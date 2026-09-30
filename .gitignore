@@ -1,6 +1,7 @@
 # Machine-specific Power Platform configuration and downloaded solution artifacts
 /powerplatform.config.local.json
 /.artifacts/
+/scripts/
 .env
 .env.*
 !.env.example
