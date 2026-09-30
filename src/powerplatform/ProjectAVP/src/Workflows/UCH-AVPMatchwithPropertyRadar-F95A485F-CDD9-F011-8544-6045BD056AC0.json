@@ -1,0 +1,1374 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)": {
+          "defaultValue": "https://api.propertyradar.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarAPIEndpoint"
+          }
+        },
+        "UCH-AVP PropertyRadar (Secret Name) (clr_UCHAVPPropertyRadarSecretName)": {
+          "defaultValue": "UCH-PropertyRadar",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarSecretName"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint List (GPT Prompts) (clr_UCHAVPSharePointListGPTPrompts)": {
+          "defaultValue": "7737d1f4-74ad-44e9-8620-246995af22e8",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListGPTPrompts"
+          }
+        },
+        "UCH-AVP PropertyRadar (List ID | Staging) (clr_UCHAVPPropertyRadarIDStaging)": {
+          "defaultValue": "1195055",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarIDStaging"
+          }
+        },
+        "UCH-AVP PropertyRadar (List ID | Feeder) (clr_UCHAVPPropertyRadarIDFeeder)": {
+          "defaultValue": "1195062",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarIDFeeder"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created_or_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnUpdatedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@equals(triggerBody()?['ValuationStatus/Value'], 'Queued')"
+            },
+            {
+              "expression": "@not(equals(triggerBody()?['Issue/Value'], 'Incomplete Address'))"
+            }
+          ],
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "a1cc48ac-fc29-41ef-9cf8-2151d9064a4d"
+          }
+        }
+      },
+      "actions": {
+        "Get_Radar_Match": {
+          "type": "Scope",
+          "actions": {
+            "Match_Property": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(triggerBody()?['RadarSynced'])",
+                      "@true"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Non-Radar": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(triggerBody()?['PropertyURL'])",
+                          "@true"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Valid_Address": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@and(\r\n  not(empty(trim(string(triggerBody()?['Address'])))),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['Address']),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['Address']),\r\n      'available'\r\n    )\r\n  )\r\n)",
+                              "@true"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@and(\r\n  not(empty(trim(string(triggerBody()?['City'])))),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['City']),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['City']),\r\n      'available'\r\n    )\r\n  )\r\n)",
+                              "@true"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@and(\r\n  not(empty(trim(string(triggerBody()?['State'])))),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['State']),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['State']),\r\n      'available'\r\n    )\r\n  )\r\n)",
+                              "@true"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@and(\r\n  not(empty(trim(string(triggerBody()?['Zip'])))),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['Zip']),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      string(triggerBody()?['Zip']),\r\n      'available'\r\n    )\r\n  )\r\n)",
+                              "@true"
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "POST_Test_Import": {
+                          "type": "Http",
+                          "inputs": {
+                            "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/lists/@{parameters('UCH-AVP PropertyRadar (List ID | Staging) (clr_UCHAVPPropertyRadarIDStaging)')}/import/items?Purchase=0",
+                            "method": "POST",
+                            "headers": {
+                              "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}",
+                              "Content-Type": "application/json"
+                            },
+                            "body": [
+                              {
+                                "Address": "@{trim(\r\n  string(triggerBody()?['Address'])\r\n)}",
+                                "City": "@{trim(\r\n  string(triggerBody()?['City'])\r\n)}",
+                                "State": "@{trim(\r\n  string(triggerBody()?['State'])\r\n)}",
+                                "ZipFive": "@{trim(\r\n  string(triggerBody()?['Zip'])\r\n)}",
+                                "County": "@trim(\r\n  string(\r\n    triggerBody()?['County']\r\n  )\r\n)"
+                              }
+                            ]
+                          },
+                          "runtimeConfiguration": {
+                            "contentTransfer": {
+                              "transferMode": "Chunked"
+                            }
+                          }
+                        },
+                        "Single_Match": {
+                          "type": "If",
+                          "expression": {
+                            "and": [
+                              {
+                                "equals": [
+                                  "@body('POST_Test_Import')?['resultCount']",
+                                  1
+                                ]
+                              }
+                            ]
+                          },
+                          "actions": {
+                            "POST_Radar_Import": {
+                              "type": "Http",
+                              "inputs": {
+                                "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/lists/@{parameters('UCH-AVP PropertyRadar (List ID | Staging) (clr_UCHAVPPropertyRadarIDStaging)')}/import/items?Purchase=1",
+                                "method": "POST",
+                                "headers": {
+                                  "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}",
+                                  "Content-Type": "application/json"
+                                },
+                                "body": [
+                                  {
+                                    "Address": "@{trim(\r\n  string(triggerBody()?['Address'])\r\n)}",
+                                    "City": "@{trim(\r\n  string(triggerBody()?['City'])\r\n)}",
+                                    "State": "@{trim(\r\n  string(triggerBody()?['State'])\r\n)}",
+                                    "ZipFive": "@{trim(\r\n  string(triggerBody()?['Zip'])\r\n)}",
+                                    "County": "@trim(\r\n  string(\r\n    triggerBody()?['County']\r\n  )\r\n)"
+                                  }
+                                ]
+                              },
+                              "runtimeConfiguration": {
+                                "contentTransfer": {
+                                  "transferMode": "Chunked"
+                                }
+                              }
+                            },
+                            "Unit_Matched": {
+                              "type": "Until",
+                              "expression": "@equals(empty(\r\n  body('Get_List_Matches')?['results']?[0]?['PropertyStatus']\r\n),false)",
+                              "limit": {
+                                "count": 60,
+                                "timeout": "PT1H"
+                              },
+                              "actions": {
+                                "Get_List_Matches": {
+                                  "type": "Http",
+                                  "inputs": {
+                                    "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/lists/@{parameters('UCH-AVP PropertyRadar (List ID | Staging) (clr_UCHAVPPropertyRadarIDStaging)')}/import/items?Limit=1&Sort=ListImportItemID&Start=0&Dir=desc",
+                                    "method": "GET",
+                                    "headers": {
+                                      "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}",
+                                      "Content-Type": "application/json"
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Delay_2_seconds": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "runtimeConfiguration": {
+                                    "contentTransfer": {
+                                      "transferMode": "Chunked"
+                                    }
+                                  }
+                                },
+                                "Delay_2_seconds": {
+                                  "type": "Wait",
+                                  "inputs": {
+                                    "interval": {
+                                      "count": 2,
+                                      "unit": "Second"
+                                    }
+                                  }
+                                }
+                              },
+                              "runAfter": {
+                                "POST_Radar_Import": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Found_Match": {
+                              "type": "If",
+                              "expression": {
+                                "and": [
+                                  {
+                                    "equals": [
+                                      "@body('Get_List_Matches')?['results']?[0]?['PropertyStatus']",
+                                      "Matched"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "actions": {
+                                "Set_Radar_ID_Match": {
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "strRadar_Match",
+                                    "value": "@body('Get_List_Matches')?['results']?[0]?['RadarID']"
+                                  },
+                                  "runAfter": {
+                                    "Set_Import_Item_ID": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Set_Import_Item_ID": {
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "strListImportItemID",
+                                    "value": "@string(body('POST_Radar_Import')?['results']?[0]?['ListImportItemID'])"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Unit_Matched": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "POST_Test_Import": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Radar_Originated": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "blnRadar_Match",
+                          "value": true
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Get_Radar_Secret": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Get_Radar_Secret": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "secretName": "@parameters('UCH-AVP PropertyRadar (Secret Name) (clr_UCHAVPPropertyRadarSecretName)')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                      "operationId": "GetSecret",
+                      "connectionName": "shared_keyvault"
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              }
+            },
+            "Match_Details": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(variables('strRadar_Match'))",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "GET_Test_Details": {
+                  "type": "Http",
+                  "inputs": {
+                    "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/properties/@{variables('strRadar_Match')}?Purchase=0&Fields=All",
+                    "method": "GET",
+                    "headers": {
+                      "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  }
+                },
+                "Single_Property": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@body('GET_Test_Details')?['totalResultCount']",
+                          1
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "GET_Property_Details": {
+                      "type": "Http",
+                      "inputs": {
+                        "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/properties/@{variables('strRadar_Match')}?Purchase=1&Fields=All",
+                        "method": "GET",
+                        "headers": {
+                          "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}"
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "contentTransfer": {
+                          "transferMode": "Chunked"
+                        }
+                      }
+                    },
+                    "Check_APN": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@empty(string(triggerBody()?['APN']))",
+                              "@false"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@empty(string(body('GET_Property_Details')?['results']?[0]?['APN']))",
+                              "@false"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@triggerBody()?['APN']",
+                              "@body('GET_Property_Details')?['results']?[0]?['APN']"
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Set_APN_Match": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "blnRadar_Match",
+                            "value": true
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Check_Owners": {
+                            "type": "If",
+                            "expression": {
+                              "or": [
+                                {
+                                  "equals": [
+                                    "@empty(triggerBody()?['LegalOwner'])",
+                                    "@false"
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@empty(triggerBody()?['Trustee'])",
+                                    "@false"
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@empty(triggerBody()?['TrusteeRepName'])",
+                                    "@false"
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@empty(triggerBody()?['OwnerFirstName'])",
+                                    "@false"
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@empty(triggerBody()?['OwnerSpouseFirstName'])",
+                                    "@false"
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@empty(triggerBody()?['Owner'])",
+                                    "@false"
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Do_Matching": {
+                                "type": "If",
+                                "expression": {
+                                  "and": [
+                                    {
+                                      "equals": [
+                                        "@variables('blnRadar_Match')",
+                                        "@false"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "actions": {
+                                  "Get_System_Prompt": {
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                                        "table": "@parameters('UCH-AVP SharePoint List (GPT Prompts) (clr_UCHAVPSharePointListGPTPrompts)')",
+                                        "$filter": "Title eq 'Owner Matching'"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                        "operationId": "GetItems",
+                                        "connectionName": "shared_sharepointonline"
+                                      }
+                                    }
+                                  },
+                                  "Get_LLM_Endpoint": {
+                                    "type": "Workflow",
+                                    "inputs": {
+                                      "host": {
+                                        "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                                      },
+                                      "body": {
+                                        "text": "UCH-AVP OpenAI Request"
+                                      }
+                                    },
+                                    "runAfter": {
+                                      "Get_System_Prompt": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  },
+                                  "AVP_Owners_ary": {
+                                    "type": "Query",
+                                    "inputs": {
+                                      "from": [
+                                        "@triggerBody()?['Owner']",
+                                        "@triggerBody()?['LegalOwner']",
+                                        "@triggerBody()?['Trustee']",
+                                        "@triggerBody()?['TrusteeRepName']",
+                                        "@trim(\r\n  concat(\r\n    string(triggerBody()?['OwnerFirstName']),\r\n    ' ',\r\n    string(triggerBody()?['OwnerLastName'])\r\n  )\r\n)",
+                                        "@trim(\r\n  concat(\r\n    string(triggerBody()?['OwnerSpouseFirstName']),\r\n    ' ',\r\n    string(triggerBody()?['OwnerLastName'])\r\n  )\r\n)"
+                                      ],
+                                      "where": "@equals(empty(string(item())),false)"
+                                    },
+                                    "runAfter": {
+                                      "Get_LLM_Endpoint": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  },
+                                  "Radar_Owners_ary": {
+                                    "type": "Query",
+                                    "inputs": {
+                                      "from": [
+                                        "@body('GET_Property_Details')?['results']?[0]?['Taxpayer']",
+                                        "@body('GET_Property_Details')?['results']?[0]?['Trustee']",
+                                        "@body('GET_Property_Details')?['results']?[0]?['ForeclosingLender']"
+                                      ],
+                                      "where": "@equals(empty(string(item())),false)"
+                                    },
+                                    "runAfter": {
+                                      "AVP_Owners_ary": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  },
+                                  "Owner_Datasets": {
+                                    "type": "Compose",
+                                    "inputs": "#AVP Owners#\n  + @{join(\n  body('AVP_Owners_ary'),\n  '\n  + '\n)}\n\n#Radar Owners#\n  + @{join(\r\n  body('Radar_Owners_ary'),\r\n  '\r\n  + '\r\n)}",
+                                    "runAfter": {
+                                      "Radar_Owners_ary": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  },
+                                  "Match_Owner_Names": {
+                                    "type": "Http",
+                                    "inputs": {
+                                      "uri": "@body('Get_LLM_Endpoint')?['callback_url']",
+                                      "method": "POST",
+                                      "body": {
+                                        "System Message": "@first(body('Get_System_Prompt')?['value'])?['SystemPrompt']",
+                                        "User Message": "@outputs('Owner_Datasets')"
+                                      },
+                                      "retryPolicy": {
+                                        "type": "none"
+                                      }
+                                    },
+                                    "runAfter": {
+                                      "Owner_Datasets": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "runtimeConfiguration": {
+                                      "contentTransfer": {
+                                        "transferMode": "Chunked"
+                                      }
+                                    }
+                                  },
+                                  "Set_Owner_Match": {
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "blnRadar_Match",
+                                      "value": "@json(body('Match_Owner_Names')?['Response'])?['Owner Matched']"
+                                    },
+                                    "runAfter": {
+                                      "Match_Owner_Names": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "else": {
+                                  "actions": {}
+                                }
+                              }
+                            },
+                            "else": {
+                              "actions": {
+                                "No_Match_Contraints": {
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "blnRadar_Match",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "GET_Property_Details": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Use_Current_Radar_ID": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "strRadar_Match",
+                          "value": "@triggerBody()?['RadarID']"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "GET_Test_Details": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Use_Current_RadarID": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "strRadar_Match",
+                      "value": "@triggerBody()?['RadarID']"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Match_Property": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Details_Matched": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@variables('blnRadar_Match')",
+                      "@true"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "PUT_Item_in_Feeder": {
+                  "type": "Http",
+                  "inputs": {
+                    "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/lists/@{parameters('UCH-AVP PropertyRadar (List ID | Feeder) (clr_UCHAVPPropertyRadarIDFeeder)')}/items",
+                    "method": "PUT",
+                    "headers": {
+                      "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}",
+                      "Content-Type": "application/json"
+                    },
+                    "body": {
+                      "Criteria": [
+                        {
+                          "name": "RadarID",
+                          "value": [
+                            "@{variables('strRadar_Match')}"
+                          ]
+                        }
+                      ]
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Record_Details": [
+                      "Succeeded"
+                    ]
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  }
+                },
+                "Record_Details": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@if(\r\n  empty(string(body('GET_Property_Details'))),\r\n  json('{}'),\r\n  first(body('GET_Property_Details')?['results'])\r\n)",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "Longitude": {
+                          "type": "string"
+                        },
+                        "Latitude": {
+                          "type": "string"
+                        },
+                        "State": {
+                          "type": "string"
+                        },
+                        "County": {
+                          "type": "string"
+                        },
+                        "City": {
+                          "type": "string"
+                        },
+                        "ZipFive": {
+                          "type": "string"
+                        },
+                        "CarrierRoute": {
+                          "type": "string"
+                        },
+                        "SiteCongressionalDistrict": {
+                          "type": "string"
+                        },
+                        "SchoolDistrict": {
+                          "type": "string"
+                        },
+                        "Address": {
+                          "type": "string"
+                        },
+                        "RadarID": {
+                          "type": "string"
+                        },
+                        "APN": {
+                          "type": "string"
+                        },
+                        "Subdivision": {
+                          "type": "string"
+                        },
+                        "Zoning": {
+                          "type": "string"
+                        },
+                        "TaxRateArea": {
+                          "type": "string"
+                        },
+                        "TaxSearchURL": {
+                          "type": "object",
+                          "properties": {
+                            "linktext": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "AssessorURL": {
+                          "type": "object",
+                          "properties": {
+                            "linktext": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "RecorderSearchURL": {
+                          "type": "object",
+                          "properties": {
+                            "linktext": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Range": {
+                          "type": "string"
+                        },
+                        "Township": {
+                          "type": "string"
+                        },
+                        "Section": {
+                          "type": "string"
+                        },
+                        "LegalBookPage": {
+                          "type": "string"
+                        },
+                        "LegalLots": {
+                          "type": "string"
+                        },
+                        "FullLegal": {
+                          "type": "string"
+                        },
+                        "Taxpayer": {
+                          "type": "string"
+                        },
+                        "DirectionsURL": {
+                          "type": "object",
+                          "properties": {
+                            "linktext": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "CensusTract": {
+                          "type": "string"
+                        },
+                        "CensusBlock": {
+                          "type": "string"
+                        },
+                        "PType": {
+                          "type": "string"
+                        },
+                        "AdvancedPropertyType": {
+                          "type": "string"
+                        },
+                        "Baths": {
+                          "type": "number"
+                        },
+                        "SqFt": {
+                          "type": "number"
+                        },
+                        "LotSize": {
+                          "type": "number"
+                        },
+                        "LotSizeAcres": {
+                          "type": "number"
+                        },
+                        "YearBuilt": {
+                          "type": "number"
+                        },
+                        "Rooms": {
+                          "type": "number"
+                        },
+                        "Stories": {
+                          "type": "number"
+                        },
+                        "AirCond": {
+                          "type": "number"
+                        },
+                        "Heating": {
+                          "type": "number"
+                        },
+                        "Pool": {
+                          "type": "number"
+                        },
+                        "Fireplace": {
+                          "type": "number"
+                        },
+                        "BuildingQuality": {
+                          "type": "string"
+                        },
+                        "FrameType": {
+                          "type": "string"
+                        },
+                        "ExteriorWallType": {
+                          "type": "string"
+                        },
+                        "RoofType": {
+                          "type": "string"
+                        },
+                        "isSiteVacant": {
+                          "type": "number"
+                        },
+                        "isMailVacant": {
+                          "type": "number"
+                        },
+                        "MailCongressionalDistrict": {
+                          "type": "string"
+                        },
+                        "AVM": {
+                          "type": "number"
+                        },
+                        "AssessedValue": {
+                          "type": "number"
+                        },
+                        "EstimatedTaxRate": {
+                          "type": "number"
+                        },
+                        "OwnerExemption": {
+                          "type": "number"
+                        },
+                        "LandValue": {
+                          "type": "number"
+                        },
+                        "ImpValue": {
+                          "type": "number"
+                        },
+                        "AssessedYear": {
+                          "type": "number"
+                        },
+                        "AnnualTaxes": {
+                          "type": "number"
+                        },
+                        "EquityPercent": {
+                          "type": "number"
+                        },
+                        "CLTV": {
+                          "type": "number"
+                        },
+                        "TotalLoanBalance": {
+                          "type": "number"
+                        },
+                        "AvailableEquity": {
+                          "type": "number"
+                        },
+                        "ForeclosureSelector": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "NoticeKey": {
+                          "type": "string"
+                        },
+                        "DelinquentAmount": {
+                          "type": "number"
+                        },
+                        "DelinquentYear": {
+                          "type": "number"
+                        },
+                        "NumberDelinquentInstallments": {
+                          "type": "number"
+                        },
+                        "FirstInstallmentAmount": {
+                          "type": "number"
+                        },
+                        "LastTransferRecDate": {
+                          "type": "string"
+                        },
+                        "LastTransferType": {
+                          "type": "string"
+                        },
+                        "LastTransferValue": {
+                          "type": "number"
+                        },
+                        "isListedForSale": {
+                          "type": "number"
+                        },
+                        "MyValue": {
+                          "type": "number"
+                        },
+                        "MyValuePerSqFt": {
+                          "type": "number"
+                        },
+                        "AVMPerSqFt": {
+                          "type": "number"
+                        },
+                        "AVMAsOf": {
+                          "type": "string"
+                        },
+                        "RentBreakEven": {
+                          "type": "number"
+                        },
+                        "RentBreakEvenPerSqFt": {},
+                        "RentBreakEvenDate": {
+                          "type": "string"
+                        },
+                        "MyRent": {
+                          "type": "number"
+                        },
+                        "MyRentPerSqFt": {
+                          "type": "string"
+                        },
+                        "HUDRent": {
+                          "type": "number"
+                        },
+                        "HUDRentPerSqFt": {
+                          "type": "string"
+                        },
+                        "HUDRentDate": {
+                          "type": "string"
+                        },
+                        "ValueBreakEven": {
+                          "type": "number"
+                        },
+                        "ValueBreakEvenPerSqFt": {
+                          "type": "number"
+                        },
+                        "ValueBreakEvenDate": {
+                          "type": "string"
+                        },
+                        "FloodZone": {
+                          "type": "string"
+                        },
+                        "FloodZoneRisk": {
+                          "type": "string"
+                        },
+                        "FloodMapDate": {
+                          "type": "string"
+                        },
+                        "FloodMapNumber": {
+                          "type": "object",
+                          "properties": {
+                            "linktext": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "ForeclosureStage": {
+                          "type": "string"
+                        },
+                        "SaleTime": {
+                          "type": "string"
+                        },
+                        "SalePlace": {
+                          "type": "object",
+                          "properties": {
+                            "linktext": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "OriginalSaleDate": {
+                          "type": "string"
+                        },
+                        "Trustee": {
+                          "type": "string"
+                        },
+                        "TrusteePhone": {
+                          "type": "string"
+                        },
+                        "ForeclosingLender": {
+                          "type": "string"
+                        },
+                        "ForeclosureRecDate": {
+                          "type": "string"
+                        },
+                        "CaseNumber": {
+                          "type": "string"
+                        },
+                        "TrusteeAddress": {
+                          "type": "string"
+                        },
+                        "TrusteeCityStZip": {
+                          "type": "string"
+                        },
+                        "isPreforeclosure": {
+                          "type": "number"
+                        },
+                        "isAuction": {
+                          "type": "number"
+                        },
+                        "isBankOwned": {
+                          "type": "number"
+                        },
+                        "Transactions": {
+                          "type": "object",
+                          "properties": {
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "DisclaimerDetails": {
+                          "type": "string"
+                        },
+                        "CompsSales": {
+                          "type": "object",
+                          "properties": {
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "CompsListingsForSale": {
+                          "type": "object",
+                          "properties": {
+                            "href": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "_links": {
+                          "type": "object",
+                          "properties": {
+                            "self": {
+                              "type": "object",
+                              "properties": {
+                                "href": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "UpgradeLinkInvestmentAnalysis": {
+                          "type": "object",
+                          "properties": {
+                            "function": {
+                              "type": "string"
+                            },
+                            "linktext": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Match_Details": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Init_Radar_Details": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Matches_ary": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryRadar_Matches",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Init_Radar_ID_Match": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "strRadar_Match",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Import_Item_ID": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Radar_Match_flag": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "blnRadar_Match",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Radar_ID_Match": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Import_Item_ID": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "strListImportItemID",
+                "type": "string",
+                "value": "@triggerBody()?['ListImportItemID']"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Matches_ary": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Radar_Details": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "objRadar_Match",
+                "type": "object",
+                "value": "@null"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Radar_Match_flag": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Handle_Errors": {
+          "type": "Scope",
+          "actions": {
+            "Set_Pending_Status": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@triggerBody()?['ID']",
+                  "item/Title": "@triggerBody()?['Title']",
+                  "item/RadarID": "@triggerBody()?['RadarID']",
+                  "item/ValuationStatus/Value": "Pending"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            },
+            "Terminate_as_failed": {
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed"
+              },
+              "runAfter": {
+                "Set_Pending_Status": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Radar_Match": [
+              "Failed"
+            ]
+          }
+        },
+        "Update_Property": {
+          "type": "Scope",
+          "actions": {
+            "Set_as_Duplicate": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@triggerBody()?['ID']",
+                  "item/Title": "@triggerBody()?['Title']",
+                  "item/RadarID": "@triggerBody()?['RadarID']",
+                  "item/ValuationStatus/Value": "Pending",
+                  "item/Notes": "@variables('strRadar_Match')",
+                  "item/RadarSynced": "Duplicate",
+                  "item/Duplicate": true
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Update_RadarID": [
+                  "Failed"
+                ]
+              }
+            },
+            "Update_RadarID": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@triggerBody()?['ID']",
+                  "item/Title": "@triggerBody()?['Title']",
+                  "item/RadarID": "@variables('strRadar_Match')",
+                  "item/ValuationStatus/Value": "Pending",
+                  "item/ListImportItemID": "@variables('strListImportItemID')",
+                  "item/RadarSynced": "@if(\r\n  variables('blnRadar_Match'),\r\n  'Yes',\r\n  ''\r\n)",
+                  "item/TaxSearchURL": "@if(\r\n  and(\r\n    variables('blnRadar_Match'),\r\n    not(empty(body('Record_Details')))\r\n  ),\r\n  body('Record_Details')?['TaxSearchURL']?['href'],\r\n  triggerBody()?['TaxSearchURL']\r\n)",
+                  "item/AssessorURL": "@if(\r\n  and(\r\n    variables('blnRadar_Match'),\r\n    not(empty(body('Record_Details')))\r\n  ),\r\n  body('Record_Details')?['AssessorURL']?['href'],\r\n  triggerBody()?['AssessorURL']\r\n)",
+                  "item/RecorderSearchURL": "@if(\r\n  and(\r\n    variables('blnRadar_Match'),\r\n    not(empty(body('Record_Details')))\r\n  ),\r\n  body('Record_Details')?['RecorderSearchURL']?['href'],\r\n  triggerBody()?['RecorderSearchURL']\r\n)",
+                  "item/DirectionsURL": "@if(\r\n  and(\r\n    variables('blnRadar_Match'),\r\n    not(empty(body('Record_Details')))\r\n  ),\r\n  body('Record_Details')?['DirectionsURL']?['href'],\r\n  triggerBody()?['DirectionsURL']\r\n)",
+                  "item/SalePlaceURL": "@if(\r\n  and(\r\n    variables('blnRadar_Match'),\r\n    not(empty(body('Record_Details')))\r\n  ),\r\n  body('Record_Details')?['SalePlace']?['href'],\r\n  triggerBody()?['SalePlaceURL']\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Radar_Match": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

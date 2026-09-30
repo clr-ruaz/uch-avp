@@ -1,0 +1,172 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Status": {
+                  "type": "string"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "metadata": {
+            "operationMetadataId": "0882f650-0701-4445-8e08-7c982e018e80"
+          }
+        }
+      },
+      "actions": {
+        "Get_items": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "$filter": "ValuationSource ne null and ValuationStatus eq '@{triggerBody()?['Status']}'"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {},
+          "runtimeConfiguration": {
+            "paginationPolicy": {
+              "minimumItemCount": 5000
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "73ed7aad-e197-4450-97a3-fae1658afb71"
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@body('Clean_Queued_Data')"
+          },
+          "runAfter": {
+            "Clean_Queued_Data": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3cefbb54-c839-44b0-b9eb-c7a74b289602"
+          }
+        },
+        "Clean_Queued_Data": {
+          "type": "Select",
+          "inputs": {
+            "from": "@sort(\r\n  body('Select_Queued_Data'),\r\n  'Filter Status'\r\n)",
+            "select": {
+              "Title": "@trim(replace(item()?['Title'], '\"', ''''))",
+              "Address": "@if(\r\n  not(empty(item()?['Address'])),\r\n  trim(replace(item()?['Address'], '\"', '''')),\r\n  ''\r\n)",
+              "City": "@if(\r\n  not(empty(item()?['City'])),\r\n  trim(replace(item()?['City'], '\"', '''')),\r\n  ''\r\n)",
+              "State": "@if(\r\n  not(empty(item()?['State'])),\r\n  trim(replace(item()?['State'], '\"', '''')),\r\n  ''\r\n)",
+              "Zip": "@if(\r\n  not(empty(string(item()?['Zip']))),\r\n  trim(replace(string(item()?['Zip']), '\"', '''')),\r\n  ''\r\n)",
+              "Property Type": "@if(\r\n  not(empty(item()?['Property Type'])),\r\n  trim(replace(item()?['Property Type'], '\"', '''')),\r\n  ''\r\n)",
+              "ID": "@item()?['ID']",
+              "Valuation Source": "@item()?['Valuation Source']",
+              "Sale Date": "@item()?['Sale Date']"
+            }
+          },
+          "runAfter": {
+            "Select_Queued_Data": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a5b04a08-f126-4d28-9bdd-2921174cb120"
+          }
+        },
+        "Get_Valid_Items_Only": {
+          "type": "Query",
+          "description": "Add here additional conditions to filter out items:\n1. Filter out NY MFRs",
+          "inputs": {
+            "from": "@outputs('Get_items')?['body/value']",
+            "where": "@equals(and(\r\n  equals(\r\n    toLower(item()?['State']),\r\n    'ny'\r\n  ),\r\n  equals(\r\n    toLower(item()?['PropertyType']),\r\n    'mfr'\r\n  )\r\n),false)"
+          },
+          "runAfter": {
+            "Get_items": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Select_Queued_Data": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Get_Valid_Items_Only')",
+            "select": {
+              "Title": "@item()?['Title']",
+              "Address": "@coalesce(\r\n  item()?['AddressOverride_x0028_ManualRevi'],\r\n  item()?['Address']\r\n)",
+              "City": "@item()?['City']",
+              "State": "@item()?['State']",
+              "Zip": "@if(\r\n  empty(string(item()?['Zip'])),\r\n  null,\r\n  if(\r\n    greater(\r\n      length(string(item()?['Zip'])),\r\n      4\r\n    ),\r\n    item()?['Zip'],\r\n    concat(\r\n      '0',\r\n      item()?['Zip']\r\n    )\r\n  )\r\n)",
+              "Property Type": "@if(\r\n  empty(string(item()?['PropertyTypeOverride'])),\r\n  trim(string(item()?['PropertyType'])),\r\n  trim(string(item()?['PropertyTypeOverride']))\r\n)",
+              "ID": "@item()?['ID']",
+              "Valuation Source": "@item()?['ValuationSource/Value']",
+              "Sale Date": "@item()?['SaleDate']",
+              "Filter Status": "@item()?['Past_x003f_']"
+            }
+          },
+          "runAfter": {
+            "Get_Valid_Items_Only": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "25604f8c-2bc2-4de7-bfe0-c343706b599f"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

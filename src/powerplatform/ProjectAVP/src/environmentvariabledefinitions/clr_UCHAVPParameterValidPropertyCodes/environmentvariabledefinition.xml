@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPParameterValidPropertyCodes">
+  <defaultvalue>AGR APT COM GOV IND LND MFR OFC REC RTL UTL</defaultvalue>
+  <displayname default="UCH-AVP Parameter (Valid CoStar Codes)">
+    <label description="UCH-AVP Parameter (Valid CoStar Codes)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.2</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

@@ -1,0 +1,15 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPSharePointLibraryImports">
+  <apiid>/providers/microsoft.powerapps/apis/shared_sharepointonline</apiid>
+  <displayname default="UCH-AVP SharePoint Library (Imports)">
+    <label description="UCH-AVP SharePoint Library (Imports)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.3</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <parameterkey>table</parameterkey>
+  <parentdefinitionid>
+    <schemaname>clr_UCHAVPSharePointSite</schemaname>
+  </parentdefinitionid>
+  <secretstore>0</secretstore>
+  <type>100000004</type>
+</environmentvariabledefinition>

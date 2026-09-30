@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPPropertyRadarIDFeeder">
+  <defaultvalue>1230754</defaultvalue>
+  <displayname default="UCH-AVP PropertyRadar (List ID | Feeder)">
+    <label description="UCH-AVP PropertyRadar (List ID | Feeder)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.9</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

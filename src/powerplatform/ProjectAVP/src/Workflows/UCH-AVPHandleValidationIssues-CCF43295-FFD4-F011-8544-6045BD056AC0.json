@@ -1,0 +1,608 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)": {
+          "defaultValue": "AGR APT COM GOV IND LND MFR OFC REC RTL UTL",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidPropertyCodes"
+          }
+        },
+        "UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)": {
+          "defaultValue": "CND OTH RES SFR UNK",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidZillowCodes"
+          }
+        },
+        "UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created_or_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnUpdatedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@not(empty(triggerOutputs()?['body/Issue/Value']))"
+            }
+          ],
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "b2d89eb0-3419-4bf5-ba7b-fa8e5fc4e3cb"
+          }
+        }
+      },
+      "actions": {
+        "Issue_Type": {
+          "type": "Switch",
+          "expression": "@triggerBody()?['Issue/Value']",
+          "default": {
+            "actions": {
+              "Send_an_email_alert": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                    "emailMessage/To": "@parameters('UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                    "emailMessage/Subject": "UCH-AVP Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Invalid Property Issue",
+                    "emailMessage/Body": "<p class=\"editor-paragraph\">The issue for @{triggerBody()?['Title']} in invalid; please report this to your Automation Development team.</p>",
+                    "emailMessage/Importance": "Normal"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                    "operationId": "SharedMailboxSendEmailV2",
+                    "connectionName": "shared_office365"
+                  }
+                }
+              }
+            }
+          },
+          "cases": {
+            "Incomplete_Address": {
+              "actions": {
+                "Address_Complete": {
+                  "type": "Compose",
+                  "inputs": "@and(\r\n  not(empty(triggerBody()?['Address'])),\r\n  not(empty(triggerBody()?['City'])),\r\n  not(empty(triggerBody()?['State'])),\r\n  not(empty(string(triggerBody()?['Zip']))),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['Address'])),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['City'])),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['State'])),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['Zip'])),\r\n      'unknown'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['Address'])),\r\n      'not available'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['City'])),\r\n      'not available'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['State'])),\r\n      'not available'\r\n    )\r\n  ),\r\n  not(\r\n    contains(\r\n      toLower(string(triggerBody()?['Zip'])),\r\n      'not available'\r\n    )\r\n  )\r\n)"
+                },
+                "Address_Valid": {
+                  "type": "Compose",
+                  "inputs": "@if(\r\n  and(\r\n    not(equals(triggerBody()?['PropertyType'], 'LND')),\r\n    not(equals(triggerBody()?['PropertyType'], 'AGR'))\r\n  ),\r\n  or(\r\n    startsWith(string(triggerBody()?['Address']), '1'),\r\n    startsWith(string(triggerBody()?['Address']), '2'),\r\n    startsWith(string(triggerBody()?['Address']), '3'),\r\n    startsWith(string(triggerBody()?['Address']), '4'),\r\n    startsWith(string(triggerBody()?['Address']), '5'),\r\n    startsWith(string(triggerBody()?['Address']), '6'),\r\n    startsWith(string(triggerBody()?['Address']), '7'),\r\n    startsWith(string(triggerBody()?['Address']), '8'),\r\n    startsWith(string(triggerBody()?['Address']), '9')\r\n  ),\r\n  true\r\n)",
+                  "runAfter": {
+                    "Address_Complete": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "ADDR_Compete": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@and(\r\n  outputs('Address_Complete'),\r\n  outputs('Address_Valid')\r\n)",
+                          "@true"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Reset_Status_upon_address_completion": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                          "id": "@triggerBody()?['ID']",
+                          "item/Title": "@triggerBody()?['Title']",
+                          "item/RadarID": "@triggerBody()?['RadarID']",
+                          "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+                          "item/ValuationStatus/Value": "@outputs('Valuation_Status')",
+                          "item/Issue/Value": "@variables('strBlank')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Address_Valid": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "case": "Incomplete Address"
+            },
+            "Incomplete_Valuation": {
+              "actions": {
+                "LTV_Available": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "greater": [
+                          "@outputs('LTV_Computed')",
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Reset_Status_when_LTV_is_provided": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                          "id": "@triggerBody()?['ID']",
+                          "item/Title": "@triggerBody()?['Title']",
+                          "item/RadarID": "@triggerBody()?['RadarID']",
+                          "item/LTV_x0025_": "@outputs('LTV_Computed')",
+                          "item/Issue/Value": "@variables('strBlank')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "LTV_Computed": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "LTV_Parameters": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "Estimated Loan": "@coalesce(\r\n  triggerBody()?['FinalJudgementAmount'],\r\n  triggerBody()?['SaleAmount'],\r\n  triggerBody()?['FirstLoanAmount'],\r\n  0\r\n)",
+                      "Estimated Value": "@if(\r\n  contains(\r\n    triggerBody()?['ValuationSource/Value'],\r\n    'CoStar'\r\n  ),\r\n  coalesce(\r\n    triggerBody()?['CoStar_x0024__x0028_Units_x0029_'],\r\n    triggerBody()?['EstimatedValue_x0028_Computed_x0'],\r\n    0\r\n  ),\r\n  outputs('SFR_Valuation_avg')\r\n)"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "Estimated Loan": {
+                          "type": "number"
+                        },
+                        "Estimated Value": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "SFR_Valuation_avg": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "LTV_Computed": {
+                  "type": "Compose",
+                  "inputs": "@if(\r\n  and(\r\n    greater(body('LTV_Parameters')?['Estimated Loan'], 0),\r\n    greater(body('LTV_Parameters')?['Estimated Value'], 0)\r\n  ),\r\n  div(\r\n    body('LTV_Parameters')?['Estimated Loan'],\r\n    body('LTV_Parameters')?['Estimated Value']\r\n  ),\r\n  0\r\n)",
+                  "runAfter": {
+                    "LTV_Parameters": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SFR_Valuation_ary": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": [
+                      "@triggerBody()?['Zestimate']",
+                      "@triggerBody()?['RedfinEstimate']",
+                      "@triggerBody()?['RealtorEstimate']"
+                    ],
+                    "where": "@equals(if(\r\n  not(empty(string(item()))),\r\n  greater(\r\n    item(),\r\n    0\r\n  ),\r\n  false\r\n),true)"
+                  }
+                },
+                "SFR_Valuation_avg": {
+                  "type": "Compose",
+                  "inputs": "@if(\r\n  empty(body('SFR_Valuation_ary')),\r\n  0,\r\n  div(\r\n    xpath(\r\n      xml(\r\n        json(\r\n          concat(\r\n            '{\"body\":{\"root\":', \r\n            body('SFR_Valuation_ary'), \r\n            '}}'\r\n          )\r\n        )\r\n      ), \r\n      'sum(//root)'\r\n    ), \r\n    length(body('SFR_Valuation_ary'))\r\n  )\r\n)",
+                  "runAfter": {
+                    "SFR_Valuation_ary": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "case": "Incomplete Valuation"
+            },
+            "No_CoStar_Match": {
+              "actions": {
+                "Get_changes_for_item": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "since": "@triggerBody()?['{TriggerWindowStartToken}']",
+                      "includeDrafts": false
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetItemChanges",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                },
+                "Address_Updated": {
+                  "type": "Compose",
+                  "inputs": "@or(\r\n  outputs('Get_changes_for_item')?['body/ColumnHasChanged/Address'],\r\n  outputs('Get_changes_for_item')?['body/ColumnHasChanged/City'],\r\n  outputs('Get_changes_for_item')?['body/ColumnHasChanged/State'],\r\n  outputs('Get_changes_for_item')?['body/ColumnHasChanged/Zip']\r\n)",
+                  "runAfter": {
+                    "Get_changes_for_item": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "ADDR_Changed": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@outputs('Address_Updated')",
+                          "@true"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Reset_Status_upon_address_change": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                          "id": "@triggerBody()?['ID']",
+                          "item/Title": "@triggerBody()?['Title']",
+                          "item/RadarID": "@triggerBody()?['RadarID']",
+                          "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+                          "item/ValuationStatus/Value": "@outputs('Valuation_Status')",
+                          "item/Issue/Value": "@variables('strBlank')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Change_PType": {
+                        "type": "If",
+                        "expression": {
+                          "and": [
+                            {
+                              "equals": [
+                                "@empty(string(triggerBody()?['PropertyTypeOverride']))",
+                                "@true"
+                              ]
+                            }
+                          ]
+                        },
+                        "actions": {
+                          "Set_PType_to_OTH": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                                "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                                "id": "@triggerBody()?['ID']",
+                                "item/Title": "@triggerBody()?['Title']",
+                                "item/RadarID": "@triggerBody()?['RadarID']",
+                                "item/PropertyTypeOverride": "OTH"
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "operationId": "PatchItem",
+                                "connectionName": "shared_sharepointonline"
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "actions": {}
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Address_Updated": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "case": "No CoStar Match"
+            },
+            "Out_of_Scope:_County": {
+              "actions": {},
+              "case": "Out of Scope (County)"
+            },
+            "No_Zillow/Redfin/Realtor_Match": {
+              "actions": {
+                "Get_changes_for_Redfin_Property": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "since": "@triggerBody()?['{TriggerWindowStartToken}']",
+                      "includeDrafts": false
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetItemChanges",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                },
+                "Address_Updated_for_Redfin_Property": {
+                  "type": "Compose",
+                  "inputs": "@or(\r\n  outputs('Get_changes_for_Redfin_Property')?['body/ColumnHasChanged/Address'],\r\n  outputs('Get_changes_for_Redfin_Property')?['body/ColumnHasChanged/City'],\r\n  outputs('Get_changes_for_Redfin_Property')?['body/ColumnHasChanged/State'],\r\n  outputs('Get_changes_for_Redfin_Property')?['body/ColumnHasChanged/Zip'],\r\n  outputs('Get_changes_for_Redfin_Property')?['body/ColumnHasChanged/AddressOverride_x0028_ManualRevi']\r\n)",
+                  "runAfter": {
+                    "Get_changes_for_Redfin_Property": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "ADDR_Updated": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@outputs('Address_Updated_for_Redfin_Property')",
+                          "@true"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Reset_Status_for_Redfin_Property": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                          "id": "@triggerBody()?['ID']",
+                          "item/Title": "@triggerBody()?['Title']",
+                          "item/RadarID": "@triggerBody()?['RadarID']",
+                          "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+                          "item/ValuationStatus/Value": "@outputs('Valuation_Status')",
+                          "item/Issue/Value": "@variables('strBlank')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Address_Updated_for_Redfin_Property": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "case": "No Zillow/Redfin/Realtor Match"
+            },
+            "Incorrect_PType": {
+              "actions": {
+                "Reset_Status_upon_PType_change": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "item/Title": "@triggerBody()?['Title']",
+                      "item/RadarID": "@triggerBody()?['RadarID']",
+                      "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+                      "item/ValuationStatus/Value": "@outputs('Valuation_Status')",
+                      "item/Issue/Value": "@variables('strBlank')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                }
+              },
+              "case": "Incorrect Property Type"
+            },
+            "No_Zillow_Match": {
+              "actions": {
+                "Proceed_to_Redfin_Validation": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "item/Title": "@triggerBody()?['Title']",
+                      "item/RadarID": "@triggerBody()?['RadarID']",
+                      "item/ValuationSource/Value": "Zillow/Redfin",
+                      "item/ValuationStatus/Value": "Pending",
+                      "item/Issue/Value": "@variables('strBlank')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                }
+              },
+              "case": "No Zillow Match"
+            },
+            "No_Zillow/Redfin_Match": {
+              "actions": {
+                "Proceed_to_Realtor_Validation": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "item/Title": "@triggerBody()?['Title']",
+                      "item/RadarID": "@triggerBody()?['RadarID']",
+                      "item/ValuationSource/Value": "Zillow/Redfin/Realtor",
+                      "item/ValuationStatus/Value": "Pending",
+                      "item/Issue/Value": "@variables('strBlank')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                }
+              },
+              "case": "No Zillow/Redfin Match"
+            }
+          },
+          "runAfter": {
+            "Valuation_Source": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Blank_str": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "strBlank",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Valuation_Status": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  equals(\r\n    string(triggerBody()?['RadarSynced']),\r\n    'Yes'\r\n  ),\r\n  'Pending',\r\n  'Queued'\r\n)",
+          "runAfter": {
+            "Init_Blank_str": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Valuation_Source": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  contains(\r\n    parameters('UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)'),\r\n    coalesce(\r\n      triggerBody()?['PropertyTypeOverride'],\r\n      triggerBody()?['PropertyType'],\r\n      ''\r\n    )\r\n  ),\r\n  'CoStar',\r\n  if(\r\n    contains(\r\n      parameters('UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)'),\r\n      coalesce(\r\n        triggerBody()?['PropertyTypeOverride'],\r\n        triggerBody()?['PropertyType'],\r\n        ''\r\n      )\r\n    ),\r\n    'Zillow',\r\n    null\r\n  )\r\n)",
+          "runAfter": {
+            "Valuation_Status": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

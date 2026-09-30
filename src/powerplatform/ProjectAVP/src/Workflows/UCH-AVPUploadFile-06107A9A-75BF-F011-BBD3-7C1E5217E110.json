@@ -1,0 +1,223 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Library ID (AVP-Sync) (clr_UCHAVPSharePointLibraryIDAVPSync)": {
+          "defaultValue": "2d602503-063c-4aef-938a-18d542dae279",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointLibraryIDAVPSync"
+          }
+        },
+        "UCH-AVP SharePoint Library ID (Documents) (clr_UCHAVPSharePointLibraryIDDocuments)": {
+          "defaultValue": "f95b48c3-65bc-4102-9779-7dc4ee5f22ed",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointLibraryIDDocuments"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Folder": {
+                  "type": "string"
+                },
+                "Attachment": {
+                  "type": "object",
+                  "properties": {
+                    "Name": {
+                      "type": "string"
+                    },
+                    "ContentBytes": {
+                      "type": "object",
+                      "properties": {
+                        "$content-type": {
+                          "type": "string"
+                        },
+                        "$content": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "69ed3274-9f9a-4bc8-9cd6-70a39f856480"
+          }
+        }
+      },
+      "actions": {
+        "Success_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Successfully created file in the database"
+            }
+          },
+          "runAfter": {
+            "Create_new_file": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7abeef65-4702-4c97-9463-17e564ff4fff"
+          }
+        },
+        "Create_new_folder": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@outputs('Target_Library')",
+              "parameters/path": "@outputs('Target_Folder')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "CreateNewFolder",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Target_Folder": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Create_new_file": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "folderPath": "@body('Create_new_folder')?['{FullPath}']",
+              "name": "@triggerBody()?['Attachment']?['Name']",
+              "body": "@triggerBody()?['Attachment']?['ContentBytes']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "CreateFile",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Create_new_folder": [
+              "Succeeded",
+              "Failed"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Error_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 400,
+            "body": {
+              "Status": "Failed creating file in the database"
+            }
+          },
+          "runAfter": {
+            "Create_new_file": [
+              "Failed"
+            ]
+          }
+        },
+        "Get_Property_Details": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "$filter": "Title eq '@{triggerBody()?['Folder']}'"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {}
+        },
+        "Existing_Folder": {
+          "type": "Compose",
+          "inputs": "@first(body('Get_Property_Details')?['value'])?['FilesFolder']",
+          "runAfter": {
+            "Get_Property_Details": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Target_Library": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  not(empty(string(outputs('Existing_Folder')))),\r\n  if(\r\n    contains(\r\n      toLower(\r\n        split(\r\n          outputs('Existing_Folder'),\r\n          '/'\r\n        )[0]\r\n      ),\r\n      'documents'\r\n    ),\r\n    parameters('UCH-AVP SharePoint Library ID (Documents) (clr_UCHAVPSharePointLibraryIDDocuments)'),\r\n    parameters('UCH-AVP SharePoint Library ID (AVP-Sync) (clr_UCHAVPSharePointLibraryIDAVPSync)')\r\n  ),\r\n  parameters('UCH-AVP SharePoint Library ID (Documents) (clr_UCHAVPSharePointLibraryIDDocuments)')\r\n)",
+          "runAfter": {
+            "Existing_Folder": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Target_Folder": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  not(empty(string(outputs('Existing_Folder')))),\r\n  split(\r\n    outputs('Existing_Folder'),\r\n    '/'\r\n  )[1],\r\n  triggerBody()?['Folder']\r\n)",
+          "runAfter": {
+            "Target_Library": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

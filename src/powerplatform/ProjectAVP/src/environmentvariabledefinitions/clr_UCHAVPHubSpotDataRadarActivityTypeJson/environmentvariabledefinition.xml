@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPHubSpotDataRadarActivityTypeJson">
+  <defaultvalue>{   "associationCategory": "USER_DEFINED",   "associationTypeId": 73 }</defaultvalue>
+  <displayname default="UCH-AVP HubSpot Data (Radar Activity Type Json)">
+    <label description="UCH-AVP HubSpot Data (Radar Activity Type Json)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.7</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000003</type>
+</environmentvariabledefinition>

@@ -1,0 +1,699 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "metadata": {
+        "defaultToEmbeddedConnections": true
+      },
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Unique identifier (ID) of the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "Property UID",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "Street address of the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "Street Address",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "description": "City address of the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "City",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_4": {
+                  "description": "2‑letter USPS state address of the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "State",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_5": {
+                  "description": "5-digt ZIP address of the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "Zip",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_6": {
+                  "description": "Assessor Parcel Number for the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "APN",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_3": {
+                  "description": "County address of the property.  This is optional, so leave blank if not explicitly indicated.",
+                  "title": "County",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_7": {
+                  "description": "Radar ID of the property.  This is optional, so leave blank if not explicitly indicated. enter your input",
+                  "title": "Radar ID",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "date": {
+                  "description": "Date when the auction or sale happens in YYYY-MM-DD format.  This is optional, so leave blank if not explicitly indicated. enter your input",
+                  "format": "date",
+                  "title": "Sale Date Start",
+                  "type": "string",
+                  "x-ms-content-hint": "DATE",
+                  "x-ms-dynamically-added": true
+                },
+                "date_1": {
+                  "description": "Date when the auction or sale ends in YYYY-MM-DD format.  This is optional, so leave blank if not explicitly indicated. enter your input",
+                  "format": "date",
+                  "title": "Sale Date End",
+                  "type": "string",
+                  "x-ms-content-hint": "DATE",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": []
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "b8f61c18-7224-4f8a-9c5f-72fbce5df764",
+            "flowSystemMetadata": {
+              "flowKind": "Stateful"
+            }
+          }
+        }
+      },
+      "actions": {
+        "Respond_to_the_agent": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "properties": {
+                  "title": "Properties",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "properties": "@{if(\n  variables('blnMatched'),\n  outputs('Properties_Summary'),\n  'No matching record was found.'\n)}"
+            }
+          },
+          "runAfter": {
+            "Matches_Found": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "81c94f73-dd52-465c-ad3b-a4686da63cc3"
+          }
+        },
+        "Init_Matched_bln": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "blnMatched",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Matches_Found": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(body('Match_Properties')?['value'])",
+                  false
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Properties_Table": {
+              "type": "Table",
+              "inputs": {
+                "from": "@body('Matched_Properties')",
+                "format": "HTML"
+              }
+            },
+            "Set_Matched_Flag": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "blnMatched",
+                "value": true
+              },
+              "runAfter": {
+                "Properties_Summary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Properties_Summary": {
+              "type": "Compose",
+              "inputs": {
+                "Properties Data": "@body('Matched_Properties')",
+                "Additional Notes": "@if(\r\n  greaterOrEquals(\r\n    length(body('Match_Properties')?['value']),\r\n    50\r\n  ),\r\n  concat(\r\n    'Note that there are more than ',\r\n    length(body('Match_Properties')?['value']), \r\n    ' records that matched your query in the AVP database but I can only process a maximum of 50 records at a time to answer your question. I recommend refining your search parameters.'\r\n  ),\r\n  null\r\n)"
+              },
+              "runAfter": {
+                "Properties_Table": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Query_AVP_Data": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Address_Fltr": {
+          "type": "Scope",
+          "actions": {
+            "Address_Filter_ary": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  {
+                    "Label": "Address",
+                    "Value": "@triggerBody()?['text_1']"
+                  },
+                  {
+                    "Label": "City",
+                    "Value": "@triggerBody()?['text_2']"
+                  },
+                  {
+                    "Label": "State",
+                    "Value": "@triggerBody()?['text_4']"
+                  },
+                  {
+                    "Label": "Zip",
+                    "Value": "@if(\r\n  or(\r\n    empty(string(triggerBody()?['text_5'])),\r\n    equals(\r\n      string(triggerBody()?['text_5']),\r\n      'null'\r\n    )\r\n  ),\r\n  null,\r\n  int(triggerBody()?['text_5'])\r\n)"
+                  }
+                ],
+                "where": "@not(equals(or(\n  empty(string(item()?['Value'])),\n  equals(string(item()?['Value']), 'null')\n),true))"
+              }
+            },
+            "Address_Filter_str": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Address_Filter_ary')",
+                "select": "@if(\r\n  equals(\r\n    item()?['Label'],\r\n    'Zip'\r\n  ),\r\n  concat(\r\n    item()?['Label'],\r\n    ' eq ',\r\n    item()?['Value']\r\n  ),\r\n  concat(\r\n    'substringof(',\r\n    '''',\r\n    item()?['Value'],\r\n    ''', ',\r\n    item()?['Label'],\r\n    ')'\r\n  )\r\n)"
+              },
+              "runAfter": {
+                "Address_Filter_ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Address_Filter": {
+              "type": "Compose",
+              "inputs": "@concat(\n  if(\n    empty(body('Address_Filter_str')),\n    '',\n    '('\n  ),\n  join(\n    body('Address_Filter_str'),\n    ' and '\n  ),\n  if(\n    empty(body('Address_Filter_str')),\n    '',\n    ')'\n  )\n)",
+              "runAfter": {
+                "Address_Filter_str": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Init_Matched_bln": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Query_AVP_Data": {
+          "type": "Scope",
+          "actions": {
+            "oData_Filter_ary": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  "@if(\r\n  or(\r\n    equals(string(triggerBody()?['text']), 'null'),\r\n    empty(string(triggerBody()?['text']))\r\n  ),\r\n  null,\r\n  concat(\r\n    'Title eq ''',\r\n    triggerBody()?['text'],\r\n    ''''\r\n  )\r\n)",
+                  "@if(\r\n  or(\r\n    equals(string(triggerBody()?['text_6']), 'null'),\r\n    empty(string(triggerBody()?['text_6']))\r\n  ),\r\n  null,\r\n  concat(\r\n    'APN eq ''',\r\n    triggerBody()?['text_6'],\r\n    ''''\r\n  )\r\n)",
+                  "@if(\r\n  or(\r\n    equals(string(triggerBody()?['text_7']), 'null'),\r\n    empty(string(triggerBody()?['text_7']))\r\n  ),\r\n  null,\r\n  concat(\r\n    'RadarID eq ''',\r\n    triggerBody()?['text_7'],\r\n    ''''\r\n  )\r\n)",
+                  "@outputs('Address_Filter')"
+                ],
+                "where": "@equals(empty(item()),false)"
+              }
+            },
+            "oData_Filter": {
+              "type": "Compose",
+              "inputs": "@join(\r\n  body('oData_Filter_ary'),\r\n  ' or '\r\n)",
+              "runAfter": {
+                "oData_Filter_ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Match_Properties": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "$filter": "@outputs('oData_Filter')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "oData_Filter": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 1000
+                }
+              }
+            },
+            "Matched_Properties": {
+              "type": "Select",
+              "inputs": {
+                "from": "@take(\r\n  body('Match_Properties')?['value'],\r\n  50\r\n)",
+                "select": {
+                  "Property UID": "@item()?['Title']",
+                  "AVP Property URL": "@{item()?['{Link}']}",
+                  "List Name": "@item()?['ListName']",
+                  "RadarID": "@item()?['RadarID']",
+                  "PropertyRadar URL": "@item()?['PropertyURL']",
+                  "APN": "@item()?['APN']",
+                  "County": "@item()?['County']",
+                  "Address": "@item()?['Address']",
+                  "City": "@item()?['City']",
+                  "State": "@item()?['State']",
+                  "Est. Value (Source)": "@item()?['EstimatedValue']",
+                  "AVM": "@item()?['AVM']",
+                  "First Loan (Source)": "@item()?['FirstLoanAmount']",
+                  "First Amount": "@item()?['FirstAmount']",
+                  "First Loan Date": "@item()?['FirstLoanDate']",
+                  "First Date": "@item()?['FirstDate']",
+                  "First Loan Lender": "@item()?['FirstLoanLender']",
+                  "First Lender Original": "@item()?['FirstLenderOriginal']",
+                  "First Loan Purpose": "@item()?['FirstLoanPurpose']",
+                  "First Purpose": "@item()?['FirstPurpose']",
+                  "FirstLoanRate": "@item()?['FirstLoanRate']",
+                  "First Rate": "@item()?['FirstRate']",
+                  "Legal Owner": "@item()?['LegalOwner']",
+                  "Owner": "@item()?['Owner']",
+                  "Owner First Name": "@item()?['OwnerFirstName']",
+                  "Owner Last Name": "@item()?['OwnerLastName']",
+                  "Owner Spouse First Name": "@item()?['OwnerSpouseFirstName']",
+                  "Mailing Address": "@item()?['MailingAddress']",
+                  "Owner Address": "@item()?['OwnerAddress']",
+                  "Mailing City": "@item()?['MailingCity']",
+                  "Owner City": "@item()?['OwnerCity']",
+                  "Mailing State": "@item()?['MailingState']",
+                  "Owner State": "@item()?['OwnerState']",
+                  "Mailing Zip": "@item()?['MailingZip']",
+                  "Year Built": "@item()?['YearBuilt']",
+                  "Sq Ft (Source)": "@item()?['SqFt']",
+                  "Beds": "@item()?['Beds']",
+                  "Baths": "@item()?['Baths']",
+                  "Units (Source)": "@item()?['Units']",
+                  "Lot Size": "@item()?['LotSize']",
+                  "Acres (Source)": "@item()?['LotSizeAcres']",
+                  "Owner Zip Five": "@item()?['OwnerZipFive']",
+                  "Open Loans": "@item()?['OpenLoans']",
+                  "Equity Percent": "@item()?['EquityPercent']",
+                  "Number Loans": "@item()?['NumberLoans']",
+                  "Primary Contact Email": "@item()?['PrimaryContactEmail']",
+                  "Primary Email1": "@item()?['PrimaryEmail1']",
+                  "Primary Email1 Status": "@item()?['PrimaryEmail1Status']",
+                  "Primary Contact First": "@item()?['PrimaryContactFirst']",
+                  "Primary First Name": "@item()?['PrimaryFirstName']",
+                  "Primary Contact Last": "@item()?['PrimaryContactLast']",
+                  "Primary Last Name": "@item()?['PrimaryLastName']",
+                  "Primary Contact Phone": "@item()?['PrimaryContactPhone']",
+                  "Primary Phone1": "@item()?['PrimaryPhone1']",
+                  "Primary Phone1 Status": "@item()?['PrimaryPhone1Status']",
+                  "Primary Mobile Phone1 Status": "@item()?['PrimaryMobilePhone1Status']",
+                  "Secondary Phone1 Status": "@item()?['SecondaryPhone1Status']",
+                  "Secondary Mobile Phone1 Status": "@item()?['SecondaryMobilePhone1Status']",
+                  "Primary Mobile Phone1": "@item()?['PrimaryMobilePhone1']",
+                  "Secondary FirstName": "@item()?['SecondaryFirstName']",
+                  "Secondary Last Name": "@item()?['SecondaryLastName']",
+                  "Secondary Mobile Phone1": "@item()?['SecondaryMobilePhone1']",
+                  "Secondary Phone1": "@item()?['SecondaryPhone1']",
+                  "Secondary Email1": "@item()?['SecondaryEmail1']",
+                  "Secondary Email1 Status": "@item()?['SecondaryEmail1Status']",
+                  "Property Type": "@item()?['PropertyType']",
+                  "P Type": "@item()?['PType']",
+                  "Purchase Amount": "@item()?['PurchaseAmount']",
+                  "Last Transfer Value": "@item()?['LastTransferValue']",
+                  "Purchase Date": "@item()?['PurchaseDate']",
+                  "Last Transfer Rec Date": "@item()?['LastTransferRecDate']",
+                  "Purchase Seller": "@item()?['PurchaseSeller']",
+                  "Last Transfer Seller": "@item()?['LastTransferSeller']",
+                  "Purchase Type": "@item()?['PurchaseType']",
+                  "Last Transfer Type": "@item()?['LastTransferType']",
+                  "Zip": "@item()?['Zip']",
+                  "Zip Five": "@item()?['ZipFive']",
+                  "Photo URL1": "@item()?['PhotoURL1']",
+                  "Annual Taxes": "@item()?['AnnualTaxes']",
+                  "Assessed Value (Source)": "@item()?['AssessedValue']",
+                  "Available Equity": "@item()?['AvailableEquity']",
+                  "Days On Market": "@item()?['DaysOnMarket']",
+                  "Default Amount": "@item()?['DefaultAmount']",
+                  "Default As Of": "@item()?['DefaultAsOf']",
+                  "DOT Position": "@item()?['DOTPosition']",
+                  "Estimated Tax Rate": "@item()?['EstimatedTaxRate']",
+                  "Foreclosure Rec Date": "@item()?['ForeclosureRecDate']",
+                  "Foreclosure Stage": "@item()?['ForeclosureStage']",
+                  "in Foreclosure": "@item()?['inForeclosure']",
+                  "is Listed For Sale": "@item()?['isListedForSale']",
+                  "is Mail Vacant": "@item()?['isMailVacant']",
+                  "is Same Mailing Or Exempt": "@item()?['isSameMailingOrExempt']",
+                  "is Site Vacant": "@item()?['isSiteVacant']",
+                  "Listing Price": "@item()?['ListingPrice']",
+                  "Opening Bid": "@item()?['OpeningBid']",
+                  "Original Sale Date": "@item()?['OriginalSaleDate']",
+                  "Pool": "@item()?['Pool']",
+                  "Post Reason": "@item()?['PostReason']",
+                  "Previous Sale Date": "@item()?['PreviousSaleDate']",
+                  "Sale Amount (Source)": "@item()?['SaleAmount']",
+                  "Sale Date": "@item()?['SaleDate']",
+                  "Sale Date Relative": "@item()?['SaleDateRelative']",
+                  "Sale Place": "@item()?['SalePlace']",
+                  "Sale Time": "@item()?['SaleTime']",
+                  "Stories": "@item()?['Stories']",
+                  "Subdivision": "@item()?['Subdivision']",
+                  "Total Loan Balance": "@item()?['TotalLoanBalance']",
+                  "Winning Bid": "@item()?['WinningBid']",
+                  "Attorney": "@item()?['Attorney']",
+                  "Case Number": "@item()?['CaseNumber']",
+                  "LisPendens Type": "@item()?['LisPendensType']",
+                  "Longitude": "@item()?['Longitude']",
+                  "Latitude": "@item()?['Latitude']",
+                  "TriggerType": "@item()?['TriggerType']",
+                  "Change1": "@item()?['Change1']",
+                  "Change2": "@item()?['Change2']",
+                  "Change3": "@item()?['Change3']",
+                  "CoStar ID": "@item()?['CoStarID']",
+                  "Valuation Source": "@item()?['ValuationSource/Value']",
+                  "Valuation Status": "@item()?['ValuationStatus/Value']",
+                  "Report #1": "@item()?['ReferenceReport']",
+                  "Property Type (Full)": "@item()?['PropertyTypeFull/Value']",
+                  "CoStar Sale Comps": "@item()?['SaleComps']",
+                  "LTV %": "@item()?['LTV_x0025_']",
+                  "Property Source": "@item()?['PropertySource/Value']",
+                  "Costar $ (Size)": "@item()?['EstimatedValue_x0028_Computed_x0']",
+                  "#Comps": "@item()?['SaleCompsCount']",
+                  "Sq Ft (Validation)": "@item()?['SqFtValidation']",
+                  "Units (CoStar)": "@item()?['UnitsValidation']",
+                  "CoStar $ (Units)": "@item()?['CoStar_x0024__x0028_Units_x0029_']",
+                  "Files Folder": "@item()?['FilesFolder']",
+                  "Specific Type": "@item()?['SpecificType']",
+                  "Demographics": "@item()?['Demographics']",
+                  "Address Override": "@item()?['AddressOverride_x0028_ManualRevi']",
+                  "Work?": "@item()?['Work_x003f_']",
+                  "Notes": "@item()?['Notes']",
+                  "Period": "@item()?['Period']",
+                  "__Space": "@item()?['__Space']",
+                  "Issue": "@item()?['Issue/Value']",
+                  "HubSpot Deal Stage": "@item()?['Action/Value']",
+                  "Drop Reason": "@item()?['DropReason/Value']",
+                  "Legal Description 1": "@item()?['LegalDescription1']",
+                  "Legal Description 2": "@item()?['LegalDescription2']",
+                  "Loan Type": "@item()?['LoanType/Value']",
+                  "Mortgagor": "@item()?['Mortgagor']",
+                  "Mortgagee": "@item()?['Mortgagee']",
+                  "Trustee Name": "@item()?['Trustee']",
+                  "Volume": "@item()?['Volume']",
+                  "Loan Year": "@item()?['LoanYear']",
+                  "Loan Month": "@item()?['LoanMonth']",
+                  "Interest Rate": "@item()?['InterestRate']",
+                  "Monthly Payment": "@item()?['MonthlyPayment']",
+                  "Loan Expires Year": "@item()?['LoanExpiresYear']",
+                  "Loan Year Length": "@item()?['LoanYearLength']",
+                  "Previous Posting": "@item()?['PreviousPosting']",
+                  "Property Setup Status": "@item()?['PropertySetupStatus/Value']",
+                  "APN Match?": "@item()?['APNMatch']",
+                  "GIS Match?": "@item()?['GISMatch']",
+                  "Condition Rating": "@item()?['ConditionRating/Value']",
+                  "Roof Condition": "@item()?['RoofCondition/Value']",
+                  "Structural Issue": "@item()?['StructuralIssue']",
+                  "Hazard": "@item()?['Hazard']",
+                  "Condition Notes": "@item()?['ConditionNotes']",
+                  "Street View": "@item()?['StreetView']",
+                  "Block Risk Level": "@item()?['BlockRiskLevel/Value']",
+                  "Block Quality Rating": "@item()?['BlockQualityRating/Value']",
+                  "High-Impact Neighbor": "@item()?['HighImpactNeighbor']",
+                  "Occupancy Status": "@item()?['OccupancyStatus/Value']",
+                  "Owner Occupied": "@item()?['OwnerOccupied']",
+                  "Occupancy Confidence": "@item()?['OccupancyConfidence/Value']",
+                  "Occupancy Notes": "@item()?['OccupancyNotes']",
+                  "Market Trend": "@item()?['MarketTrend/Value']",
+                  "Market Value Low": "@item()?['MarketValueLow']",
+                  "Market Value High": "@item()?['MarketValueHigh']",
+                  "Market Rent Mid": "@item()?['MarketRentMid']",
+                  "Market Comps Count": "@item()?['MarketCompsCount']",
+                  "Comp 1 Address": "@item()?['Comp1Address']",
+                  "Comp 1 Sale Price": "@item()?['Comp1SalePrice']",
+                  "Comp 1 Sale Date": "@item()?['Comp1SaleDate']",
+                  "Comp 1 SQFT": "@item()?['Comp1SQFT']",
+                  "Comp 1 DOM": "@item()?['Comp1DOM']",
+                  "Comp 1 CoStar Value": "@item()?['Comp1CoStarValue']",
+                  "Comp 1 Adj Value": "@item()?['Comp1AdjValue']",
+                  "Comp 2 Address": "@item()?['Comp2Address']",
+                  "Comp 2 Sale Price": "@item()?['Comp2SalePrice']",
+                  "Comp 2 Sale Date": "@item()?['Comp2SaleDate']",
+                  "Comp 2 SQFT": "@item()?['Comp2SQFT']",
+                  "Comp 2 Adj Value": "@item()?['Comp2AdjValue']",
+                  "Comp 3 Address": "@item()?['Comp3Address']",
+                  "Comp 3 Sale Price": "@item()?['Comp3SalePrice']",
+                  "Comp 3 Sale Date": "@item()?['Comp3SaleDate']",
+                  "Comp 3 SQFT": "@item()?['Comp3SQFT']",
+                  "Comp 3 Adj Value": "@item()?['Comp3AdjValue']",
+                  "Owner Entity Type": "@item()?['OwnerEntityType/Value']",
+                  "Entity Status": "@item()?['EntityStatus/Value']",
+                  "Related Properties Count": "@item()?['RelatedPropertiesCount']",
+                  "Trustee Status": "@item()?['TrusteeStatus/Value']",
+                  "Trustee Rep Name": "@item()?['TrusteeRepName']",
+                  "Trustee Call Timestamp": "@item()?['TrusteeCallTimestamp']",
+                  "Opening Bid Subject to Change": "@item()?['OpeningBidSubjecttoChange']",
+                  "Payment Methods Allowed": "@item()?['PaymentMethodsAllowed/Value']",
+                  "Postponement History Count": "@item()?['PostponementHistoryCount']",
+                  "Original LTV Estimate": "@item()?['OriginalLTVEstimate']",
+                  "Loan Maturity Date": "@item()?['LoanMaturityDate']",
+                  "DOT Borrower Names": "@item()?['DOTBorrowerNames']",
+                  "Current Beneficiary Name": "@item()?['CurrentBeneficiaryName']",
+                  "Loan Modifications Exists": "@item()?['LoanModificationsExists']",
+                  "Debt Position Confidence": "@item()?['DebtPositionConfidence/Value']",
+                  "UPB Estimated": "@item()?['UPBEstimated']",
+                  "Accrued Interest Estimate": "@item()?['AccruedInterestEstimate']",
+                  "Fees Estimate": "@item()?['FeesEstimate']",
+                  "Reinstatement Amount Estimate": "@item()?['ReinstatementAmountEstimate']",
+                  "Payoff Amount Estimate": "@item()?['PayoffAmountEstimate']",
+                  "NOD Record Date": "@item()?['NODRecordDate']",
+                  "NOS Record Date": "@item()?['NOSRecordDate']",
+                  "Senior Lien Risk Level": "@item()?['SeniorLienRiskLevel/Value']",
+                  "IRS Lien Exists": "@item()?['IRSLienExists']",
+                  "Tax Lien Exists": "@item()?['TaxLienExists']",
+                  "HOA Lien Exists": "@item()?['HOALienExists']",
+                  "Judgment Lien Count": "@item()?['JudgmentLienCount']",
+                  "Municipal Lien Exists": "@item()?['MunicipalLienExists']",
+                  "Valuation Input Compilation": "@item()?['ValuationInputCompilation']",
+                  "Bankruptcy Impact": "@item()?['BankruptcyImpact/Value']",
+                  "Bankruptcy Case Number": "@item()?['BankruptcyCaseNumber']",
+                  "Bankruptcy Chapter": "@item()?['BankruptcyChapter/Value']",
+                  "Bankruptcy Status": "@item()?['BankruptcyStatus/Value']",
+                  "Bankruptcy Automatic Stay Active": "@item()?['BankruptcyAutomaticStayActive']",
+                  "Litigation Risk Level": "@item()?['LitigationRiskLevel/Value']",
+                  "Litigation Case Count": "@item()?['LitigationCaseCount']",
+                  "Lis Pendens?": "@item()?['LisPendens']",
+                  "Receivership?": "@item()?['ReceivershipExists']",
+                  "Environmental Risk Level": "@item()?['EnvironmentalRiskLevel/Value']",
+                  "Flood Zone Code": "@item()?['FloodZoneCode']",
+                  "Hazard Site Proximity?": "@item()?['HazardSiteProximity']",
+                  "Title Docs Complete": "@item()?['TitleDocsComplete']",
+                  "DOT Downloaded?": "@item()?['DOTDownloaded']",
+                  "Assignments Complete?": "@item()?['AssignmentsComplete']",
+                  "Substitution Of Trustee Downloaded": "@item()?['SubstitutionOfTrusteeDownloaded']",
+                  "Title Insurability": "@item()?['TitleInsurability/Value']",
+                  "Assignment Chain Intact?": "@item()?['AssignmentChainIntact']",
+                  "Access Legal?": "@item()?['AccessLegal']",
+                  "HOA SuperPriority Risk": "@item()?['HOASuperPriorityRisk/Value']",
+                  "HOA Balance Estimate": "@item()?['HOABalanceEstimate']",
+                  "PI Risk?": "@item()?['PIRisk']",
+                  "Overall Legal Title Risk": "@item()?['OverallLegalTitleRisk/Value']",
+                  "SR Condition Score": "@item()?['SRConditionScore']",
+                  "SR Debt Stack Risk": "@item()?['SRDebtStackRisk/Value']",
+                  "SR Legal Title Risk Score": "@item()?['SRLegalTitleRiskScore']",
+                  "Fire Sale Value Mid": "@item()?['FireSaleValueMid']",
+                  "Fire Sale Value Low": "@item()?['FireSaleValueLow']",
+                  "Fire Sale Value High": "@item()?['FireSaleValueHigh']",
+                  "Cost To Cure Total": "@item()?['CostToCureTotal']",
+                  "Repairs Low": "@item()?['RepairsLow']",
+                  "Repairs High": "@item()?['RepairsHigh']",
+                  "SR Pre-Bid Status": "@item()?['SRPre_x002d_BidStatus/Value']",
+                  "SR Max Bid Recommended": "@item()?['SRMaxBidRecommended']",
+                  "SR Max Bid Conservative": "@item()?['SRMaxBidConservative']",
+                  "SR Max Bid Aggressive": "@item()?['SRMaxBidAggressive']",
+                  "Sensitivity Pass Flag": "@item()?['SensitivityPass']",
+                  "Exit Strategy": "@item()?['ExitStrategy/Value']",
+                  "Pre-Exec Clear To Bid?": "@item()?['Pre_x002d_ExecClearToBid']",
+                  "Exec Package Complete?": "@item()?['ExecPackageComplete']",
+                  "Exec Decision": "@item()?['ExecDecision/Value']",
+                  "Bid Day Ready?": "@item()?['BidDayReady']",
+                  "Sale Period": "@item()?['Sale_x0020_Period']",
+                  "Filter Out": "@item()?['Past_x003f_']",
+                  "Zestimate": "@item()?['Zestimate']",
+                  "Acres (Validation)": "@item()?['LotSizeAcresValidation']",
+                  "Postponement": "@item()?['AVPCounter']",
+                  "County Length": "@item()?['CountyLength']",
+                  "Sale Description": "@item()?['SaleDescription']",
+                  "POV": "@item()?['POV']",
+                  "Confidence Rating": "@item()?['ConfidenceRating']",
+                  "Actual Land Use": "@item()?['ActualLandUse']",
+                  "Appraiser Link": "@item()?['AppraiserLink']",
+                  "Final Judgement Docs": "@item()?['FinalJudgementDocs']",
+                  "Bidding Link": "@item()?['BiddingLink']",
+                  "County Land Value": "@item()?['CountyLandValue']",
+                  "Defendants": "@item()?['Defendants']",
+                  "Final Judgement Amount": "@item()?['FinalJudgementAmount']",
+                  "Last Sale": "@item()?['LastSale']",
+                  "Plaintiff": "@item()?['Plaintiff']",
+                  "Plaintiff Max Bid": "@item()?['PlaintiffMaxBid']",
+                  "Previous Sale Price": "@item()?['PreviousSalePrice']",
+                  "Previous Sale Type": "@item()?['PreviousSaleType/Value']",
+                  "Sale Type": "@item()?['SaleType/Value']",
+                  "Sum Building SqFt": "@item()?['SumBuildingSqFt']",
+                  "Total Lien Amount": "@item()?['TotalLienAmount']",
+                  "Vacant Since": "@item()?['VacantSince']",
+                  "County Market Value": "@item()?['CountyMarketValue']",
+                  "Zone": "@item()?['Zone']",
+                  "Zone Details": "@item()?['ZoneDetails']",
+                  "New Record Type": "@item()?['NewRecordType']",
+                  "RadarMatch": "@item()?['RadarMatch']",
+                  "Radar Json": "@item()?['RadarJson']",
+                  "Title Search": "@item()?['TitleSearch']",
+                  "Report #2": "@item()?['Report_x0023_2']",
+                  "Redfin Estimate": "@item()?['RedfinEstimate']",
+                  "Lot Size (Validation)": "@item()?['LotSize_x0028_Validation_x0029_']",
+                  "Manual Trigger": "@item()?['TestTriggerCount']",
+                  "Assessed Improvement": "@item()?['AssessedImprovement']",
+                  "Assessed Land": "@item()?['AssessedLand']",
+                  "Assessment Footage": "@item()?['AssessmentFootage']",
+                  "FEMA Flood Map": "@item()?['FEMAFloodMap']",
+                  "Flood Zone Raw": "@item()?['FloodZoneRaw']",
+                  "Flood Zone Updated": "@item()?['FloodZoneUpdated']",
+                  "Land Economic Type": "@item()?['LandEconomicType']",
+                  "Mortgage 1 Position": "@item()?['Mortgage1Position']",
+                  "Mortgage 2": "@item()?['Mortgage2']",
+                  "Mortgage 3": "@item()?['Mortgage3']",
+                  "Right-of-Way Flag": "@item()?['RightofWayFlag']",
+                  "Public Access": "@item()?['PublicAccess']",
+                  "View or Influence": "@item()?['VieworInfluence']",
+                  "Deal Name": "@item()?['DealName']",
+                  "CoStar Report": "@item()?['CoStar_x0020_Report']",
+                  "HB Mortgagee": "@item()?['hb_mortgagee']",
+                  "Zillow Report": "@item()?['ZillowReport']",
+                  "Google Maps": "@item()?['hb_google_maps']",
+                  "Google Search": "@item()?['hb_google_search']",
+                  "Auction Cancelled": "@item()?['AuctionCancelled']",
+                  "Foreclosure Status": "@item()?['AuctionStatus']",
+                  "Land ID Link": "@item()?['LandIDLink']",
+                  "Realtor Estimate": "@item()?['RealtorEstimate']",
+                  "Report #3": "@item()?['Report3']",
+                  "ListImportItemID": "@item()?['ListImportItemID']",
+                  "SharePoint ID": "@item()?['ID']",
+                  "AVP Creation Date": "@item()?['Created']",
+                  "AVP Last Modified Date": "@item()?['Modified']",
+                  "Tax Search URL": "@item()?['TaxSearchURL']",
+                  "Assessor URL": "@item()?['AssessorURL']",
+                  "Recorder Search URL": "@item()?['RecorderSearchURL']",
+                  "Directions URL": "@item()?['DirectionsURL']",
+                  "Sale Place URL": "@item()?['SalePlaceURL']"
+                }
+              },
+              "runAfter": {
+                "Match_Properties": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Address_Fltr": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {},
+      "description": "When an agent calls the flow and send back a response."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

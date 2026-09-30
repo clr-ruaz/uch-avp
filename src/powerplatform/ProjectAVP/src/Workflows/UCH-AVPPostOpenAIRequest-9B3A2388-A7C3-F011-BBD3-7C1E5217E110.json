@@ -1,0 +1,224 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Azure OpenAI (Endpoint) (clr_UCHAVPAzureOpenAIEndpoint)": {
+          "defaultValue": "https://uch-openai.openai.azure.com/openai/responses?api-version=2025-04-01-preview",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPAzureOpenAIEndpoint"
+          }
+        },
+        "UCH-AVP Azure OpenAI (Secret Name) (clr_UCHAVPAzureOpenAISecretName)": {
+          "defaultValue": "UCH-OpenAI",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPAzureOpenAISecretName"
+          }
+        },
+        "UCH-AVP Azure OpenAI (Deployment) (clr_UCHAVPAzureOpenAIDeployment)": {
+          "defaultValue": "gpt-5.4",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPAzureOpenAIDeployment"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "System Message",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "User Message",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "boolean": {
+                  "description": "Please select yes or no",
+                  "title": "JSON Format",
+                  "type": "boolean",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "boolean"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "30cf42e3-fd13-4501-aba4-f2a52822a0bb"
+          }
+        }
+      },
+      "actions": {
+        "Get_OpenAI_Key": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "secretName": "@parameters('UCH-AVP Azure OpenAI (Secret Name) (clr_UCHAVPAzureOpenAISecretName)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+              "operationId": "GetSecret",
+              "connectionName": "shared_keyvault"
+            }
+          },
+          "runAfter": {
+            "User_Message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9e5ce284-5847-4824-869c-6cb0e01dd9d0"
+          }
+        },
+        "LLM_POST_Request": {
+          "type": "Http",
+          "inputs": {
+            "uri": "@parameters('UCH-AVP Azure OpenAI (Endpoint) (clr_UCHAVPAzureOpenAIEndpoint)')",
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json",
+              "api-key": "@{outputs('Get_OpenAI_Key')?['body/value']}"
+            },
+            "body": {
+              "model": "@parameters('UCH-AVP Azure OpenAI (Deployment) (clr_UCHAVPAzureOpenAIDeployment)')",
+              "input": [
+                {
+                  "role": "system",
+                  "content": "@triggerBody()?['text']"
+                },
+                {
+                  "role": "user",
+                  "content": "@body('User_Message')"
+                }
+              ],
+              "text": {
+                "format": {
+                  "type": "@if(\r\n  triggerBody()?['boolean'],\r\n  'json_object',\r\n  'text'\r\n)"
+                }
+              }
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 2,
+              "interval": "PT60S"
+            }
+          },
+          "runAfter": {
+            "Get_OpenAI_Key": [
+              "Succeeded"
+            ]
+          },
+          "limit": {
+            "timeout": "PT30M"
+          },
+          "operationOptions": "DisableAsyncPattern",
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "User_Message": {
+          "type": "Query",
+          "inputs": {
+            "from": "@json(outputs('Cleanup_String'))",
+            "where": "@equals(empty(item()?['type']),false)"
+          },
+          "runAfter": {
+            "Cleanup_String": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "response": {
+                  "title": "Response",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "response": "@{body('LLM_Response')?[0]?['content']?[0]?['text']}"
+            }
+          },
+          "runAfter": {
+            "LLM_Response": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Cleanup_String": {
+          "type": "Compose",
+          "inputs": "@replace(triggerBody()?['text_1'], '\\', '\\\\')",
+          "runAfter": {}
+        },
+        "LLM_Response": {
+          "type": "Query",
+          "inputs": {
+            "from": "@body('LLM_POST_Request')?['output']",
+            "where": "@equals(item()?['type'],'message')"
+          },
+          "runAfter": {
+            "LLM_POST_Request": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "480a2970-f07b-49f6-bfe1-938e1b10f199"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

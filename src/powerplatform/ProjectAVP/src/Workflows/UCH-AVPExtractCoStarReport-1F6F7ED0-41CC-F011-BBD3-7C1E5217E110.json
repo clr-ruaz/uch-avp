@@ -1,0 +1,1022 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (GPT Prompts) (clr_UCHAVPSharePointListGPTPrompts)": {
+          "defaultValue": "7737d1f4-74ad-44e9-8620-246995af22e8",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListGPTPrompts"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        },
+        "UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP SharePoint List (Sale Comps Summary) (clr_UCHAVPSharePointListSaleCompsSummary)": {
+          "defaultValue": "6569a2ae-63b4-4352-a241-ab04c36c9fac",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListSaleCompsSummary"
+          }
+        },
+        "UCH-AVP SharePoint List (Sale Comps Details) (clr_UCHAVPSharePointListSaleCompsDetails)": {
+          "defaultValue": "a044524a-14a4-4c2c-ae6f-b44540d4f80b",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListSaleCompsDetails"
+          }
+        },
+        "UCH-AVP SharePoint List (Demographics) (clr_UCHAVPSharePointListDemographics)": {
+          "defaultValue": "4fe60796-bc03-4672-bfd4-f250062aa793",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListDemographics"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        }
+      },
+      "triggers": {
+        "When_file_is_created": {
+          "type": "OpenApiConnection",
+          "description": "Condition: should contain one of these starting texts: condominium, misc residential, single family, industrial, land, multi, office, retail property, shopping center, student",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "Documents"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnUpdatedFileItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 1
+          },
+          "conditions": [
+            {
+              "expression": "@contains('industrial, land, multi, office, retail property, shopping center, student', toLower(split(triggerBody()?['{Name}'], '-')[0]))"
+            }
+          ],
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1,
+              "maximumWaitingRuns": 100
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "47b5992b-e5ff-4faf-826e-3b57c81b251d"
+          }
+        }
+      },
+      "actions": {
+        "Add_Summary": {
+          "type": "Scope",
+          "actions": {
+            "Each_Comp_List": {
+              "type": "Foreach",
+              "foreach": "@body('Sale_Comps_Data')?['Table']",
+              "actions": {
+                "Sale_Comps_Rows": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "Property Name - Address": "@{if(\r\n  empty(\r\n    item()?['Property Name - Address']\r\n  ),\r\n  item()?['Property Name / Address'],\r\n  item()?['Property Name - Address']\r\n)}",
+                      "Property Type": "@{item()?['Type']}",
+                      "Leased Size (SF)": "@item()?['Size (% Leased) (SF)']",
+                      "Sale Date": "@{if(\r\n  empty(\r\n    item()?['Sale']?['Sale Date']\r\n  ),\r\n  item()?['Sale Date'],\r\n  item()?['Sale']?['Sale Date']\r\n)}",
+                      "Built/Renovated": "@if(\r\n  empty(\r\n    string(item()?['Property']?['Yr Built'])\r\n  ),\r\n  item()?['Built/Renovated'],\r\n  item()?['Property']?['Yr Built']\r\n)",
+                      "Bldg SF": "@item()?['Property']?['Bldg SF']",
+                      "Units": "@item()?['Property']?['Units']",
+                      "Vacancy": "@item()?['Property']?['Vacancy']",
+                      "Price": "@if(\r\n  empty(\r\n    string(item()?['Sale']?['Price'])\r\n  ),\r\n  item()?['Price']?['Total'],\r\n  item()?['Sale']?['Price']\r\n)",
+                      "Price/Unit": "@item()?['Sale']?['Price/Unit']",
+                      "Price/SF": "@if(\r\n  empty(\r\n    string(item()?['Sale']?['Price/SF'])\r\n  ),\r\n  item()?['Price']?['Per SF'],\r\n  item()?['Sale']?['Price/SF']\r\n)",
+                      "Cap Rate": "@if(\r\n  empty(\r\n    string(item()?['Sale']?['Cap Rate'])\r\n  ),\r\n  item()?['Cap Rate'],\r\n  item()?['Sale']?['Cap Rate']\r\n)"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "Property Name - Address": {},
+                        "Property Type": {},
+                        "Leased Size (SF)": {},
+                        "Sale Date": {},
+                        "Built/Renovated": {},
+                        "Bldg SF": {},
+                        "Units": {},
+                        "Vacancy": {},
+                        "Price": {},
+                        "Price/Unit": {},
+                        "Price/SF": {},
+                        "Cap Rate": {}
+                      }
+                    }
+                  }
+                },
+                "Create_Comps_Item": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Sale Comps Details) (clr_UCHAVPSharePointListSaleCompsDetails)')",
+                      "item/Title": "@body('Sale_Comps_Rows')?['Property Name - Address']",
+                      "item/YrBuilt": "@body('Sale_Comps_Rows')?['Built/Renovated']",
+                      "item/SaleDate": "@body('Sale_Comps_Rows')?['Sale Date']",
+                      "item/BldgSF": "@body('Sale_Comps_Rows')?['Bldg SF']",
+                      "item/Units": "@body('Sale_Comps_Rows')?['Units']",
+                      "item/Vacancy": "@body('Sale_Comps_Rows')?['Vacancy']",
+                      "item/Price": "@body('Sale_Comps_Rows')?['Price']",
+                      "item/Price_x002f_Unit": "@body('Sale_Comps_Rows')?['Price/Unit']",
+                      "item/Price_x002f_SF": "@body('Sale_Comps_Rows')?['Price/SF']",
+                      "item/CapRate": "@body('Sale_Comps_Rows')?['Cap Rate']",
+                      "item/PropertyType": "@body('Sale_Comps_Rows')?['Property Type']",
+                      "item/ParentID/Id": "@outputs('Create_Comps_Hdr')?['body/ID']",
+                      "item/TargetProperty": "@outputs('Target_Property')",
+                      "item/LeasedSize_x0028_SF_x0029_": "@body('Sale_Comps_Rows')?['Leased Size (SF)']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PostItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Sale_Comps_Rows": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "Update_Comps_Hdr": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Create_Comps_Hdr": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Sale Comps Summary) (clr_UCHAVPSharePointListSaleCompsSummary)')",
+                  "item/Title": "@triggerBody()?['{FullPath}']",
+                  "item/PropertyType": "@body('Sale_Comps_Data')?['Property']?['Property Type']",
+                  "item/YearBuilt_x002f_Renov": "@body('Sale_Comps_Data')?['Property']?['Built/Renovated']",
+                  "item/RBA_x0028_SF_x0029_": "@body('Sale_Comps_Data')?['Property']?['RBA (SF)']",
+                  "item/Land_x0028_SF_x0029_": "@body('Sale_Comps_Data')?['Property']?['Land (SF)']",
+                  "item/No_x002e_ofUnits": "@body('Sale_Comps_Data')?['Property']?['No. of Units']",
+                  "item/PropertySize_x0028_SF_x0029_": "@body('Sale_Comps_Data')?['Property']?['Property Size (SF)']",
+                  "item/TypicalFloor_x0028_SF_x0029_": "@body('Sale_Comps_Data')?['Property']?['Typical Floor (SF)']",
+                  "item/AvgUnitSize_x0028_SF_x0029_": "@body('Sale_Comps_Data')?['Property']?['Avg. Unit Size (SF)']",
+                  "item/SaleComparables": "@outputs('Sale_Comparables')",
+                  "item/Stories": "@body('Sale_Comps_Data')?['Property']?['Stories']",
+                  "item/Avg_x002e_Price_x002f_Unit_x0028": "@body('Sale_Comps_Data')?['Sale Comps']?['Avg. Price/Unit (thous.)']",
+                  "item/AveragePrice_x0028_mil_x002e__x0": "@body('Sale_Comps_Data')?['Sale Comps']?['Average Price (mil.)']",
+                  "item/Avg_x002e_VacancyAtSale": "@body('Sale_Comps_Data')?['Sale Comps']?['Avg. Vacancy at Sale']",
+                  "item/Avg_x002e_Price_x002f_SF": "@body('Sale_Comps_Data')?['Sale Comps']?['Avg. Price/SF']",
+                  "item/DisclosedPricesCount": "@sub(\r\n  length(body('Sale_Comps_Data')?['Table']),\r\n  length(body('Undisclosed_Prices'))\r\n)",
+                  "item/UndisclosedPricesCount": "@length(body('Undisclosed_Prices'))",
+                  "item/SalePricePerAC_x0028_Avg_x0029_": "@body('Sale_Comps_Data')?['Property']?['Sale Price Per AC']",
+                  "item/UnderContractCount": "@length(body('Under_Contract'))",
+                  "item/ParentID/Id": "@first(body('Get_Property_Details')?['value'])?['ID']",
+                  "item/Avg_x002e_CapRate": "@body('Sale_Comps_Data')?['Sale Comps']?['Avg. Cap Rate']",
+                  "item/CoreFactor": "@body('Sale_Comps_Data')?['Property']?['Core Factor']",
+                  "item/GrossLeasableArea_x0028_SF_x0029": "@body('Sale_Comps_Data')?['Property']?['Gross Leasable Area (SF)']",
+                  "item/Floors": "@body('Sale_Comps_Data')?['Property']?['Floors']",
+                  "item/BuildingFAR": "@body('Sale_Comps_Data')?['Property']?['Building FAR']",
+                  "item/TargetProperty": "@outputs('Target_Property')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PostItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Demog_Link": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Undisclosed_Prices": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Sale_Comps_Data')?['Table']",
+                "where": "@equals(if(\r\n  equals(\r\n    toLower(split(triggerBody()?['{Name}'], '-')[0]),\r\n    'land'\r\n  ),\r\n  and(\r\n    empty(string(item()?['Price']?['Total'])),\r\n    empty(string(item()?['Price']?['Per SF']))\r\n  ),\r\n  and(\r\n    empty(string(item()?['Sale']?['Price'])),\r\n    empty(string(item()?['Sale']?['Price/SF'])),\r\n    empty(string(item()?['Sale']?['Price/Unit']))\r\n  )\r\n),true)"
+              },
+              "runAfter": {
+                "Sale_Comparables": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "119e9015-1d26-4a15-8752-32a0eeef19c7"
+              }
+            },
+            "Under_Contract": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Sale_Comps_Data')?['Table']",
+                "where": "@contains(if(\r\n  equals(\r\n    toLower(split(triggerBody()?['{Name}'], '-')[0]),\r\n    'land'\r\n  ),\r\n  toLower(string(item()?['Sale Date'])),\r\n  toLower(string(item()?['Sale']?['Sale Date']))\r\n),'under contract')"
+              },
+              "runAfter": {
+                "Undisclosed_Prices": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "119e9015-1d26-4a15-8752-32a0eeef19c7"
+              }
+            },
+            "Update_Comps_Hdr": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Sale Comps Summary) (clr_UCHAVPSharePointListSaleCompsSummary)')",
+                  "id": "@outputs('Create_Comps_Hdr')?['body/ID']",
+                  "item/SaleCompsList": "../@{outputs('Sale_Comps_List')}/AllItems.aspx?FilterField1=ParentID&FilterValue1=@{outputs('Create_Comps_Hdr')?['body/ID']}&FilterType1=Number&viewid=@{first(body('Comps_List_Views'))?['viewid']}",
+                  "item/Demographics": "@if(\r\n  empty(string(body('Sale_Comps_Data')?['Demographics']?['Population'])),\r\n  '',\r\n  outputs('Demog_Link')\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Demog_Exists": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Property_Size": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  empty(\r\n    string(body('Sale_Comps_Data')?['Property']?['Property Size (SF)'])\r\n  ),\r\n  if(\r\n    empty(\r\n      string(\r\n        body('Sale_Comps_Data')?['Property']?['RBA (SF)']\r\n      )\r\n    ),\r\n    if(\r\n      empty(\r\n        string(\r\n          body('Sale_Comps_Data')?['Property']?['Gross Leasable Area (SF)']\r\n        )\r\n      ),\r\n      body('Sale_Comps_Data')?['Property']?['Land (SF)'],\r\n      body('Sale_Comps_Data')?['Property']?['Gross Leasable Area (SF)']\r\n    ),\r\n    body('Sale_Comps_Data')?['Property']?['RBA (SF)']\r\n  ),\r\n  body('Sale_Comps_Data')?['Property']?['Property Size (SF)']\r\n)",
+              "runAfter": {
+                "Under_Contract": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Sale_Comparables": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  empty(string(body('Sale_Comps_Data')?['Sale Comps']?['Sale Comparables'])),\r\n  length(body('Sale_Comps_Data')?['Table']),\r\n  body('Sale_Comps_Data')?['Sale Comps']?['Sale Comparables']\r\n)"
+            },
+            "Target_Property": {
+              "type": "Compose",
+              "inputs": "@{first(body('Get_Property_Details')?['value'])?['Address']}, @{first(body('Get_Property_Details')?['value'])?['City']} @{first(body('Get_Property_Details')?['value'])?['State']} @{first(body('Get_Property_Details')?['value'])?['Zip']}",
+              "runAfter": {
+                "Property_Size": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Price_for_Size": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  and(\r\n    not(empty(string(outputs('Property_Size')))),\r\n    not(empty(string(body('Sale_Comps_Data')?['Sale Comps']?['Avg. Price/SF'])))\r\n  ),\r\n  mul(\r\n    outputs('Property_Size'),\r\n    body('Sale_Comps_Data')?['Sale Comps']?['Avg. Price/SF']\r\n  ),\r\n  if(\r\n    and(\r\n      not(empty(string(first(body('Get_Property_Details')?['value'])?['LotSizeAcres']))),\r\n      not(empty(string(body('Sale_Comps_Data')?['Property']?['Sale Price Per AC'])))\r\n    ),\r\n    mul(\r\n      first(body('Get_Property_Details')?['value'])?['LotSizeAcres'],\r\n      body('Sale_Comps_Data')?['Property']?['Sale Price Per AC']\r\n    ),\r\n    null\r\n  )\r\n)",
+              "runAfter": {
+                "Target_Property": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Price_for_Units": {
+              "type": "Compose",
+              "inputs": "@if(\n  and(\n    not(empty(string(body('Sale_Comps_Data')?['Property']?['No. of Units']))),\n    not(empty(string(body('Sale_Comps_Data')?['Sale Comps']?['Avg. Price/Unit (thous.)'])))\n  ),\n  mul(\n    body('Sale_Comps_Data')?['Property']?['No. of Units'],\n    mul(\n      body('Sale_Comps_Data')?['Sale Comps']?['Avg. Price/Unit (thous.)'],\n      1000\n    )\n  ),\n  null\n)",
+              "runAfter": {
+                "Price_for_Size": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "LTV_Pct": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  not(empty(string(first(body('Get_Property_Details')?['value'])?['FirstLoanAmount']))),\r\n  if(\r\n    empty(string(outputs('Price_for_Units'))),\r\n    if(\r\n      empty(string(outputs('Price_for_Size'))),\r\n      null,\r\n      if(\r\n        and(\r\n          greater(\r\n            first(body('Get_Property_Details')?['value'])?['FirstLoanAmount'],\r\n            0\r\n          ),\r\n          greater(\r\n            outputs('Price_for_Size'),\r\n            0\r\n          )\r\n        ),\r\n        div(\r\n          first(body('Get_Property_Details')?['value'])?['FirstLoanAmount'],\r\n          outputs('Price_for_Size')\r\n        ),\r\n        null\r\n      )\r\n    ),\r\n    if(\r\n      and(\r\n        greater(\r\n          first(body('Get_Property_Details')?['value'])?['FirstLoanAmount'],\r\n          0\r\n        ),\r\n        greater(\r\n          outputs('Price_for_Units'),\r\n          0\r\n        )\r\n      ),\r\n      div(\r\n        first(body('Get_Property_Details')?['value'])?['FirstLoanAmount'],\r\n        outputs('Price_for_Units')\r\n      ),\r\n      null\r\n    )\r\n  ),\r\n  null\r\n)",
+              "runAfter": {
+                "Price_for_Units": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Demog_Link": {
+              "type": "Compose",
+              "inputs": "../@{outputs('Demographics')}/AllItems.aspx?FilterField1=ParentID&FilterValue1=@{first(body('Get_Property_Details')?['value'])?['ID']}&FilterType1=Number",
+              "runAfter": {
+                "LTV_Pct": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Demog_Exists": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(string(body('Sale_Comps_Data')?['Demographics']?['Population']))",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Create_Demog": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Demographics) (clr_UCHAVPSharePointListDemographics)')",
+                      "item/Title": "@outputs('Target_Property')",
+                      "item/Population": "@body('Sale_Comps_Data')?['Demographics']?['Population']",
+                      "item/Avg_x002e_HHSize": "@body('Sale_Comps_Data')?['Demographics']?['Avg. HH Size']",
+                      "item/Avg_x002e_Age": "@body('Sale_Comps_Data')?['Demographics']?['Avg. Age']",
+                      "item/Med_x002e_HHInc": "@body('Sale_Comps_Data')?['Demographics']?['Med. HH Inc']",
+                      "item/MileRadius": "@body('Sale_Comps_Data')?['Demographics']?['Mile Radius']",
+                      "item/ParentID/Id": "@first(body('Get_Property_Details')?['value'])?['ID']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PostItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Create_Comps_Hdr": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Extract_Content": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aecfefc5-1592-4ff4-aabc-7ebf6c92b3dd"
+          }
+        },
+        "Send_an_email_about_Comps_Header_fail": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+              "emailMessage/To": "@parameters('UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)')",
+              "emailMessage/Subject": "UCH-AVP Alert @{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Error adding Sale Comps Summary",
+              "emailMessage/Body": "<p class=\"editor-paragraph\">There was an error creating the Sale Comps Summary for Property @{first(body('Get_Property_Details')?['value'])?['Title']} based on @{triggerBody()?['{FilenameWithExtension}']}; please report this issue to your Automation Development team.</p>",
+              "emailMessage/Importance": "High"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "SharedMailboxSendEmailV2",
+              "connectionName": "shared_office365"
+            }
+          },
+          "runAfter": {
+            "Add_Summary": [
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a9757e49-9b16-4830-b174-7c920383693d"
+          }
+        },
+        "Get_SPList_Refs": {
+          "type": "Scope",
+          "actions": {
+            "Sale_Comps_List": {
+              "type": "Compose",
+              "inputs": "@substring(\r\n  replace(\r\n    body('Get_Sale_Comps_List')?['d']?['EntityTypeName'],\r\n    '_x0020_',\r\n    ' '\r\n  ),\r\n  0,\r\n  sub(\r\n    length(\r\n        replace(\r\n          body('Get_Sale_Comps_List')?['d']?['EntityTypeName'],\r\n          '_x0020_',\r\n          ' '\r\n        )\r\n      ),\r\n      4\r\n  )\r\n)",
+              "runAfter": {
+                "Sale_Comps_Header": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "83e1d2ac-df99-4f36-b6fa-125e704a3b6e"
+              }
+            },
+            "Sale_Comps_Header": {
+              "type": "Compose",
+              "inputs": "@substring(\r\n  replace(\r\n    body('Get_Sale_Comps_Hdr')?['d']?['EntityTypeName'],\r\n    '_x0020_',\r\n    ' '\r\n  ),\r\n  0,\r\n  sub(\r\n    length(\r\n        replace(\r\n          body('Get_Sale_Comps_Hdr')?['d']?['EntityTypeName'],\r\n          '_x0020_',\r\n          ' '\r\n        )\r\n      ),\r\n      4\r\n  )\r\n)",
+              "runAfter": {
+                "Get_Demographics": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d5dfbb64-b782-433a-b6cd-ff614fbfa3cb"
+              }
+            },
+            "Get_Sale_Comps_List": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Sale Comps Details) (clr_UCHAVPSharePointListSaleCompsDetails)')}')?$select=Title,EntityTypeName"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Get_Sale_Comps_Hdr": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1bbde558-9db4-4ff5-98c6-f6f5f349fdba"
+              }
+            },
+            "Get_Sale_Comps_Hdr": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Sale Comps Summary) (clr_UCHAVPSharePointListSaleCompsSummary)')}')?$select=Title,EntityTypeName"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Get_Property_Details": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cbeb7b77-ef3d-4e86-b93f-7e750b207864"
+              }
+            },
+            "Get_Property_Details": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "$filter": "Title eq '@{split(\n  triggerBody()?['{FullPath}'],\n  '/'\n)[1]}'"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 5000
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "ca5bcfc6-2e65-4881-8e46-b27c2b531d23"
+              }
+            },
+            "Comps_Hdr_Views": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  {
+                    "type": "industrial",
+                    "viewid": "87bbcdeb-1d47-4e9c-bda7-dde8c98ba37b"
+                  },
+                  {
+                    "type": "land",
+                    "viewid": "ee0d753d-a2a1-4c0f-81a3-c56dc5a685a3"
+                  },
+                  {
+                    "type": "multi",
+                    "viewid": "33935c8a-39ee-4036-a46a-3f7181e6e07d"
+                  },
+                  {
+                    "type": "office",
+                    "viewid": "2bacbc64-8432-46af-9a7a-0c13ba248830"
+                  },
+                  {
+                    "type": "retail property",
+                    "viewid": "c5981c69-cce1-4ae2-8dec-406bf939bf19"
+                  },
+                  {
+                    "type": "shopping center",
+                    "viewid": "6156078f-5fbd-4c76-aebe-e22c39a9426e"
+                  },
+                  {
+                    "type": "student",
+                    "viewid": "33935c8a-39ee-4036-a46a-3f7181e6e07d"
+                  }
+                ],
+                "where": "@equals(item()?['type'],toLower(\n  split(\n    triggerBody()?['{Name}'],\n    '-'\n  )[0]\n))"
+              },
+              "runAfter": {
+                "Demographics": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Comps_List_Views": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  {
+                    "type": "industrial",
+                    "viewid": "136d5f6e-2c85-47cf-98ed-e5811f2769d8"
+                  },
+                  {
+                    "type": "land",
+                    "viewid": "891ed917-fcf1-4551-9868-2c68519f9dc6"
+                  },
+                  {
+                    "type": "multi",
+                    "viewid": "b37a4003-1db2-4191-aa76-8e1b11db9d95"
+                  },
+                  {
+                    "type": "office",
+                    "viewid": "136d5f6e-2c85-47cf-98ed-e5811f2769d8"
+                  },
+                  {
+                    "type": "retail property",
+                    "viewid": "136d5f6e-2c85-47cf-98ed-e5811f2769d8"
+                  },
+                  {
+                    "type": "student",
+                    "viewid": "136d5f6e-2c85-47cf-98ed-e5811f2769d8"
+                  }
+                ],
+                "where": "@equals(item()?['type'],toLower(\n  split(\n    triggerBody()?['{Name}'],\n    '-'\n  )[0]\n))"
+              },
+              "runAfter": {
+                "Comps_Hdr_Views": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Demographics": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Demographics) (clr_UCHAVPSharePointListDemographics)')}')?$select=Title,EntityTypeName"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Get_Sale_Comps_List": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cbeb7b77-ef3d-4e86-b93f-7e750b207864"
+              }
+            },
+            "Demographics": {
+              "type": "Compose",
+              "inputs": "@substring(\r\n  replace(\r\n    body('Get_Demographics')?['d']?['EntityTypeName'],\r\n    '_x0020_',\r\n    ' '\r\n  ),\r\n  0,\r\n  sub(\r\n    length(\r\n        replace(\r\n          body('Get_Demographics')?['d']?['EntityTypeName'],\r\n          '_x0020_',\r\n          ' '\r\n        )\r\n      ),\r\n      4\r\n  )\r\n)",
+              "runAfter": {
+                "Sale_Comps_List": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d5dfbb64-b782-433a-b6cd-ff614fbfa3cb"
+              }
+            }
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "f8b00e5e-7745-42db-881b-667b433aca77"
+          }
+        },
+        "Extract_Content": {
+          "type": "Scope",
+          "actions": {
+            "Get_System_Prompt": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (GPT Prompts) (clr_UCHAVPSharePointListGPTPrompts)')",
+                  "$filter": "Title eq '@{toLower(\n  split(\n    triggerBody()?['{Name}'],\n    '-'\n  )[0]\n)}'"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "f3904dd5-fa81-4e66-80c7-c3a83a968c91"
+              }
+            },
+            "System_Message": {
+              "type": "Compose",
+              "inputs": "@first(body('Get_System_Prompt')?['value'])?['SystemPrompt']",
+              "runAfter": {
+                "Get_System_Prompt": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2c4221c7-1902-4d7d-ac3f-5a1c07560be5"
+              }
+            },
+            "Get_File_Content": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "id": "@triggerBody()?['{Identifier}']",
+                  "inferContentType": true
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetFileContent",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "System_Message": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b2b46386-6187-45d8-a068-a735e93efaa6"
+              }
+            },
+            "User_Message": {
+              "type": "Compose",
+              "inputs": [
+                {
+                  "type": "input_file",
+                  "filename": "@{triggerBody()?['{FilenameWithExtension}']}",
+                  "file_data": "data:application/pdf;base64,@{base64(body('Get_File_Content'))}"
+                },
+                {
+                  "type": "input_text",
+                  "text": "Extract the relevant content from the PDF document."
+                }
+              ],
+              "runAfter": {
+                "Get_File_Content": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "37c9d068-ca68-42fd-8325-f784cbaaf521"
+              }
+            },
+            "Post_OpenAI_Request": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "9b3a2388-a7c3-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "@outputs('System_Message')",
+                  "text_1": "@string(outputs('User_Message'))",
+                  "boolean": true
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 3,
+                  "interval": "PT20S"
+                }
+              },
+              "runAfter": {
+                "User_Message": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7cc0f9f2-d3dd-4eb7-86c2-2589f9eee255"
+              }
+            },
+            "Extracted_Data": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@json(body('Post_OpenAI_Request')?['response'])",
+                "schema": {}
+              },
+              "runAfter": {
+                "Post_OpenAI_Request": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7232a0d5-3b21-4660-a1c1-f3ed52b6738c"
+              }
+            },
+            "Send_an_email_alert": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                  "emailMessage/To": "@parameters('UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)')",
+                  "emailMessage/Subject": "UCH-AVP Alert @{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Error extracting report content",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">There was an error extracting the content of @{triggerBody()?['{FullPath}']}; see below for details:</p><p class=\"editor-paragraph\">@{body('Post_OpenAI_Request')?['error']?['message']}</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2",
+                  "connectionName": "shared_office365"
+                }
+              },
+              "runAfter": {
+                "Post_OpenAI_Request": [
+                  "Failed"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "372571ff-29e3-4888-a806-61c84c678789"
+              }
+            },
+            "Terminate": {
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed"
+              },
+              "runAfter": {
+                "Update_Property_Status_to_Failed": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0cc6df93-ac45-4d46-ad86-20297054469a"
+              }
+            },
+            "Update_Property_Status_to_Failed": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@first(body('Get_Property_Details')?['value'])?['ID']",
+                  "item/Title": "@first(body('Get_Property_Details')?['value'])?['Title']",
+                  "item/RadarID": "@first(body('Get_Property_Details')?['value'])?['RadarID']",
+                  "item/ValuationStatus/Value": "Failed"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Send_an_email_alert": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "247da382-179c-4d99-802f-8dd4f65ce74c"
+              }
+            },
+            "Sale_Comps_Data": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": {
+                  "Property": {
+                    "Property Type": "@{body('Extracted_Data')?['Subject Property']?['Property']?['Type']}",
+                    "Built/Renovated": "@{body('Extracted_Data')?['Subject Property']?['Property']?['Year Built/Renov']}",
+                    "RBA (SF)": "@body('Extracted_Data')?['Subject Property']?['Property']?['Rentable Building Area (SF)']",
+                    "Land (SF)": "@if(\n  empty(\n    string(\n      body('Extracted_Data')?['Subject Property']?['Property']?['Land Square Feet (SF)']\n    )\n  ),\n  body('Extracted_Data')?['Subject Property']?['Property']?['Land SF (SF)'],\n  body('Extracted_Data')?['Subject Property']?['Property']?['Land Square Feet (SF)']\n)",
+                    "Property Size (SF)": "@body('Extracted_Data')?['Subject Property']?['Property']?['Property Size (SF)']",
+                    "No. of Units": "@body('Extracted_Data')?['Subject Property']?['Property']?['No. of Units']",
+                    "Stories": "@body('Extracted_Data')?['Subject Property']?['Property']?['Stories']",
+                    "Floors": "@body('Extracted_Data')?['Subject Property']?['Property']?['Floors']",
+                    "Core Factor": "@body('Extracted_Data')?['Subject Property']?['Property']?['Core Factor']",
+                    "Typical Floor (SF)": "@body('Extracted_Data')?['Subject Property']?['Property']?['Typical Floor (SF)']",
+                    "Avg. Unit Size (SF)": "@body('Extracted_Data')?['Subject Property']?['Property']?['Avg. Unit Size (SF)']",
+                    "Gross Leasable Area (SF)": "@body('Extracted_Data')?['Subject Property']?['Property']?['Gross Leasable Area (GLA) (SF)']",
+                    "Building FAR": "@body('Extracted_Data')?['Subject Property']?['Property']?['Building Floor Area Ratio (FAR)']",
+                    "Sale Price Per AC": "@body('Extracted_Data')?['Sale Comps Map & List Report']?['Sale Comparables Summary Statistics']?['Sale Price Per AC']?['Average']",
+                    "Zestimate": "@body('Extracted_Data')?['Subject Property']?['Property']?['Zestimate']",
+                    "Lot (Acre)": "@body('Extracted_Data')?['Subject Property']?['Property']?['Lot (Acres)']"
+                  },
+                  "Sale Comps": {
+                    "Sale Comparables": "@if(\n  empty(\n    string(\n      body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Sale Comparables']\n    )\n  ),\n  body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Sale Comparables'],\n  body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Sale Comparables']\n)",
+                    "Avg. Cap Rate": "@if(\n  empty(\n    string(\n      body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Avg. Cap Rate']\n    )\n  ),\n  body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Avg. Cap Rate'],\n  body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Avg. Cap Rate']\n)",
+                    "Avg. Price/SF": "@if(\n  empty(\n    string(\n      body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Avg. Price/SF']\n    )\n  ),\n  body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Avg. Price/SF'],\n  body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Avg. Price/SF']\n)",
+                    "Avg. Vacancy at Sale": "@if(\n  empty(\n    string(\n      body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Avg. Vacancy At Sale']\n    )\n  ),\n  body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Avg. Vacancy At Sale'],\n  body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Avg. Vacancy At Sale']\n)",
+                    "Avg. Price/Unit (thous.)": "@body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Avg. Price/Unit (thous)']",
+                    "Average Price (mil.)": "@body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Average Price (mil)']"
+                  },
+                  "Table": "@if(\r\n  empty(\r\n    body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Table']\r\n  ),\r\n  if(\r\n    empty(\r\n      body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Table']\r\n    ),\r\n    if(\r\n      empty(\r\n        body('Extracted_Data')?['Sale Comps Map & List Report']?['Sale Comps List']\r\n      ),\r\n      json('[]'),\r\n      body('Extracted_Data')?['Sale Comps Map & List Report']?['Sale Comps List']\r\n    ),\r\n    body('Extracted_Data')?['Sales Comps']?['Sale Comparables Summary']?['Table']\r\n  ),\r\n  body('Extracted_Data')?['Sales Comps']?['Investment Trends']?['Table']\r\n)",
+                  "Demographics": {
+                    "Population": "@body('Extracted_Data')?['Demographics']?['Population']",
+                    "Avg. HH Size": "@body('Extracted_Data')?['Demographics']?['Avg. HH Size']",
+                    "Avg. Age": "@body('Extracted_Data')?['Demographics']?['Avg. Age']",
+                    "Med. HH Inc": "@body('Extracted_Data')?['Demographics']?['Med. HH Inc']",
+                    "Mile Radius": "@body('Extracted_Data')?['Demographics']?['Mile Radius']"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Property": {
+                      "type": "object",
+                      "properties": {
+                        "Property Type": {},
+                        "Built/Renovated": {},
+                        "RBA (SF)": {},
+                        "Land (SF)": {},
+                        "Property Size (SF)": {},
+                        "No. of Units": {},
+                        "Stories": {},
+                        "Floors": {},
+                        "Core Factor": {},
+                        "Typical Floor (SF)": {},
+                        "Avg. Unit Size (SF)": {},
+                        "Gross Leasable Area (SF)": {},
+                        "Building FAR": {},
+                        "Sale Price Per AC": {}
+                      }
+                    },
+                    "Sale Comps": {
+                      "type": "object",
+                      "properties": {
+                        "Sale Comparables": {},
+                        "Avg. Cap Rate": {},
+                        "Avg. Price/SF": {},
+                        "Avg. Vacancy at Sale": {},
+                        "Avg. Price/Unit (thous.)": {},
+                        "Average Price (mil.)": {}
+                      }
+                    },
+                    "Table": {},
+                    "Demographics": {
+                      "Population": {},
+                      "Avg. HH Size": {},
+                      "Avg. Age": {},
+                      "Med. HH Inc": {},
+                      "Mile Radius": {}
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Extracted_Data": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_SPList_Refs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c4b6e77c-ef48-49cb-ba77-218e4c707c51"
+          }
+        },
+        "Set_Property_Status": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@first(body('Get_Property_Details')?['value'])?['ID']",
+              "item/Title": "@first(body('Get_Property_Details')?['value'])?['Title']",
+              "item/RadarID": "@first(body('Get_Property_Details')?['value'])?['RadarID']",
+              "item/ValuationStatus/Value": "Failed (Extraction)"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "PatchItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Send_an_email_about_Comps_Header_fail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ec5964fb-1984-4c91-a1f8-bea8203483c5"
+          }
+        },
+        "Update_Property": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@first(body('Get_Property_Details')?['value'])?['ID']",
+              "item/Title": "@first(body('Get_Property_Details')?['value'])?['Title']",
+              "item/RadarID": "@first(body('Get_Property_Details')?['value'])?['RadarID']",
+              "item/EstimatedValue_x0028_Computed_x0": "@outputs('Price_for_Size')",
+              "item/CoStar_x0024__x0028_Units_x0029_": "@outputs('Price_for_Units')",
+              "item/SqFtValidation": "@outputs('Property_Size')",
+              "item/SaleCompsCount": "@outputs('Sale_Comparables')",
+              "item/ReferenceReport": "@triggerBody()?['{FullPath}']",
+              "item/SaleComps": "../@{outputs('Sale_Comps_Header')}/AllItems.aspx?FilterField1=ParentID&FilterValue1=@{first(body('Get_Property_Details')?['value'])?['ID']}&FilterType1=Number&viewid=@{first(body('Comps_Hdr_Views'))?['viewid']}",
+              "item/FilesFolder": "@triggerBody()?['{Path}']",
+              "item/Issue/Value": "Incomplete Valuation",
+              "item/PropertyTypeFull/Value": "@split(\n  triggerBody()?['{Name}'],\n  '-'\n)[0]",
+              "item/SpecificType": "@body('Sale_Comps_Data')?['Property']?['Property Type']",
+              "item/Demographics": "@if(\r\n  empty(string(body('Sale_Comps_Data')?['Demographics']?['Population'])),\r\n  '',\r\n  outputs('Demog_Link')\r\n)",
+              "item/Zestimate": "@body('Sale_Comps_Data')?['Property']?['Zestimate']",
+              "item/UnitsValidation": "@body('Sale_Comps_Data')?['Property']?['No. of Units']",
+              "item/LotSizeAcresValidation": "@body('Sale_Comps_Data')?['Property']?['Lot (Acres)']",
+              "item/CoStarUploadTimestamp": "@formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ssZ')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "PatchItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Add_Summary": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dc5db0f7-7751-4b69-a5c7-828d6b602d07"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

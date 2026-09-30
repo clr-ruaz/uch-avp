@@ -1,0 +1,325 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (Activity Stream) (clr_UCHAVPSharePointListActivityStream)": {
+          "defaultValue": "6dc132cb-a7e3-4efe-ab2b-96113188a313",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListActivityStream"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP HubSpot API (Endpoint) (clr_UCHAVPHubSpotAPIEndpoint)": {
+          "defaultValue": "https://api.hubapi.com/crm/v3",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotAPIEndpoint"
+          }
+        },
+        "UCH-AVP HubSpot API (Secret) (clr_UCHAVPHubSpotAPISecret)": {
+          "defaultValue": "UCH-HubSpot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotAPISecret"
+          }
+        },
+        "UCH-AVP HubSpot Data (Radar Activity Obj ID) (clr_UCHAVPHubSpotDataObjIDRadarActtivity)": {
+          "defaultValue": "2-227300239",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotDataObjIDRadarActtivity"
+          }
+        },
+        "UCH-AVP HubSpot Data (Radar Activity Type Json) (clr_UCHAVPHubSpotDataRadarActivityTypeJson)": {
+          "defaultValue": {
+            "associationCategory": "USER_DEFINED",
+            "associationTypeId": 73
+          },
+          "type": "Object",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotDataRadarActivityTypeJson"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "UCH-AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created_or_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Activity Stream) (clr_UCHAVPSharePointListActivityStream)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnUpdatedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1,
+              "maximumWaitingRuns": 100
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "dbd6270e-0c67-4c05-b340-3dea6c09fdec"
+          }
+        }
+      },
+      "actions": {
+        "Get_HubSpot_Secret": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "secretName": "@parameters('UCH-AVP HubSpot API (Secret) (clr_UCHAVPHubSpotAPISecret)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+              "operationId": "GetSecret",
+              "connectionName": "shared_keyvault"
+            }
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "93eff48e-5633-4e6a-aa26-2caa3ebb2e08"
+          }
+        },
+        "Find_Deal_Match": {
+          "type": "Http",
+          "inputs": {
+            "uri": "@{parameters('UCH-AVP HubSpot API (Endpoint) (clr_UCHAVPHubSpotAPIEndpoint)')}/objects/deals/search",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer @{outputs('Get_HubSpot_Secret')?['body/value']}"
+            },
+            "body": {
+              "filterGroups": [
+                {
+                  "filters": [
+                    {
+                      "propertyName": "sharepointlist_id",
+                      "operator": "EQ",
+                      "value": "@{triggerBody()?['ParentID']}"
+                    }
+                  ]
+                }
+              ],
+              "properties": [
+                "property_uid",
+                "dealname",
+                "dealstage",
+                "pipeline"
+              ],
+              "limit": 10
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT5S"
+            }
+          },
+          "runAfter": {
+            "Get_HubSpot_Secret": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "577ae04f-8eef-4a83-a00b-3b2a8327930b"
+          }
+        },
+        "Existing_Deal": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(body('Find_Deal_Match')?['results'])",
+                  "@false"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Add_Radar_Activity": {
+              "type": "Http",
+              "description": "Switched values for rec_date and logged, because sometimes rec_date is null.",
+              "inputs": {
+                "uri": "@{parameters('UCH-AVP HubSpot API (Endpoint) (clr_UCHAVPHubSpotAPIEndpoint)')}/objects/@{parameters('UCH-AVP HubSpot Data (Radar Activity Obj ID) (clr_UCHAVPHubSpotDataObjIDRadarActtivity)')}",
+                "method": "POST",
+                "headers": {
+                  "Authorization": "Bearer @{outputs('Get_HubSpot_Secret')?['body/value']}",
+                  "Content-Type": "application/json"
+                },
+                "body": {
+                  "properties": {
+                    "rec_date": "@formatDateTime(\n  triggerBody()?['Created'],\n  'yyyy-MM-dd'\n)",
+                    "logged": "@triggerBody()?['ForeclosureRecDate']",
+                    "activity": "@triggerBody()?['Activity']"
+                  },
+                  "associations": [
+                    {
+                      "to": {
+                        "id": "@first(body('Find_Deal_Match')?['results'])?['id']"
+                      },
+                      "types": [
+                        "@parameters('UCH-AVP HubSpot Data (Radar Activity Type Json) (clr_UCHAVPHubSpotDataRadarActivityTypeJson)')"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "770d0fee-9c45-4ffc-924b-45ed08fedc5f"
+              }
+            },
+            "Send_email_alert": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                  "emailMessage/To": "@parameters('UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)')",
+                  "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed HubSpot operation (Activity Stream ID @{triggerBody()?['ID']})",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encountered an error when attempting to record an activity in HubSpot (Activity Stream ID @{triggerBody()?['ID']}); see the error details below.</p><p class=\"editor-paragraph\">@{body('Add_Radar_Activity')?['message']}@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2",
+                  "connectionName": "shared_office365"
+                }
+              },
+              "runAfter": {
+                "Add_Radar_Activity": [
+                  "Failed"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e86e41a3-4d4a-4d22-bd11-a253ef6cc632"
+              }
+            },
+            "Log_as_Failed_Run": {
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed"
+              },
+              "runAfter": {
+                "Send_email_alert": [
+                  "SUCCEEDED"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Find_Deal_Match": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b57b22aa-e4dc-44bc-b398-df870f281eba"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

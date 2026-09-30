@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPRunMode">
+  <defaultvalue>Unattended</defaultvalue>
+  <displayname default="UCH-AVP Run Mode">
+    <label description="UCH-AVP Run Mode" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPNotificationProjectName">
+  <defaultvalue>AVP</defaultvalue>
+  <displayname default="UCH-AVP Notification (Project Name)">
+    <label description="UCH-AVP Notification (Project Name)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.3</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

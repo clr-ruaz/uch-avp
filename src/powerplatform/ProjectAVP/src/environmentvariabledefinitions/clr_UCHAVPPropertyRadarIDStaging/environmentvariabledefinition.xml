@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPPropertyRadarIDStaging">
+  <defaultvalue>1194940</defaultvalue>
+  <displayname default="UCH-AVP PropertyRadar (List ID | Staging)">
+    <label description="UCH-AVP PropertyRadar (List ID | Staging)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.9</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

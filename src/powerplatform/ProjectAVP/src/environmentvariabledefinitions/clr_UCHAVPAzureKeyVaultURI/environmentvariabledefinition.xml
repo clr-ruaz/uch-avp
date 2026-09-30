@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPAzureKeyVaultURI">
+  <defaultvalue>https://avp-vault.vault.azure.net/</defaultvalue>
+  <displayname default="UCH-AVP Azure Key Vault (URI)">
+    <label description="UCH-AVP Azure Key Vault (URI)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.9</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

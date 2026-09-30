@@ -1,0 +1,25 @@
+{
+  "Folders": [],
+  "Images": [
+    {
+      "Id": "370348a1-ba20-44e8-a007-8099af2266f6",
+      "Name": "Human Verification",
+      "Screenshot": null,
+      "ScreenshotPath": "imageRepo-screenshots\\16716118-2de7-4500-8988-be89e7740543.png"
+    },
+    {
+      "Id": "43f3b235-7a62-4966-a273-2b76484a110c",
+      "Name": "Human Verification - Success",
+      "Screenshot": null,
+      "ScreenshotPath": "imageRepo-screenshots\\8a624e68-318d-4620-ad5b-d952a591ff23.png"
+    },
+    {
+      "Id": "0464d2ef-b370-408e-90f8-e8b465d63000",
+      "Name": "PX-Human Verification Button",
+      "Screenshot": null,
+      "ScreenshotPath": "imageRepo-screenshots\\39864af5-0a98-465e-9d3d-38d4a664989b.png"
+    }
+  ],
+  "Version": 1,
+  "saveId": "c607c282-e21d-44e1-ad35-da474cc2a8b7"
+}

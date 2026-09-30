@@ -1,0 +1,17 @@
+{
+  "authProfileName": "UCH-AVP",
+  "tenantId": "",
+  "environmentId": "",
+  "environmentUrl": "",
+  "environmentType": "",
+  "solutionUniqueName": "ProjectAVP",
+  "solutionProjectPath": "src/powerplatform/ProjectAVP",
+  "solutionSourcePath": "src/powerplatform/ProjectAVP/src",
+  "artifactPath": ".artifacts/powerplatform",
+  "artifactHints": {
+    "environmentDisplayName": "xxxxxxxxxxxxxxxxxxxxxx",
+    "m365CopilotTenantId": "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "sharePointSiteUrl": "https://xxxxxxxxxxx.sharepoint.com/Automation/UCH-AVP",
+    "verificationStatus": "Exported defaults only; confirm the flow-hosting tenant and environment through authenticated discovery."
+  }
+}

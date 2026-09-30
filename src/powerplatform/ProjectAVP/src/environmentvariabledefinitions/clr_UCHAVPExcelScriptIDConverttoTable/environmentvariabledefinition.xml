@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPExcelScriptIDConverttoTable">
+  <displayname default="UCH-AVP Excel Script ID (Convert to Table)">
+    <label description="UCH-AVP Excel Script ID (Convert to Table)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

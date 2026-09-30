@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPParameterValidZillowCodes">
+  <defaultvalue>CND OTH RES SFR UNK</defaultvalue>
+  <displayname default="UCH-AVP Parameter (Valid Zillow Codes)">
+    <label description="UCH-AVP Parameter (Valid Zillow Codes)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.2</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

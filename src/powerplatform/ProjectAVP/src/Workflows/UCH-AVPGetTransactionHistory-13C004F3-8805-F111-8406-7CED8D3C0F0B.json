@@ -1,0 +1,362 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)": {
+          "defaultValue": "https://api.propertyradar.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarAPIEndpoint"
+          }
+        },
+        "UCH-AVP PropertyRadar (Secret Name) (clr_UCHAVPPropertyRadarSecretName)": {
+          "defaultValue": "UCH-PropertyRadar",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarSecretName"
+          }
+        },
+        "UCH-AVP SharePoint List (Transactons) (clr_UCHAVPSharePointListTransctons)": {
+          "defaultValue": "9aa6342e-3294-4ba6-b043-051acbe59166",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListTransctons"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created_or_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnUpdatedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@startsWith(triggerBody()?['RadarID'], 'P')"
+            },
+            {
+              "expression": "@equals(length(triggerBody()?['RadarID']), 8)"
+            },
+            {
+              "expression": "@equals(1, 2)"
+            }
+          ],
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "8aef74d9-51d6-4b8d-99ba-ecd63ac63a10"
+          }
+        }
+      },
+      "actions": {
+        "Get_AVP_History": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Transactons) (clr_UCHAVPSharePointListTransctons)')",
+              "$filter": "Title eq '@{triggerBody()?['RadarID']}'"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Get_Radar_Secret": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Radar_Secret": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "secretName": "@parameters('UCH-AVP PropertyRadar (Secret Name) (clr_UCHAVPPropertyRadarSecretName)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+              "operationId": "GetSecret",
+              "connectionName": "shared_keyvault"
+            }
+          },
+          "runAfter": {}
+        },
+        "No_Transactions": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(body('Get_AVP_History')?['value'])",
+                  "@true"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Get_Radar_History": {
+              "type": "Http",
+              "inputs": {
+                "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/properties/@{triggerBody()?['RadarID']}/transactions?Purchase=1",
+                "method": "GET",
+                "headers": {
+                  "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}"
+                }
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Each_Transaction": {
+              "type": "Foreach",
+              "foreach": "@sort(\n  body('Get_Radar_History')?['results'],\n  'RecDate'\n)",
+              "actions": {
+                "All_Radar_History": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@items('Each_Transaction')",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "DocTypeUI": {},
+                        "Status": {},
+                        "Purpose": {},
+                        "LoanPosition": {},
+                        "DocNumber": {},
+                        "RecDate": {},
+                        "Grantor": {},
+                        "Grantee": {},
+                        "Amount": {},
+                        "LTVorDown": {},
+                        "hasDocumentImage": {},
+                        "isFirstCurrentOwnerRecord": {},
+                        "isParentType": {},
+                        "DocumentID": {}
+                      }
+                    }
+                  }
+                },
+                "Log_All_Transactions": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Transactons) (clr_UCHAVPSharePointListTransctons)')",
+                      "item/Title": "@triggerBody()?['RadarID']",
+                      "item/TargetProperty": "@{triggerBody()?['Address']} @{triggerBody()?['City']} @{triggerBody()?['State']} @{triggerBody()?['Zip']}",
+                      "item/DocTypeUI/Value": "@body('All_Radar_History')?['DocTypeUI']",
+                      "item/Status/Value": "@body('All_Radar_History')?['Status']",
+                      "item/Purpose/Value": "@body('All_Radar_History')?['Purpose']",
+                      "item/LoanPosition": "@body('All_Radar_History')?['LoanPosition']",
+                      "item/DocNumber": "@body('All_Radar_History')?['DocNumber']",
+                      "item/RecDate": "@body('All_Radar_History')?['RecDate']",
+                      "item/Grantor": "@body('All_Radar_History')?['Grantor']",
+                      "item/Grantee": "@body('All_Radar_History')?['Grantee']",
+                      "item/Amount": "@body('All_Radar_History')?['Amount']",
+                      "item/LTVorDown": "@body('All_Radar_History')?['LTVorDown']",
+                      "item/DocumentID": "@body('All_Radar_History')?['DocumentID']",
+                      "item/hasDocumentImage": "@body('All_Radar_History')?['hasDocumentImage']",
+                      "item/isFirstCurrentOwnerRecord": "@body('All_Radar_History')?['isFirstCurrentOwnerRecord']",
+                      "item/isParentType": "@body('All_Radar_History')?['isParentType']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PostItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "All_Radar_History": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_Radar_History": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Get_Radar_Hist_Count": {
+                "type": "Http",
+                "inputs": {
+                  "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/properties/@{triggerBody()?['RadarID']}/transactions?Purchase=0",
+                  "method": "GET",
+                  "headers": {
+                    "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}"
+                  }
+                },
+                "runtimeConfiguration": {
+                  "contentTransfer": {
+                    "transferMode": "Chunked"
+                  }
+                }
+              },
+              "New_Radar_Hist": {
+                "type": "If",
+                "expression": {
+                  "and": [
+                    {
+                      "greater": [
+                        "@body('Get_Radar_Hist_Count')?['resultCount']",
+                        "@length(body('Get_AVP_History')?['value'])"
+                      ]
+                    }
+                  ]
+                },
+                "actions": {
+                  "Get_Current_History": {
+                    "type": "Http",
+                    "inputs": {
+                      "uri": "@{parameters('UCH-AVP PropertyRadar (API Endpoint) (clr_UCHAVPPropertyRadarAPIEndpoint)')}/v1/properties/@{triggerBody()?['RadarID']}/transactions?Purchase=1",
+                      "method": "GET",
+                      "headers": {
+                        "Authorization": "Bearer @{outputs('Get_Radar_Secret')?['body/value']}"
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "contentTransfer": {
+                        "transferMode": "Chunked"
+                      }
+                    }
+                  },
+                  "Get_Additional_Hist": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Get_Current_History')?['results']",
+                      "where": "@greater(item()?['RecDate'],last(body('Get_AVP_History')?['value'])?['RecDate'])"
+                    },
+                    "runAfter": {
+                      "Get_Current_History": [
+                        "SUCCEEDED"
+                      ]
+                    }
+                  },
+                  "Each_Addition": {
+                    "type": "Foreach",
+                    "foreach": "@body('Get_Additional_Hist')",
+                    "actions": {
+                      "Log_New_Transaction": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                            "table": "@parameters('UCH-AVP SharePoint List (Transactons) (clr_UCHAVPSharePointListTransctons)')",
+                            "item/Title": "@triggerBody()?['RadarID']",
+                            "item/TargetProperty": "@{triggerBody()?['Address']} @{triggerBody()?['City']} @{triggerBody()?['State']} @{triggerBody()?['Zip']}",
+                            "item/DocTypeUI/Value": "@item()?['DocTypeUI']",
+                            "item/Status/Value": "@item()?['Status']",
+                            "item/Purpose/Value": "@item()?['Purpose']",
+                            "item/LoanPosition": "@item()?['LoanPosition']",
+                            "item/DocNumber": "@item()?['DocNumber']",
+                            "item/RecDate": "@item()?['RecDate']",
+                            "item/Grantor": "@item()?['Grantor']",
+                            "item/Grantee": "@item()?['Grantee']",
+                            "item/Amount": "@item()?['Amount']",
+                            "item/LTVorDown": "@item()?['LTVorDown']",
+                            "item/DocumentID": "@item()?['DocumentID']",
+                            "item/hasDocumentImage": "@item()?['hasDocumentImage']",
+                            "item/isFirstCurrentOwnerRecord": "@item()?['isFirstCurrentOwnerRecord']",
+                            "item/isParentType": "@item()?['isParentType']"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "operationId": "PostItem",
+                            "connectionName": "shared_sharepointonline"
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Get_Additional_Hist": [
+                        "SUCCEEDED"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "actions": {}
+                },
+                "runAfter": {
+                  "Get_Radar_Hist_Count": [
+                    "SUCCEEDED"
+                  ]
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Get_AVP_History": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

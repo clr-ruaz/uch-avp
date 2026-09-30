@@ -1,0 +1,278 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "undefined",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Property UID": {
+                  "type": "string"
+                },
+                "APN": {
+                  "type": "string"
+                },
+                "Street Address": {
+                  "type": "string"
+                },
+                "City": {
+                  "type": "string"
+                },
+                "State": {
+                  "type": "string"
+                },
+                "Zip": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Success_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Success",
+              "Matches": "@outputs('Match_Properties')?['body/value']"
+            }
+          },
+          "runAfter": {
+            "Query_AVP_Data": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Fail_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": "@outputs('Match_Properties')?['statusCode']",
+            "body": {
+              "Status": "Failed",
+              "Message": "@body('Match_Properties')?['message']"
+            }
+          },
+          "runAfter": {
+            "Query_AVP_Data": [
+              "Failed"
+            ]
+          }
+        },
+        "Terminate_due_to_error_response": {
+          "type": "Terminate",
+          "description": "This is so this run will be logged as failure.",
+          "inputs": {
+            "runStatus": "Failed"
+          },
+          "runAfter": {
+            "Fail_Response": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Address_Fltr": {
+          "type": "Scope",
+          "actions": {
+            "Address_Filter_ary": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  {
+                    "Label": "Address",
+                    "Value": "@triggerBody()?['Address']"
+                  },
+                  {
+                    "Label": "City",
+                    "Value": "@triggerBody()?['City']"
+                  },
+                  {
+                    "Label": "State",
+                    "Value": "@triggerBody()?['State']"
+                  },
+                  {
+                    "Label": "Zip",
+                    "Value": "@if(\r\n  empty(string(triggerBody()?['Zip'])),\r\n  null,\r\n  int(string(triggerBody()?['Zip']))\r\n)"
+                  }
+                ],
+                "where": "@not(equals(empty(string(item()?['Value'])),true))"
+              }
+            },
+            "Address_Filter_str": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Address_Filter_ary')",
+                "select": "@if(\r\n  equals(\r\n    item()?['Label'],\r\n    'Zip'\r\n  ),\r\n  concat(\r\n    item()?['Label'],\r\n    ' eq ',\r\n    item()?['Value']\r\n  ),\r\n  concat(\r\n    'substringof(',\r\n    '''',\r\n    item()?['Value'],\r\n    ''', ',\r\n    item()?['Label'],\r\n    ')'\r\n  )\r\n)"
+              },
+              "runAfter": {
+                "Address_Filter_ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Address_Filter": {
+              "type": "Compose",
+              "inputs": "@concat(\r\n  if(\r\n    empty(body('Address_Filter_str')),\r\n    '',\r\n    '('\r\n  ),\r\n  join(\r\n    body('Address_Filter_str'),\r\n    ' and '\r\n  ),\r\n  if(\r\n    empty(body('Address_Filter_str')),\r\n    '',\r\n    ')'\r\n  )\r\n)",
+              "runAfter": {
+                "Address_Filter_str": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Query_AVP_Data": {
+          "type": "Scope",
+          "actions": {
+            "oData_Filter_ary": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  "@if(\r\n  empty(string(triggerBody()?['Property UID'])),\r\n  null,\r\n  concat(\r\n    'Title eq ''',\r\n    triggerBody()?['Property UID'],\r\n    ''''\r\n  )\r\n)",
+                  "@if(\r\n  empty(string(triggerBody()?['Property UID'])),\r\n  null,\r\n  concat(\r\n    'RadarID eq ''',\r\n    triggerBody()?['Property UID'],\r\n    ''''\r\n  )\r\n)",
+                  "@if(\r\n  empty(string(triggerBody()?['APN'])),\r\n  null,\r\n  concat(\r\n    'APN eq ''',\r\n    triggerBody()?['APN'],\r\n    ''''\r\n  )\r\n)",
+                  "@outputs('Address_Filter')"
+                ],
+                "where": "@equals(empty(item()),false)"
+              }
+            },
+            "oData_Filter": {
+              "type": "Compose",
+              "inputs": "@join(\r\n  body('oData_Filter_ary'),\r\n  ' or '\r\n)",
+              "runAfter": {
+                "oData_Filter_ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Valid_Filter": {
+              "type": "If",
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@empty(body('Address_Filter_ary'))",
+                      "@false"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@empty(body('oData_Filter_ary'))",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Match_Properties": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "$filter": "@outputs('oData_Filter')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "paginationPolicy": {
+                      "minimumItemCount": 1000
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Invalid_Filter": {
+                    "type": "Response",
+                    "kind": "Http",
+                    "inputs": {
+                      "statusCode": 400,
+                      "body": {
+                        "Status": "Failed",
+                        "Message": "You need to provide at least one search criteria."
+                      }
+                    }
+                  },
+                  "Terminate_due_to_invalid_oData_filter": {
+                    "type": "Terminate",
+                    "description": "This is so this run will be logged as failure.",
+                    "inputs": {
+                      "runStatus": "Failed"
+                    },
+                    "runAfter": {
+                      "Invalid_Filter": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "oData_Filter": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Address_Fltr": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPSharePointURLActivityStream">
+  <defaultvalue>https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV/Lists/Activity%20Stream/AllItems.aspx?FilterField1=LinkTitle&amp;FilterValue1=</defaultvalue>
+  <displayname default="UCH-AVP SharePoint URL (Activity Stream)">
+    <label description="UCH-AVP SharePoint URL (Activity Stream)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.6</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

@@ -1,0 +1,181 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "invoker"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (OData Filters) (clr_UCHAVPSharePointListODataFilters)": {
+          "defaultValue": "a79a66a0-8553-4f7f-882b-6ca11a55621f",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListODataFilters"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Please enter your input",
+                  "title": "OData Filter",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "a94b5965-4648-40f0-9f24-4b8dd7514e02"
+          }
+        }
+      },
+      "actions": {
+        "Get_Items_Count": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "$filter": "@{first(body('Get_OData_Filter')?['value'])?['Filter']}@{if(\r\n  contains(\r\n    'Intake, Junior Review, Junior Input, Senior Review',\r\n    triggerBody()?['text']\r\n  ),\r\n  outputs('Sale_Date_Filter'),\r\n  ''\r\n)}",
+              "$top": 5000
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Sale_Date_Filter": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "paginationPolicy": {
+              "minimumItemCount": 5000
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "fe8cbad8-5552-4567-8d19-898b33a4d151"
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "title": "Count",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "count": "@length(outputs('Get_Items_Count')?['body/value'])"
+            }
+          },
+          "runAfter": {
+            "Get_Items_Count": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b0e5f222-d422-46da-a1e4-5cdbe36ebef6"
+          }
+        },
+        "Sale_Date_Filter": {
+          "type": "Compose",
+          "inputs": " and SaleDate ne null and SaleDate ge '@{formatDateTime(body('Convert_time_zone'), 'yyyy-MM-dd')}'",
+          "runAfter": {
+            "Get_OData_Filter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0755821c-a50a-497d-915d-a91bdc19502c"
+          }
+        },
+        "Convert_time_zone": {
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@utcNow()",
+            "sourceTimeZone": "UTC",
+            "destinationTimeZone": "UTC-08",
+            "formatString": "u"
+          },
+          "runAfter": {}
+        },
+        "Get_OData_Filter": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (OData Filters) (clr_UCHAVPSharePointListODataFilters)')",
+              "$filter": "Title eq '@{triggerBody()?['text']}'"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Convert_time_zone": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

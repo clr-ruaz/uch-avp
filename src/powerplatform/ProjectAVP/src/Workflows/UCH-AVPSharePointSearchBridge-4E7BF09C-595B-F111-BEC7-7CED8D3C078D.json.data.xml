@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Workflow WorkflowId="{4e7bf09c-595b-f111-bec7-7ced8d3c078d}" Name="UCH-AVP SharePoint Search Bridge" Description="This flow starts when a manual trigger receives two inputs: a unique ID and a user query. It then sends the user query to a specified URL using an HTTP POST request. After receiving a response from the external service, the flow returns that response to the original caller. The flow includes retry logic for the HTTP request and ensures the response is only sent after the external service successfully replies. The process is designed to search for information based on the user’s query and provide the results efficiently." xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <JsonFileName>/Workflows/UCH-AVPSharePointSearchBridge-4E7BF09C-595B-F111-BEC7-7CED8D3C078D.json</JsonFileName>
+  <Type>1</Type>
+  <Subprocess>0</Subprocess>
+  <Category>5</Category>
+  <Mode>0</Mode>
+  <Scope>4</Scope>
+  <OnDemand>0</OnDemand>
+  <TriggerOnCreate>0</TriggerOnCreate>
+  <TriggerOnDelete>0</TriggerOnDelete>
+  <AsyncAutodelete>0</AsyncAutodelete>
+  <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+  <StateCode>1</StateCode>
+  <StatusCode>2</StatusCode>
+  <RunAs>1</RunAs>
+  <IsTransacted>1</IsTransacted>
+  <IntroducedVersion>0.0.0.9</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <BusinessProcessType>0</BusinessProcessType>
+  <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+  <ModernFlowType>0</ModernFlowType>
+  <PrimaryEntity>none</PrimaryEntity>
+  <LocalizedNames>
+    <LocalizedName languagecode="1033" description="UCH-AVP SharePoint Search Bridge" />
+  </LocalizedNames>
+  <Descriptions>
+    <Description languagecode="1033" description="This flow starts when a manual trigger receives two inputs: a unique ID and a user query. It then sends the user query to a specified URL using an HTTP POST request. After receiving a response from the external service, the flow returns that response to the original caller. The flow includes retry logic for the HTTP request and ensures the response is only sent after the external service successfully replies. The process is designed to search for information based on the user’s query and provide the results efficiently." />
+  </Descriptions>
+</Workflow>

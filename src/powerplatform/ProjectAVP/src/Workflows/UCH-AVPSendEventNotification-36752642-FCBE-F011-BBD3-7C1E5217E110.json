@@ -1,0 +1,165 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365-1": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "To": {
+                  "type": "string"
+                },
+                "Subject": {
+                  "type": "string"
+                },
+                "Body": {
+                  "type": "string"
+                },
+                "Importance": {
+                  "type": "string"
+                },
+                "Attachment": {
+                  "type": "object",
+                  "properties": {
+                    "Name": {
+                      "type": "string"
+                    },
+                    "ContentBytes": {
+                      "type": "object",
+                      "properties": {
+                        "$content-type": {
+                          "type": "string"
+                        },
+                        "$content": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "69ed3274-9f9a-4bc8-9cd6-70a39f856480"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Successful"
+            }
+          },
+          "runAfter": {
+            "With_Attachment": [
+              "SUCCEEDED"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7abeef65-4702-4c97-9463-17e564ff4fff"
+          }
+        },
+        "With_Attachment": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@triggerBody()?['Attachment']",
+                    "@null"
+                  ]
+                }
+              }
+            ]
+          },
+          "actions": {
+            "Send_an_email_alert_with_attachment": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                  "emailMessage/To": "@triggerBody()?['To']",
+                  "emailMessage/Subject": "@triggerBody()?['Subject']",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">@{triggerBody()?['Body']}</p>",
+                  "emailMessage/Attachments": [
+                    "@triggerBody()?['Attachment']"
+                  ],
+                  "emailMessage/Importance": "@if(\n    not(empty(triggerBody()?['Importance'])),\n    triggerBody()?['Importance'],\n    'Normal'\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2",
+                  "connectionName": "shared_office365-1"
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Send_an_email_alert_with_no_attachment": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                    "emailMessage/To": "@triggerBody()?['To']",
+                    "emailMessage/Subject": "@triggerBody()?['Subject']",
+                    "emailMessage/Body": "<p class=\"editor-paragraph\">@{triggerBody()?['Body']}</p>",
+                    "emailMessage/Importance": "@if(\n    not(empty(triggerBody()?['Importance'])),\n    triggerBody()?['Importance'],\n    'Normal'\n)"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                    "operationId": "SharedMailboxSendEmailV2",
+                    "connectionName": "shared_office365-1"
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

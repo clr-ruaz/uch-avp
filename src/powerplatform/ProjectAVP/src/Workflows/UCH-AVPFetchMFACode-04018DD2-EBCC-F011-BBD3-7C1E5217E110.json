@@ -1,0 +1,211 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Notification (MFA) (clr_UCHAVPNotificationMFA)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationMFA"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Query": {
+                  "type": "string"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "metadata": {
+            "operationMetadataId": "03d15f16-6d76-43b9-a448-f9d97f89eaff"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Success",
+              "Response": "@{variables('strMFACode')}"
+            }
+          },
+          "runAfter": {
+            "Matched_Emails": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "004c3d46-e9b8-4e38-b166-46ccbd12f87a"
+          }
+        },
+        "Get_matching_emails": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "fetchOnlyWithAttachment": true,
+              "folderPath": "Inbox",
+              "from": "8642405555@vzwpix.com",
+              "fetchOnlyUnread": true,
+              "mailboxAddress": "@parameters('UCH-AVP Notification (MFA) (clr_UCHAVPNotificationMFA)')",
+              "top": 10
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "GetEmailsV3",
+              "connectionName": "shared_office365"
+            }
+          },
+          "runAfter": {
+            "Init_MFA_code_str": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Matched_Emails": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(outputs('CoStar_Access_Code'))",
+                  false
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Mark_as_read": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "messageId": "@first(body('Get_matching_emails')?['value'])?['id']",
+                  "mailboxAddress": "@parameters('UCH-AVP Notification (MFA) (clr_UCHAVPNotificationMFA)')",
+                  "body/isRead": true
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "MarkAsRead_V3",
+                  "connectionName": "shared_office365"
+                }
+              },
+              "runAfter": {
+                "Set_MFA_Code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_MFA_with_LLM": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "9b3a2388-a7c3-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "Get the 6-digit code from the provided text.  Use the following JSON schema for your output:  { \"Code\": \"number, 6-digit code\" }",
+                  "text_1": "[\n  {\n    \"type\": \"input_text\", \n    \"text\":  \"@{replace(\r\n  outputs('CoStar_Access_Code'),\r\n  '\"',\r\n  ''''\r\n)}\" \n  }\n]",
+                  "boolean": true
+                }
+              }
+            },
+            "Set_MFA_Code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "strMFACode",
+                "value": "@string(json(body('Get_MFA_with_LLM')?['response'])?['Code'])"
+              },
+              "runAfter": {
+                "Get_MFA_with_LLM": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "CoStar_Access_Code": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_MFA_code_str": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "strMFACode",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Get_mail_attachment": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "messageId": "@first(body('Get_matching_emails')?['value'])?['id']",
+              "attachmentId": "@first(body('Get_matching_emails')?['value'])?['attachments']?[0]?['id']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "GetAttachment_V2",
+              "connectionName": "shared_office365"
+            }
+          },
+          "runAfter": {
+            "Get_matching_emails": [
+              "Succeeded"
+            ]
+          }
+        },
+        "CoStar_Access_Code": {
+          "type": "Compose",
+          "inputs": "@base64ToString(body('Get_mail_attachment')?['contentBytes'])",
+          "runAfter": {
+            "Get_mail_attachment": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

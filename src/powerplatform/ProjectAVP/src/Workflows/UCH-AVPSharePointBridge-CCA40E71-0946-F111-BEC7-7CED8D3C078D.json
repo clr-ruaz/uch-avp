@@ -1,0 +1,110 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "metadata": {
+        "defaultToEmbeddedConnections": true
+      },
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH=AVP SharePoint Connector (URL) (clr_UCHAVPSharePointConnectorURL)": {
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointConnectorURL"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Please enter your input",
+                  "title": "Requests",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "b8f61c18-7224-4f8a-9c5f-72fbce5df764"
+          }
+        }
+      },
+      "actions": {
+        "Respond_to_the_agent": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "response": {
+                  "title": "Response",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "response": "@{body('Request_Forwarder')}"
+            }
+          },
+          "runAfter": {
+            "Request_Forwarder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "81c94f73-dd52-465c-ad3b-a4686da63cc3"
+          }
+        },
+        "Request_Forwarder": {
+          "type": "Http",
+          "inputs": {
+            "uri": "@parameters('UCH=AVP SharePoint Connector (URL) (clr_UCHAVPSharePointConnectorURL)')",
+            "method": "POST",
+            "body": "@json(triggerBody()?['text'])",
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT20S"
+            }
+          },
+          "runAfter": {},
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        }
+      },
+      "outputs": {},
+      "description": "When an agent calls the flow and send back a response."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

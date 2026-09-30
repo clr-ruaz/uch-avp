@@ -1,0 +1,984 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_uiflow": {
+        "api": {
+          "name": "shared_uiflow"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPDesktopFlowConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP CoStar Portal URL (clr_UCHAVPCoStarPortalURL)": {
+          "defaultValue": "https://product.costar.com/",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPCoStarPortalURL"
+          }
+        },
+        "UCH-AVP CoStar Secret Name (clr_UCHAVPCoStarSecretName)": {
+          "defaultValue": "avp-coStar",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPCoStarSecretName"
+          }
+        },
+        "UCH-AVP CoStar Username (clr_UCHAVPCoStarUsername)": {
+          "defaultValue": "michael@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPCoStarUsername"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        },
+        "UCH-AVP Run Mode (clr_UCHAVPRunMode)": {
+          "defaultValue": "Unattended",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPRunMode"
+          }
+        },
+        "UCH-AVP Zillow Search URL (clr_UCHAVPZillowSearchURL)": {
+          "defaultValue": "https://www.zillow.com/homes/",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPZillowSearchURL"
+          }
+        },
+        "UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "avp-exemptions@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP Notification (TO | Business) (clr_UCHAVPNotificationBusiness)": {
+          "defaultValue": "avp-exemptions@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationBusiness"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Please enter your input",
+                  "title": "Target Status",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "boolean": {
+                  "description": "Please select yes or no",
+                  "title": "Force CoStar",
+                  "type": "boolean",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "boolean"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "73c61976-c58e-44d6-8520-7fb7fc4b983b"
+          }
+        }
+      },
+      "actions": {
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {}
+          },
+          "runAfter": {
+            "CoStar_Run": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "91b3fbcc-6e65-4f25-bf4d-4def02842838"
+          }
+        },
+        "Prep_RPA_Inputs": {
+          "type": "Scope",
+          "actions": {
+            "Get_Callback_URL_for_Fetch_Work_Queue": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Fetch Work Queue"
+                }
+              }
+            },
+            "Get_Callback_URL_for_Update_Work_Queue": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Update Work Queue"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_Fetch_Work_Queue": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Callback_URL_for_Send_Notification": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Send Event Notification"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_Update_Work_Queue": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Callback_URL_for_Upload_File": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Upload File"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_Send_Notification": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Callback_URL_for_OpenAI_Request": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP OpenAI Request"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_Upload_File": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Callback_URL_for_Image_Analysis": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Fetch Image Analysis"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_OpenAI_Request": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Callback_URL_for_CoStar_MFA_Code": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Fetch MFA Code"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_Image_Analysis": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Callback_URL_for_Fetch_LLM_Prompt": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Fetch LLM Prompt"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL_for_CoStar_MFA_Code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_CoStar_Secret": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "secretName": "@parameters('UCH-AVP CoStar Secret Name (clr_UCHAVPCoStarSecretName)')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                  "operationId": "GetSecret",
+                  "connectionName": "shared_keyvault"
+                }
+              },
+              "runAfter": {
+                "Workflow_Outline": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Workflow_Outline": {
+              "type": "Compose",
+              "inputs": [
+                {
+                  "Step": "Initialize Work Queue",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Clear Canvass",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Initialize CoStar Web App",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Initialize Zillow Web App",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Initialize Redfin Web App",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Initialize Realtor Web App",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Queue Work Item",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Generate Underwriting Report",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Generate CoStar Land Report",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Generate All Properties Report",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Extract Single Family Details",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Extract Redfin Estimate",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Extract Realtor Estimate",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Get Property Type",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Upload File",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Skip Queue Item",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Report Failure",
+                  "Error Count": "0",
+                  "Last Error": ""
+                },
+                {
+                  "Step": "Update Queue Status",
+                  "Error Count": "0",
+                  "Last Error": ""
+                }
+              ],
+              "runAfter": {
+                "Get_Callback_URL_for_Fetch_LLM_Prompt": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "103a402a-c3fc-42c5-81f4-892d34897bde"
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "CoStar_Run": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerBody()?['boolean']",
+                  "@true"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Process_CoStar": {
+              "type": "Scope",
+              "actions": {
+                "Convert_time_zone": {
+                  "type": "Expression",
+                  "kind": "ConvertTimeZone",
+                  "inputs": {
+                    "baseTime": "@utcNow()",
+                    "sourceTimeZone": "UTC",
+                    "destinationTimeZone": "Pacific Standard Time",
+                    "formatString": "HH"
+                  }
+                },
+                "CoStar_Run_Flag": {
+                  "type": "Compose",
+                  "inputs": "@or(\r\n  equals(int(body('Convert_time_zone')), 7),\r\n  equals(int(body('Convert_time_zone')), 10),\r\n  equals(int(body('Convert_time_zone')), 12),\r\n  equals(int(body('Convert_time_zone')), 14),\r\n  equals(int(body('Convert_time_zone')), 17)\r\n)",
+                  "runAfter": {
+                    "Convert_time_zone": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Scheduled_Run": {
+                  "type": "If",
+                  "expression": {
+                    "or": [
+                      {
+                        "equals": [
+                          "@triggerBody()?['boolean']",
+                          "@true"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Fetch_Costar_Queue": {
+                      "type": "Http",
+                      "inputs": {
+                        "uri": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                        "method": "POST",
+                        "body": {
+                          "Status": "@{triggerBody()?['text']}"
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "contentTransfer": {
+                          "transferMode": "Chunked"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "109f479f-fb8c-4c39-9a1f-5792ade7c33c"
+                      }
+                    },
+                    "CoStar_Queue": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Fetch_Costar_Queue')",
+                        "where": "@equals(item()?['Valuation Source'],'CoStar')"
+                      },
+                      "runAfter": {
+                        "Fetch_Costar_Queue": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "CoStar_Items": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@empty(body('CoStar_Queue'))",
+                              "@false"
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Run_Desktop_Flow": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "uiFlowId": "2e6975e7-8c20-4f15-9fec-ac412e9a55dd",
+                              "runMode": "@parameters('UCH-AVP Run Mode (clr_UCHAVPRunMode)')",
+                              "item/aryWorkQueue": "@body('CoStar_Queue')",
+                              "item/strCoStarUser_Name": "@parameters('UCH-AVP CoStar Username (clr_UCHAVPCoStarUsername)')",
+                              "item/strCoStarUser_Password": "@outputs('Get_CoStar_Secret')?['body/value']",
+                              "item/strNotifyEmail_Business": "@parameters('UCH-AVP Notification (TO | Business) (clr_UCHAVPNotificationBusiness)')",
+                              "item/strNotifyEmail_Support": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                              "item/strNotifyLabel": "@parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')",
+                              "item/strWebApp_CoStar_BaseUrl": "@parameters('UCH-AVP CoStar Portal URL (clr_UCHAVPCoStarPortalURL)')",
+                              "item/strWebApp_FetchQueue_URL": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                              "item/strWebApp_FlowMailer_URL": "@body('Get_Callback_URL_for_Send_Notification')?['callback_url']",
+                              "item/strWebApp_UpdateQueueUrl": "@body('Get_Callback_URL_for_Update_Work_Queue')?['callback_url']",
+                              "item/tblExceptions_Tracker": "@outputs('Workflow_Outline')",
+                              "item/strWebApp_FileUpload_URL": "@body('Get_Callback_URL_for_Upload_File')?['callback_url']",
+                              "item/strValuationSource": "CoStar",
+                              "item/strWebApp_OpenAIRequest_URL": "@body('Get_Callback_URL_for_OpenAI_Request')?['callback_url']",
+                              "item/strWebApp_FetchMFA_URL": "@body('Get_Callback_URL_for_CoStar_MFA_Code')?['callback_url']",
+                              "item/strWebApp_Zillow_BaseUrl": "@parameters('UCH-AVP Zillow Search URL (clr_UCHAVPZillowSearchURL)')",
+                              "item/strWebApp_FetchLlmPrompt_URL": "@body('Get_Callback_URL_for_Fetch_LLM_Prompt')?['callback_url']",
+                              "item/strWebApp_Redfin_BaseUrl": "https://www.redfin.com/",
+                              "item/strWebApp_ImageAnalysis_URL": "@body('Get_Callback_URL_for_Image_Analysis')?['callback_url']",
+                              "item/strWebApp_Realtor_BaseUrl": "https://www.realtor.com/"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_uiflow",
+                              "operationId": "RunUIFlow_V2",
+                              "connectionName": "shared_uiflow"
+                            }
+                          }
+                        },
+                        "Send_CoStar_failure_email_notification": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                              "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                              "emailMessage/Subject": "UCH-AVP Failure@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: RPA Run Failure (CoStar)",
+                              "emailMessage/Body": "<p class=\"editor-paragraph\">The RPA encountered an error; see issue below:</p><p class=\"editor-paragraph\">@{body('Run_Desktop_Flow')?['error']?['message']}</p>",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SharedMailboxSendEmailV2",
+                              "connectionName": "shared_office365"
+                            }
+                          },
+                          "runAfter": {
+                            "Run_Desktop_Flow": [
+                              "Failed"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "CoStar_Queue": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "CoStar_Run_Flag": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Process_Zillow": {
+                "type": "Scope",
+                "actions": {
+                  "Fetch_Zillow_Queue": {
+                    "type": "Http",
+                    "inputs": {
+                      "uri": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                      "method": "POST",
+                      "body": {
+                        "Status": "@{triggerBody()?['text']}"
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "contentTransfer": {
+                        "transferMode": "Chunked"
+                      }
+                    },
+                    "metadata": {
+                      "operationMetadataId": "109f479f-fb8c-4c39-9a1f-5792ade7c33c"
+                    }
+                  },
+                  "Zillow_Queue": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Fetch_Zillow_Queue')",
+                      "where": "@equals(item()?['Valuation Source'],'Zillow')"
+                    },
+                    "runAfter": {
+                      "Fetch_Zillow_Queue": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Zillow_Items": {
+                    "type": "If",
+                    "expression": {
+                      "and": [
+                        {
+                          "equals": [
+                            "@empty(body('Zillow_Queue'))",
+                            "@false"
+                          ]
+                        }
+                      ]
+                    },
+                    "actions": {
+                      "Process_Zillow_Items": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "uiFlowId": "2e6975e7-8c20-4f15-9fec-ac412e9a55dd",
+                            "runMode": "@parameters('UCH-AVP Run Mode (clr_UCHAVPRunMode)')",
+                            "item/aryWorkQueue": "@take(\r\n  body('Zillow_Queue'),\r\n  200\r\n)",
+                            "item/strCoStarUser_Name": "@parameters('UCH-AVP CoStar Username (clr_UCHAVPCoStarUsername)')",
+                            "item/strCoStarUser_Password": "@outputs('Get_CoStar_Secret')?['body/value']",
+                            "item/strNotifyEmail_Business": "@parameters('UCH-AVP Notification (TO | Business) (clr_UCHAVPNotificationBusiness)')",
+                            "item/strNotifyEmail_Support": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                            "item/strNotifyLabel": "@parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')",
+                            "item/strWebApp_CoStar_BaseUrl": "@parameters('UCH-AVP CoStar Portal URL (clr_UCHAVPCoStarPortalURL)')",
+                            "item/strWebApp_FetchQueue_URL": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                            "item/strWebApp_FlowMailer_URL": "@body('Get_Callback_URL_for_Send_Notification')?['callback_url']",
+                            "item/strWebApp_UpdateQueueUrl": "@body('Get_Callback_URL_for_Update_Work_Queue')?['callback_url']",
+                            "item/tblExceptions_Tracker": "@outputs('Workflow_Outline')",
+                            "item/strWebApp_FileUpload_URL": "@body('Get_Callback_URL_for_Upload_File')?['callback_url']",
+                            "item/strValuationSource": "Zillow",
+                            "item/strWebApp_OpenAIRequest_URL": "@body('Get_Callback_URL_for_OpenAI_Request')?['callback_url']",
+                            "item/strWebApp_FetchMFA_URL": "@body('Get_Callback_URL_for_CoStar_MFA_Code')?['callback_url']",
+                            "item/strWebApp_Zillow_BaseUrl": "@parameters('UCH-AVP Zillow Search URL (clr_UCHAVPZillowSearchURL)')",
+                            "item/strWebApp_FetchLlmPrompt_URL": "@body('Get_Callback_URL_for_Fetch_LLM_Prompt')?['callback_url']",
+                            "item/strWebApp_Redfin_BaseUrl": "https://www.redfin.com/",
+                            "item/strWebApp_ImageAnalysis_URL": "@body('Get_Callback_URL_for_Image_Analysis')?['callback_url']",
+                            "item/strWebApp_Realtor_BaseUrl": "https://www.realtor.com/"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_uiflow",
+                            "operationId": "RunUIFlow_V2",
+                            "connectionName": "shared_uiflow"
+                          }
+                        }
+                      },
+                      "Send_Zillow_failure_email_notification": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                            "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                            "emailMessage/Subject": "UCH-AVP Failure@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: RPA Run Failure (Zillow)",
+                            "emailMessage/Body": "<p class=\"editor-paragraph\">The RPA encountered an error; see issue below:</p><p class=\"editor-paragraph\">@{body('Process_Zillow_Items')?['error']?['message']}</p>",
+                            "emailMessage/Importance": "Normal"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                            "operationId": "SharedMailboxSendEmailV2",
+                            "connectionName": "shared_office365"
+                          }
+                        },
+                        "runAfter": {
+                          "Process_Zillow_Items": [
+                            "Failed"
+                          ]
+                        }
+                      },
+                      "Terminate_due_to_Zillow_failure": {
+                        "type": "Terminate",
+                        "inputs": {
+                          "runStatus": "Failed"
+                        },
+                        "runAfter": {
+                          "Send_Zillow_failure_email_notification": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {}
+                    },
+                    "runAfter": {
+                      "Zillow_Queue": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "Process_Redfin": {
+                "type": "Scope",
+                "actions": {
+                  "Fetch_Redfin_Queue": {
+                    "type": "Http",
+                    "inputs": {
+                      "uri": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                      "method": "POST",
+                      "body": {
+                        "Status": "@{triggerBody()?['text']}"
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "contentTransfer": {
+                        "transferMode": "Chunked"
+                      }
+                    },
+                    "metadata": {
+                      "operationMetadataId": "109f479f-fb8c-4c39-9a1f-5792ade7c33c"
+                    }
+                  },
+                  "Redfin_Queue": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Fetch_Redfin_Queue')",
+                      "where": "@equals(item()?['Valuation Source'],'Zillow/Redfin')"
+                    },
+                    "runAfter": {
+                      "Fetch_Redfin_Queue": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Redfin_Items": {
+                    "type": "If",
+                    "expression": {
+                      "and": [
+                        {
+                          "equals": [
+                            "@empty(body('Redfin_Queue'))",
+                            "@false"
+                          ]
+                        }
+                      ]
+                    },
+                    "actions": {
+                      "Process_Redfin_Items": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "uiFlowId": "2e6975e7-8c20-4f15-9fec-ac412e9a55dd",
+                            "runMode": "@parameters('UCH-AVP Run Mode (clr_UCHAVPRunMode)')",
+                            "item/aryWorkQueue": "@body('Redfin_Queue')",
+                            "item/strCoStarUser_Name": "@parameters('UCH-AVP CoStar Username (clr_UCHAVPCoStarUsername)')",
+                            "item/strCoStarUser_Password": "@outputs('Get_CoStar_Secret')?['body/value']",
+                            "item/strNotifyEmail_Business": "@parameters('UCH-AVP Notification (TO | Business) (clr_UCHAVPNotificationBusiness)')",
+                            "item/strNotifyEmail_Support": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                            "item/strNotifyLabel": "@parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')",
+                            "item/strWebApp_CoStar_BaseUrl": "@parameters('UCH-AVP CoStar Portal URL (clr_UCHAVPCoStarPortalURL)')",
+                            "item/strWebApp_FetchQueue_URL": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                            "item/strWebApp_FlowMailer_URL": "@body('Get_Callback_URL_for_Send_Notification')?['callback_url']",
+                            "item/strWebApp_UpdateQueueUrl": "@body('Get_Callback_URL_for_Update_Work_Queue')?['callback_url']",
+                            "item/tblExceptions_Tracker": "@outputs('Workflow_Outline')",
+                            "item/strWebApp_FileUpload_URL": "@body('Get_Callback_URL_for_Upload_File')?['callback_url']",
+                            "item/strValuationSource": "Redfin",
+                            "item/strWebApp_OpenAIRequest_URL": "@body('Get_Callback_URL_for_OpenAI_Request')?['callback_url']",
+                            "item/strWebApp_FetchMFA_URL": "@body('Get_Callback_URL_for_CoStar_MFA_Code')?['callback_url']",
+                            "item/strWebApp_Zillow_BaseUrl": "@parameters('UCH-AVP Zillow Search URL (clr_UCHAVPZillowSearchURL)')",
+                            "item/strWebApp_FetchLlmPrompt_URL": "@body('Get_Callback_URL_for_Fetch_LLM_Prompt')?['callback_url']",
+                            "item/strWebApp_Redfin_BaseUrl": "https://www.redfin.com/",
+                            "item/strWebApp_ImageAnalysis_URL": "@body('Get_Callback_URL_for_Image_Analysis')?['callback_url']",
+                            "item/strWebApp_Realtor_BaseUrl": "https://www.realtor.com/"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_uiflow",
+                            "operationId": "RunUIFlow_V2",
+                            "connectionName": "shared_uiflow"
+                          }
+                        }
+                      },
+                      "Send_Redfin_failure_email_notification": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                            "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                            "emailMessage/Subject": "UCH-AVP Failure@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: RPA Run Failure (Redfin)",
+                            "emailMessage/Body": "<p class=\"editor-paragraph\">The RPA encountered an error; see issue below:</p><p class=\"editor-paragraph\">@{body('Process_Redfin_Items')?['error']?['message']}</p>",
+                            "emailMessage/Importance": "Normal"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                            "operationId": "SharedMailboxSendEmailV2",
+                            "connectionName": "shared_office365"
+                          }
+                        },
+                        "runAfter": {
+                          "Process_Redfin_Items": [
+                            "Failed"
+                          ]
+                        }
+                      },
+                      "Terminate_due_to_Redfin_failure": {
+                        "type": "Terminate",
+                        "inputs": {
+                          "runStatus": "Failed"
+                        },
+                        "runAfter": {
+                          "Send_Redfin_failure_email_notification": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {}
+                    },
+                    "runAfter": {
+                      "Redfin_Queue": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Process_Zillow": [
+                    "SUCCEEDED"
+                  ]
+                }
+              },
+              "Process_Realtor": {
+                "type": "Scope",
+                "actions": {
+                  "Fetch_Realtor_Queue": {
+                    "type": "Http",
+                    "inputs": {
+                      "uri": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                      "method": "POST",
+                      "body": {
+                        "Status": "@{triggerBody()?['text']}"
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "contentTransfer": {
+                        "transferMode": "Chunked"
+                      }
+                    },
+                    "metadata": {
+                      "operationMetadataId": "109f479f-fb8c-4c39-9a1f-5792ade7c33c"
+                    }
+                  },
+                  "Realtor_Queue": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Fetch_Realtor_Queue')",
+                      "where": "@equals(item()?['Valuation Source'],'Zillow/Redfin/Realtor')"
+                    },
+                    "runAfter": {
+                      "Fetch_Realtor_Queue": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Realtor_Items": {
+                    "type": "If",
+                    "expression": {
+                      "and": [
+                        {
+                          "equals": [
+                            "@empty(body('Realtor_Queue'))",
+                            "@false"
+                          ]
+                        }
+                      ]
+                    },
+                    "actions": {
+                      "Process_Realtor_Item": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "uiFlowId": "2e6975e7-8c20-4f15-9fec-ac412e9a55dd",
+                            "runMode": "@parameters('UCH-AVP Run Mode (clr_UCHAVPRunMode)')",
+                            "item/aryWorkQueue": "@body('Realtor_Queue')",
+                            "item/strCoStarUser_Name": "@parameters('UCH-AVP CoStar Username (clr_UCHAVPCoStarUsername)')",
+                            "item/strCoStarUser_Password": "@outputs('Get_CoStar_Secret')?['body/value']",
+                            "item/strNotifyEmail_Business": "@parameters('UCH-AVP Notification (TO | Business) (clr_UCHAVPNotificationBusiness)')",
+                            "item/strNotifyEmail_Support": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                            "item/strNotifyLabel": "@parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')",
+                            "item/strWebApp_CoStar_BaseUrl": "@parameters('UCH-AVP CoStar Portal URL (clr_UCHAVPCoStarPortalURL)')",
+                            "item/strWebApp_FetchQueue_URL": "@body('Get_Callback_URL_for_Fetch_Work_Queue')?['callback_url']",
+                            "item/strWebApp_FlowMailer_URL": "@body('Get_Callback_URL_for_Send_Notification')?['callback_url']",
+                            "item/strWebApp_UpdateQueueUrl": "@body('Get_Callback_URL_for_Update_Work_Queue')?['callback_url']",
+                            "item/tblExceptions_Tracker": "@outputs('Workflow_Outline')",
+                            "item/strWebApp_FileUpload_URL": "@body('Get_Callback_URL_for_Upload_File')?['callback_url']",
+                            "item/strValuationSource": "Realtor",
+                            "item/strWebApp_OpenAIRequest_URL": "@body('Get_Callback_URL_for_OpenAI_Request')?['callback_url']",
+                            "item/strWebApp_FetchMFA_URL": "@body('Get_Callback_URL_for_CoStar_MFA_Code')?['callback_url']",
+                            "item/strWebApp_Zillow_BaseUrl": "@parameters('UCH-AVP Zillow Search URL (clr_UCHAVPZillowSearchURL)')",
+                            "item/strWebApp_FetchLlmPrompt_URL": "@body('Get_Callback_URL_for_Fetch_LLM_Prompt')?['callback_url']",
+                            "item/strWebApp_Redfin_BaseUrl": "https://www.redfin.com/",
+                            "item/strWebApp_ImageAnalysis_URL": "@body('Get_Callback_URL_for_Image_Analysis')?['callback_url']",
+                            "item/strWebApp_Realtor_BaseUrl": "https://www.realtor.com/"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_uiflow",
+                            "operationId": "RunUIFlow_V2",
+                            "connectionName": "shared_uiflow"
+                          }
+                        }
+                      },
+                      "Send_Realtor_failure_email_notification": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                            "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                            "emailMessage/Subject": "UCH-AVP Failure@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: RPA Run Failure (Realtor)",
+                            "emailMessage/Body": "<p class=\"editor-paragraph\">The RPA encountered an error; see issue below:</p><p class=\"editor-paragraph\">@{body('Process_Realtor_Item')?['error']?['message']}</p>",
+                            "emailMessage/Importance": "Normal"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                            "operationId": "SharedMailboxSendEmailV2",
+                            "connectionName": "shared_office365"
+                          }
+                        },
+                        "runAfter": {
+                          "Process_Realtor_Item": [
+                            "Failed"
+                          ]
+                        }
+                      },
+                      "Terminate_due_to_Realtor_failure": {
+                        "type": "Terminate",
+                        "inputs": {
+                          "runStatus": "Failed"
+                        },
+                        "runAfter": {
+                          "Send_Realtor_failure_email_notification": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {}
+                    },
+                    "runAfter": {
+                      "Realtor_Queue": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Process_Redfin": [
+                    "SUCCEEDED"
+                  ]
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Prep_RPA_Inputs": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

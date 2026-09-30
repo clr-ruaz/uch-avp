@@ -1,0 +1,104 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Week",
+            "interval": 1,
+            "timeZone": "Pacific Standard Time",
+            "startTime": "2025-12-02T02:00:00Z",
+            "schedule": {
+              "hours": [
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+              ],
+              "weekDays": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
+              "minutes": [
+                0,
+                15,
+                30,
+                45
+              ]
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "623dc7f3-ed47-4623-8e73-7c05c953fbf8"
+          }
+        }
+      },
+      "actions": {
+        "Validate_Properties": {
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "821b8546-78cf-f011-bbd3-7c1e5217e110"
+            },
+            "body": {
+              "text": "Pending",
+              "boolean": false
+            },
+            "retryPolicy": {
+              "type": "none"
+            }
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "8ba540b7-cb20-49a7-b7ea-7bd5779c0f54"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

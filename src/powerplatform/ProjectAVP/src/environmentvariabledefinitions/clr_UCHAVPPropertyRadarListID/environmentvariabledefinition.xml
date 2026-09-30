@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPPropertyRadarListID">
+  <defaultvalue>1128481</defaultvalue>
+  <displayname default="UCH-AVP PropertyRadar (List ID | Sync)">
+    <label description="UCH-AVP PropertyRadar (List ID | Sync)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.2</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

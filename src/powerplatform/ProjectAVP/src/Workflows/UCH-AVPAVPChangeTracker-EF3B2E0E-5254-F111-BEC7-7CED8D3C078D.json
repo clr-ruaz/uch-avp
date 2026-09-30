@@ -1,0 +1,466 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)": {
+          "defaultValue": "AGR APT COM GOV IND LND MFR OFC REC RTL UTL",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidPropertyCodes"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)": {
+          "defaultValue": "CND OTH RES SFR UNK",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidZillowCodes"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "avp-exemptions@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP SharePoint Connector (URL) (clr_UCHAVPSharePointConnectorURL)": {
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointConnectorURL"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_or_a_file_is_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnChangedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@not(equals(triggerBody()?['Past_x003f_'], 'Yes'))"
+            },
+            {
+              "expression": "@not(equals(triggerBody()?['Action/Value'], 'Drop-out'))"
+            },
+            {
+              "expression": "@not(equals(triggerBody()?['WorkflowStatus/Value'], 'For Drop-out'))"
+            }
+          ],
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "91a8b870-774c-404d-a20a-8428b0329807"
+          }
+        }
+      },
+      "actions": {
+        "Init_HTTP_Requests": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryHttpRequests",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Valid_Request": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(variables('aryHttpRequests'))",
+                  "@false"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Request_Forwarder": {
+              "type": "Http",
+              "inputs": {
+                "uri": "@parameters('UCH-AVP SharePoint Connector (URL) (clr_UCHAVPSharePointConnectorURL)')",
+                "method": "POST",
+                "body": "@variables('aryHttpRequests')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Send_an_email_alert": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                  "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                  "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Failure: Change Tracker Failed",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">An error occured when <b><strong class=\"editor-text-bold\">@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Change Tracker</strong></b> workflow attempted to reset relevant values for Property UID @{triggerBody()?['Title']} (@{triggerBody()?['DealName']}) after a property type change; refer to the details below.</p><p class=\"editor-paragraph\"><i>@{body('Request_Forwarder')?['message']}</i></p>@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}",
+                  "emailMessage/Importance": "Normal"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2",
+                  "connectionName": "shared_office365"
+                }
+              },
+              "runAfter": {
+                "Request_Forwarder": [
+                  "Failed"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Duplicate_Check": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Change_Tracker": {
+          "type": "Scope",
+          "actions": {
+            "Get_changes_for_item": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@triggerBody()?['ID']",
+                  "since": "@triggerBody()?['{TriggerWindowStartToken}']",
+                  "includeDrafts": false
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItemChanges",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            },
+            "PType_Changed": {
+              "type": "If",
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/PropertyType']",
+                      "@true"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/PropertyTypeOverride']",
+                      "@true"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "On_Property_Type": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "aryHttpRequests",
+                    "value": [
+                      {
+                        "Site Address": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                        "Uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')",
+                        "Method": "GET",
+                        "Output": "ListItemEntityTypeFullName"
+                      },
+                      {
+                        "Site Address": "@{parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')}",
+                        "Uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')/items(@{triggerBody()?['ID']})",
+                        "Method": "POST",
+                        "Headers": {
+                          "Content-Type": "application/json;odata=verbose",
+                          "IF-MATCH": "*",
+                          "X-HTTP-Method": "MERGE"
+                        },
+                        "Body": {
+                          "CoStar_x0024__x0028_Units_x0029_": null,
+                          "EstimatedValue_x0028_Computed_x0": null,
+                          "Issue": null,
+                          "LTV_x0025_": null,
+                          "ModifiedBySystem": "AVP - Change Tracker: Property Type",
+                          "RealtorEstimate": null,
+                          "RedfinEstimate": null,
+                          "ReferenceReport": null,
+                          "Report_x0023_2": null,
+                          "Report3": null,
+                          "SaleComps": null,
+                          "SaleCompsCount": null,
+                          "ValuationStatus": "@if(\n  equals(\n    string(triggerBody()?['RadarSynced']),\n    'Yes'\n  ),\n  'Pending',\n  'Queued'\n)",
+                          "ValuationSource": "@if(\r\n  contains(\r\n    parameters('UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)'),\r\n    coalesce(\r\n      triggerBody()?['PropertyTypeOverride'],\r\n      triggerBody()?['PropertyType'],\r\n      ''\r\n    )\r\n  ),\r\n  'CoStar',\r\n  if(\r\n    contains(\r\n      parameters('UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)'),\r\n      coalesce(\r\n        triggerBody()?['PropertyTypeOverride'],\r\n        triggerBody()?['PropertyType'],\r\n        ''\r\n      )\r\n    ),\r\n    'Zillow',\r\n    null\r\n  )\r\n)",
+                          "Zestimate": null,
+                          "__metadata": {
+                            "type": "_replace_with_previous_output_"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Get_changes_for_item": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Init_HTTP_Requests": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Duplicate_Check": {
+          "type": "Scope",
+          "actions": {
+            "Address_Filter_str": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Address_Filter_ary')",
+                "select": "@if(\r\n  equals(\r\n    item()?['Label'],\r\n    'Zip'\r\n  ),\r\n  concat(\r\n    item()?['Label'],\r\n    ' eq ',\r\n    item()?['Value']\r\n  ),\r\n  concat(\r\n    'substringof(',\r\n    '''',\r\n    item()?['Value'],\r\n    ''', ',\r\n    item()?['Label'],\r\n    ')'\r\n  )\r\n)"
+              },
+              "runAfter": {
+                "Address_Filter_ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Address_Filter_ary": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  {
+                    "Label": "Address",
+                    "Value": "@if(\r\n  empty(string(triggerBody()?['AddressOverride_x0028_ManualRevi'])),\r\n  triggerBody()?['Address'],\r\n  triggerBody()?['AddressOverride_x0028_ManualRevi']\r\n)"
+                  },
+                  {
+                    "Label": "City",
+                    "Value": "@replace(\r\n  triggerBody()?['City'],\r\n  '''',\r\n  ''''''\r\n)"
+                  },
+                  {
+                    "Label": "State",
+                    "Value": "@triggerBody()?['State']"
+                  },
+                  {
+                    "Label": "Zip",
+                    "Value": "@if(\r\n  or(\r\n    empty(string(triggerBody()?['Zip'])),\r\n    equals(\r\n      string(triggerBody()?['Zip']),\r\n      'null'\r\n    )\r\n  ),\r\n  null,\r\n  int(triggerBody()?['Zip'])\r\n)"
+                  }
+                ],
+                "where": "@not(equals(empty(string(item()?['Value'])),true))"
+              }
+            },
+            "Get_Same_Address": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "$filter": "@join(\r\n  body('Address_Filter_str'),\r\n  ' and '\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Address_Filter_str": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Multiple_Match": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "greater": [
+                      "@length(outputs('Get_Same_Address')?['body/value'])",
+                      1
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Each_Match": {
+                  "type": "Foreach",
+                  "foreach": "@outputs('Get_Same_Address')?['body/value']",
+                  "actions": {
+                    "Untagged_yet": {
+                      "type": "If",
+                      "expression": {
+                        "or": [
+                          {
+                            "not": {
+                              "equals": [
+                                "@items('Each_Match')?['Duplicate']",
+                                "@true"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Get_Entity_Type": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "aryHttpRequests",
+                            "value": {
+                              "Site Address": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                              "Uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')",
+                              "Method": "GET",
+                              "Output": "ListItemEntityTypeFullName"
+                            }
+                          }
+                        },
+                        "Set_Duplicate_Value": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "aryHttpRequests",
+                            "value": {
+                              "Site Address": "@{parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')}",
+                              "Uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')/items(@{items('Each_Match')?['ID']})",
+                              "Method": "POST",
+                              "Headers": {
+                                "Content-Type": "application/json;odata=verbose",
+                                "IF-MATCH": "*",
+                                "X-HTTP-Method": "MERGE"
+                              },
+                              "Body": {
+                                "Duplicate": true,
+                                "__metadata": {
+                                  "type": "_replace_with_previous_output_"
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Get_Entity_Type": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Get_Same_Address": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Change_Tracker": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

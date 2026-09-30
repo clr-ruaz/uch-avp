@@ -1,0 +1,115 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "69ed3274-9f9a-4bc8-9cd6-70a39f856480"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Instruction": {
+                  "type": "string"
+                },
+                "Image": {
+                  "type": "object",
+                  "properties": {
+                    "Name": {
+                      "type": "string"
+                    },
+                    "ContentBytes": {
+                      "type": "object",
+                      "properties": {
+                        "$content-type": {
+                          "type": "string"
+                        },
+                        "$content": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "runAfter": {
+            "Post_OpenAI_Request": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7abeef65-4702-4c97-9463-17e564ff4fff"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Successful",
+              "Response": "@json(body('Post_OpenAI_Request')?['response'])?['Chosen']"
+            }
+          }
+        },
+        "Post_OpenAI_Request": {
+          "runAfter": {
+            "User_Message": [
+              "Succeeded"
+            ]
+          },
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "9b3a2388-a7c3-f011-bbd3-7c1e5217e110"
+            },
+            "body": {
+              "text": "@triggerBody()?['Instruction']",
+              "text_1": "@string(outputs('User_Message'))",
+              "boolean": true
+            },
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "User_Message": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "37c9d068-ca68-42fd-8325-f784cbaaf521"
+          },
+          "type": "Compose",
+          "inputs": [
+            {
+              "type": "input_image",
+              "image_url": "data:image/jpeg;base64,@{base64(triggerBody()?['Image']?['ContentBytes'])}"
+            }
+          ]
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

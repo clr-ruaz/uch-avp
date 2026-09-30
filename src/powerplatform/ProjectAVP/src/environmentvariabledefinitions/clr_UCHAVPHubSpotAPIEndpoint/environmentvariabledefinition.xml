@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPHubSpotAPIEndpoint">
+  <defaultvalue>https://api.hubapi.com/crm/v3</defaultvalue>
+  <displayname default="UCH-AVP HubSpot API (Endpoint)">
+    <label description="UCH-AVP HubSpot API (Endpoint)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.4</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

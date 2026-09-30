@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_IGSBOTGitHubAPIMarkdownEndpoint">
+  <defaultvalue>https://api.github.com/markdown</defaultvalue>
+  <displayname default="UCH-AVP GitHub API (Markdown Endpoint)">
+    <label description="UCH-AVP GitHub API (Markdown Endpoint)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.8</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

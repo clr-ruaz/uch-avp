@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPHubSpotAPISecret">
+  <defaultvalue>UCH-HubSpot</defaultvalue>
+  <displayname default="UCH-AVP HubSpot API (Secret)">
+    <label description="UCH-AVP HubSpot API (Secret)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.4</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

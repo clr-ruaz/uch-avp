@@ -1,0 +1,198 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "metadata": {
+        "defaultToEmbeddedConnections": true
+      },
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (Helper Interactions) (clr_UCHAVPSharePointListHelperInteractions)": {
+          "defaultValue": "a895666c-c0d5-482a-8ff9-5920b078ee4d",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListHelperInteractions"
+          }
+        },
+        "IGS-BOT GitHub API (Markdown Endpoint) (clr_IGSBOTGitHubAPIMarkdownEndpoint)": {
+          "defaultValue": "https://api.github.com/markdown",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_IGSBOTGitHubAPIMarkdownEndpoint"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "b8f61c18-7224-4f8a-9c5f-72fbce5df764"
+          },
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "The last query or request of the user",
+                  "title": "User Query",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "The response of the agent to the user query",
+                  "title": "Agent Response",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "description": "The display name of the user",
+                  "title": "User Name",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_3": {
+                  "description": "User Session ID",
+                  "title": "User Session",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2",
+                "text_3"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Respond_to_the_agent": {
+          "runAfter": {
+            "Record_Interaction": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "81c94f73-dd52-465c-ad3b-a4686da63cc3"
+          },
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {}
+          }
+        },
+        "Response_HTML": {
+          "runAfter": {
+            "Query_HTML": [
+              "Succeeded"
+            ]
+          },
+          "type": "Http",
+          "inputs": {
+            "uri": "@parameters('IGS-BOT GitHub API (Markdown Endpoint) (clr_IGSBOTGitHubAPIMarkdownEndpoint)')",
+            "method": "POST",
+            "headers": {
+              "Accept": "application/vnd.github.v3+json",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "@{triggerBody()?['text_1']}",
+              "mode": "gfm"
+            }
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Query_HTML": {
+          "runAfter": {},
+          "type": "Http",
+          "inputs": {
+            "uri": "@parameters('IGS-BOT GitHub API (Markdown Endpoint) (clr_IGSBOTGitHubAPIMarkdownEndpoint)')",
+            "method": "POST",
+            "headers": {
+              "Accept": "application/vnd.github.v3+json",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "@{triggerBody()?['text']}",
+              "mode": "gfm"
+            }
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Record_Interaction": {
+          "runAfter": {
+            "Response_HTML": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Helper Interactions) (clr_UCHAVPSharePointListHelperInteractions)')",
+              "item/UserQuery": "<p class=\"editor-paragraph\">@{body('Query_HTML')}</p>",
+              "item/AgentResponse": "<p class=\"editor-paragraph\">@{body('Response_HTML')}</p>",
+              "item/User": "@triggerBody()?['text_2']",
+              "item/Title": "@triggerBody()?['text_3']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "PostItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

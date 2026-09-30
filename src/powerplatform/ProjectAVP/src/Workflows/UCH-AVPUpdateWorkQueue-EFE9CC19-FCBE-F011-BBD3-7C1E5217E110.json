@@ -1,0 +1,402 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint Library (Documents) (clr_UCHAVPSharePointLibraryDocuments)": {
+          "defaultValue": "f95b48c3-65bc-4102-9779-7dc4ee5f22ed",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointLibraryDocuments"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "string"
+                },
+                "Status": {
+                  "type": "string"
+                },
+                "Source": {
+                  "type": "string"
+                },
+                "Notes": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "0a547ae6-b9c3-4113-b2b2-7809b9f98854"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Successful"
+            }
+          },
+          "runAfter": {
+            "Extra_Actions": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c8064dba-579c-46c0-b141-7e287f616ae3"
+          }
+        },
+        "Update_Details": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@triggerBody()?['ID']",
+              "item/Title": "@outputs('Notes_Breakdown')?['Title']",
+              "item/RadarID": "@outputs('Get_Property_Details')?['body/RadarID']",
+              "item/LTV_x0025_": "@if(\r\n  equals(triggerBody()?['Source'], 'Realtor'),\r\n  outputs('LTV_Percentage'),\r\n  null\r\n)",
+              "item/SqFtValidation": "@body('Update_Payload')?['Property SF']",
+              "item/ReferenceReport": "@if(\r\n  greater(\r\n    length(string(body('Update_Payload')?['Report1Url'])),\r\n    255\r\n  ),\r\n  split(\r\n    body('Update_Payload')?['Report1Url'],\r\n    '?'\r\n  )?[0],\r\n  body('Update_Payload')?['Report1Url']\r\n)",
+              "item/Report_x0023_2": "@body('Update_Payload')?['Report2Url']",
+              "item/Report3": "@body('Update_Payload')?['Report3Url']",
+              "item/ValuationSource/Value": "@body('Update_Payload')?['ValuationSource']",
+              "item/ValuationStatus/Value": "@outputs('Valuation_Status')",
+              "item/Issue/Value": "@outputs('Issue_Status')",
+              "item/PropertyTypeFull/Value": "@body('Update_Payload')?['PropertyType']",
+              "item/Zestimate": "@body('Update_Payload')?['Zestimate']",
+              "item/RedfinEstimate": "@body('Update_Payload')?['RedfinEstimate']",
+              "item/APN": "@body('Update_Payload')?['APN']",
+              "item/LotSize_x0028_Validation_x0029_": "@body('Update_Payload')?['Lot SF']",
+              "item/RealtorEstimate": "@body('Update_Payload')?['RealtorEstimate']",
+              "item/LotSizeAcresValidation": "@body('Update_Payload')?['Acres']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "PatchItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Issue_Status": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Property_Details": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@triggerBody()?['ID']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {}
+        },
+        "Extra_Actions": {
+          "type": "If",
+          "expression": {
+            "or": [
+              {
+                "startsWith": [
+                  "@body('Get_Property_Details')?['ValuationSource/Value']",
+                  "Zillow"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Valuation_Status')",
+                  "No Match"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Create_Folder": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(body('Get_Property_Details')?['FilesFolder'])",
+                      "@true"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Create_new_folder": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint Library (Documents) (clr_UCHAVPSharePointLibraryDocuments)')",
+                      "parameters/path": "@outputs('Get_Property_Details')?['body/Title']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "CreateNewFolder",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                },
+                "Update_Files_Folder": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "item/Title": "@outputs('Get_Property_Details')?['body/Title']",
+                      "item/RadarID": "@outputs('Get_Property_Details')?['body/RadarID']",
+                      "item/FilesFolder": "@outputs('Create_new_folder')?['body/{FullPath}']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Create_new_folder": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              }
+            },
+            "No_LTV": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(string(body('Update_Details')?['LTV_x0025_']))",
+                      "@true"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Update_Details')?['body/ValuationStatus/Value']",
+                      "Processed"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Set_Status_to_incomplete_valuation": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "id": "@triggerBody()?['ID']",
+                      "item/Title": "@outputs('Notes_Breakdown')?['Title']",
+                      "item/RadarID": "@outputs('Get_Property_Details')?['body/RadarID']",
+                      "item/Issue/Value": "Incomplete Valuation"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Create_Folder": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Update_Details": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Issue_Status": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  equals(\r\n    triggerBody()?['Status'], \r\n    'Skipped'\r\n  ),\r\n  'Incomplete Address',\r\n  if(\r\n    equals(\r\n      triggerBody()?['Status'], \r\n      'No Match'\r\n    ),\r\n    if(\r\n      equals(\r\n        triggerBody()?['Source'],\r\n        'Realtor'\r\n      ),\r\n      if(\r\n        empty(string(outputs('Estimated_Value'))),\r\n        'No Zillow/Redfin/Realtor Match',\r\n        null\r\n      ),\r\n      if(\r\n        equals(\r\n          triggerBody()?['Source'],\r\n          'CoStar'\r\n        ),\r\n        'No CoStar Match',\r\n        null\r\n      )\r\n    ),\r\n    null\r\n  )\r\n)",
+          "runAfter": {
+            "Valuation_Status": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Valuation_Status": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  equals(\r\n    triggerBody()?['Status'], \r\n    'Skipped'\r\n  ),\r\n  'Skipped',\r\n  if(\r\n    or(\r\n      equals(\r\n        triggerBody()?['Source'], \r\n        'Zillow'\r\n      ),\r\n      equals(\r\n        triggerBody()?['Source'], \r\n        'Redfin'\r\n      )\r\n    ),\r\n    'Pending',\r\n    if(\r\n      and(\r\n        equals(triggerBody()?['Status'], 'No Match'),\r\n        equals(triggerBody()?['Source'], 'Realtor')\r\n      ),\r\n      if(\r\n        empty(string(outputs('Estimated_Value'))),\r\n        triggerBody()?['Status'],\r\n        'Processed'\r\n      ),\r\n      triggerBody()?['Status']\r\n    )\r\n  )\r\n)",
+          "runAfter": {
+            "Compute_LTV": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Prep_Datasets": {
+          "type": "Scope",
+          "actions": {
+            "Notes_Breakdown": {
+              "type": "Compose",
+              "inputs": "@json(triggerBody()?['Notes'])"
+            },
+            "Update_Payload": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": {
+                  "Acres": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Lot (Acres)'])),\r\n  outputs('Get_Property_Details')?['body/LotSizeAcresValidation'],\r\n  float(string(outputs('Notes_Breakdown')?['Zillow Details']?['Lot (Acres)']))\r\n)",
+                  "AddressOverride": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Manual Address'])),\r\n  body('Get_Property_Details')?['AddressOverride_x0028_ManualRevi'],\r\n  if(\r\n    endsWith(\r\n      trim(outputs('Notes_Breakdown')?['Manual Address']),\r\n      outputs('Get_Property_Details')?['body/City']\r\n    ),\r\n    trim(\r\n      replace(\r\n        toUpper(outputs('Notes_Breakdown')?['Manual Address']), \r\n        toUpper(outputs('Get_Property_Details')?['body/City']),\r\n        ''\r\n      )\r\n    ),\r\n    trim(toUpper(outputs('Notes_Breakdown')?['Manual Address']))\r\n  )\r\n)",
+                  "APN": "@if(\r\n  empty(string(outputs('Get_Property_Details')?['body/APN'])),\r\n  if(\r\n    empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Parcel Number'])),\r\n    outputs('Notes_Breakdown')?['Redfin Details']?['Parcel Number'],\r\n    outputs('Notes_Breakdown')?['Zillow Details']?['Parcel Number']\r\n  ),\r\n  outputs('Get_Property_Details')?['body/APN']\r\n)",
+                  "EstimatedLoan": "@coalesce(\r\n  body('Get_Property_Details')?['FinalJudgementAmount'],\r\n  body('Get_Property_Details')?['SaleAmount'],\r\n  body('Get_Property_Details')?['FirstLoanAmount'],\r\n  0\r\n)",
+                  "Lot SF": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Lot (SF)'])),\r\n  outputs('Get_Property_Details')?['body/LotSize'],\r\n  float(string(outputs('Notes_Breakdown')?['Zillow Details']?['Lot (SF)']))\r\n)",
+                  "PropertyType": "@if(\r\n  empty(string(outputs('Get_Property_Details')?['body/PropertyTypeFull/Value'])),\r\n  if(\r\n    empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Property Type'])),\r\n    outputs('Notes_Breakdown')?['Redfin Details']?['Property Type'],\r\n    outputs('Notes_Breakdown')?['Zillow Details']?['Property Type']\r\n  ),\r\n  outputs('Get_Property_Details')?['body/PropertyTypeFull/Value']\r\n)",
+                  "Property SF": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Property Size (SF)'])),\r\n  if(\r\n    empty(string(outputs('Get_Property_Details')?['body/SqFtValidation'])),\r\n    if(\r\n      empty(string(outputs('Notes_Breakdown')?['Redfin Details']?['Property Size (SF)'])),\r\n      null,\r\n      outputs('Notes_Breakdown')?['Redfin Details']?['Property Size (SF)']\r\n    ),\r\n    outputs('Get_Property_Details')?['body/SqFtValidation']\r\n  ),\r\n  outputs('Notes_Breakdown')?['Zillow Details']?['Property Size (SF)']\r\n)",
+                  "RealtorEstimate": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Realtor Details']?['Estimate'])),\r\n  outputs('Get_Property_Details')?['body/RealtorEstimate'],\r\n  float(string(outputs('Notes_Breakdown')?['Realtor Details']?['Estimate']))\r\n)",
+                  "RedfinEstimate": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Redfin Details']?['Estimate'])),\r\n  outputs('Get_Property_Details')?['body/RedfinEstimate'],\r\n  float(string(outputs('Notes_Breakdown')?['Redfin Details']?['Estimate']))\r\n)",
+                  "Report1Url": "@if(\n  empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Zillow URL'])),\n  outputs('Get_Property_Details')?['body/ReferenceReport'],\n  outputs('Notes_Breakdown')?['Zillow Details']?['Zillow URL']\n)",
+                  "Report2Url": "@if(\n  empty(string(outputs('Notes_Breakdown')?['Redfin Details']?['Redfin URL'])),\n  outputs('Get_Property_Details')?['body/Report_x0023_2'],\n  outputs('Notes_Breakdown')?['Redfin Details']?['Redfin URL']\n)",
+                  "Report3Url": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Realtor Details']?['Realtor URL'])),\r\n  outputs('Get_Property_Details')?['body/Report3'],\r\n  outputs('Notes_Breakdown')?['Realtor Details']?['Realtor URL']\r\n)",
+                  "ValuationSource": "@if(\r\n  equals(\r\n    triggerBody()?['Status'], \r\n    'Skipped'\r\n  ),\r\n  body('Get_Property_Details')?['ValuationSource/Value'],\r\n  if(\r\n    equals(\r\n      triggerBody()?['Source'],\r\n      'Zillow'\r\n    ),\r\n    'Zillow/Redfin',\r\n    if(\r\n      equals(\r\n        triggerBody()?['Source'],\r\n        'Redfin'\r\n      ),\r\n      'Zillow/Redfin/Realtor',\r\n      body('Get_Property_Details')?['ValuationSource/Value']\r\n    )\r\n  )\r\n)",
+                  "Zestimate": "@if(\r\n  empty(string(outputs('Notes_Breakdown')?['Zillow Details']?['Zestimate'])),\r\n  outputs('Get_Property_Details')?['body/Zestimate'],\r\n  float(string(outputs('Notes_Breakdown')?['Zillow Details']?['Zestimate']))\r\n)"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Acres": {},
+                    "AddressOverride": {},
+                    "APN": {},
+                    "EstimatedLoan": {},
+                    "Lot SF": {},
+                    "PropertyType": {},
+                    "Property SF": {},
+                    "RealtorEstimate": {},
+                    "RedfinEstimate": {},
+                    "Report1Url": {},
+                    "Report2Url": {},
+                    "Report3Url": {},
+                    "ValuationSource": {},
+                    "Zestimate": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Notes_Breakdown": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Property_Details": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Compute_LTV": {
+          "type": "Scope",
+          "actions": {
+            "Estimated_Value_ary": {
+              "type": "Query",
+              "inputs": {
+                "from": [
+                  "@body('Update_Payload')?['RealtorEstimate']",
+                  "@body('Update_Payload')?['RedfinEstimate']",
+                  "@body('Update_Payload')?['Zestimate']"
+                ],
+                "where": "@equals(if(\r\n  not(empty(string(item()))),\r\n  greater(\r\n    item(),\r\n    0\r\n  ),\r\n  false\r\n),true)"
+              }
+            },
+            "Estimated_Value": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  empty(body('Estimated_Value_ary')),\r\n  null,\r\n  div(\r\n    xpath(\r\n      xml(\r\n        json(\r\n          concat(\r\n            '{\"body\":{\"root\":', \r\n            body('Estimated_Value_ary'), \r\n            '}}'\r\n          )\r\n        )\r\n      ), \r\n      'sum(//root)'\r\n    ), \r\n    length(body('Estimated_Value_ary'))\r\n  )\r\n)",
+              "runAfter": {
+                "Estimated_Value_ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "LTV_Percentage": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  and(\r\n    not(empty(string(outputs('Estimated_Value')))),\r\n    not(empty(string(body('Update_Payload')?['EstimatedLoan'])))\r\n  ),\r\n  if(\r\n    and(\r\n      greater(\r\n        outputs('Estimated_Value'),\r\n        0\r\n      ),\r\n      greater(\r\n        body('Update_Payload')?['EstimatedLoan'],\r\n        0\r\n      )\r\n    ),\r\n    div(\r\n      body('Update_Payload')?['EstimatedLoan'],\r\n      outputs('Estimated_Value')\r\n    ),\r\n    null\r\n  ),\r\n  null\r\n)",
+              "runAfter": {
+                "Estimated_Value": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Prep_Datasets": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

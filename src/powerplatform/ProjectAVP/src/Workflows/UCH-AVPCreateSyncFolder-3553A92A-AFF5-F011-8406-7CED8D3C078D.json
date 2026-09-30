@@ -1,0 +1,466 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_webcontents": {
+        "api": {
+          "name": "shared_webcontents"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_sharedwebcontents_81f3d"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Library (AVP-Sync) (clr_UCHAVPSharePointLibraryAVPSync)": {
+          "defaultValue": "2d602503-063c-4aef-938a-18d542dae279",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointLibraryAVPSync"
+          }
+        },
+        "UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)": {
+          "defaultValue": "AVP-Sync",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointLibraryNameAVPSync"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "UCH-AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_or_a_file_is_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnChangedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@or(     equals(triggerOutputs()?['body/WorkflowStatus/Value'], 'Move to Pipeline'),      equals(triggerOutputs()?['body/WorkflowStatus/Value'], 'Move to Watchlist'),     equals(triggerOutputs()?['body/Action/Value'], 'Watchlist'),     equals(triggerOutputs()?['body/Action/Value'], 'SR Stage') )"
+            },
+            {
+              "expression": "@not(empty(triggerBody()?['FilesFolder']))"
+            }
+          ],
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "1e2dddde-b767-4ce8-af2b-28a435e44c70"
+          }
+        }
+      },
+      "actions": {
+        "Get_changes_for_item": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@triggerBody()?['ID']",
+              "since": "@triggerBody()?['{TriggerWindowStartToken}']",
+              "includeDrafts": false
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItemChanges",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {}
+        },
+        "Workflow_Status": {
+          "type": "If",
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/WorkflowStatus']",
+                  "@true"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/Address']",
+                  "@true"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/City']",
+                  "@true"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/State']",
+                  "@true"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/Zip']",
+                  "@true"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_changes_for_item')?['body/ColumnHasChanged/Action']",
+                  "@true"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Create_Sync_Fld": {
+              "type": "Scope",
+              "actions": {
+                "Get_folder_using_path": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "path": "/@{triggerBody()?['FilesFolder']}"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetFolderMetadataByPath",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  }
+                },
+                "Create_Sync_folder": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint Library (AVP-Sync) (clr_UCHAVPSharePointLibraryAVPSync)')",
+                      "parameters/path": "@variables('strSync_FolderName')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "CreateNewFolder",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Get_folder_using_path": [
+                      "Failed"
+                    ]
+                  }
+                },
+                "Doc_Library": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "not": {
+                          "contains": [
+                            "@triggerBody()?['FilesFolder']",
+                            "@replace(\r\n  parameters('UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)'),\r\n  '-',\r\n  ''\r\n)"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Copy_to_Sync_folder": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "parameters/sourceFolderId": "@outputs('Get_folder_using_path')?['body/Id']",
+                          "parameters/destinationDataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "parameters/destinationFolderPath": "/@{replace(\r\n  parameters('UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)'),\r\n  '-',\r\n  ''\r\n)}",
+                          "parameters/nameConflictBehavior": 1
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "CopyFolderAsync",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Get_folder_using_path": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SharePoint_Site_ID": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "request/method": "GET",
+                      "request/url": "/v1.0/sites/@{replace(\r\n  replace(\r\n    parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)'),\r\n    '.com/',\r\n    '.com:/'\r\n  ),\r\n  'https://',\r\n  ''\r\n)}"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
+                      "operationId": "InvokeHttp",
+                      "connectionName": "shared_webcontents"
+                    }
+                  },
+                  "runAfter": {
+                    "Doc_Library": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Rename_Folder": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "request/method": "PATCH",
+                      "request/url": "/v1.0/drives/@{first(body('SharePoint_Drive_ID'))?['id']}/items/@{body('SharePoint_Folder_ID')?['id']}",
+                      "request/headers": {
+                        "Content-Type": "application/json"
+                      },
+                      "request/body": "{\n  \"name\": \"@{trim(variables('strSync_FolderName'))}\"\n}\n"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
+                      "operationId": "InvokeHttp",
+                      "connectionName": "shared_webcontents"
+                    }
+                  },
+                  "runAfter": {
+                    "SharePoint_Folder_ID": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SharePoint_Drives": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "request/method": "GET",
+                      "request/url": "/v1.0/sites/@{body('SharePoint_Site_ID')?['id']}/drives"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
+                      "operationId": "InvokeHttp",
+                      "connectionName": "shared_webcontents"
+                    }
+                  },
+                  "runAfter": {
+                    "SharePoint_Site_ID": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SharePoint_Drive_ID": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('SharePoint_Drives')?['value']",
+                    "where": "@equals(item()?['name'],parameters('UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)'))"
+                  },
+                  "runAfter": {
+                    "SharePoint_Drives": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SharePoint_Folder_ID": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "request/method": "GET",
+                      "request/url": "/v1.0/drives/@{first(body('SharePoint_Drive_ID'))?['id']}/root:/@{split(\r\n  triggerBody()?['FilesFolder'],\r\n  '/'\r\n)[1]}:"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
+                      "operationId": "InvokeHttp",
+                      "connectionName": "shared_webcontents"
+                    }
+                  },
+                  "runAfter": {
+                    "SharePoint_Drive_ID": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Send_email_alert_due_to_rename_failure": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                      "emailMessage/To": "@parameters('UCH-AVP Notification (Support) (clr_UCHAVPNotificationSupport)')",
+                      "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed to rename AVP-Sync Folder",
+                      "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encounterd an issue when attempting to rename the folder \"@{split(\n  triggerBody()?['FilesFolder'],\n  '/'\n)[1]}\" to \"@{trim(variables('strSync_FolderName'))}\" in the @{parameters('UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)')} document library. The server returned the following error message: <i>@{body('Rename_Folder')?['error']?['message']}.</i></p>@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                      "operationId": "SharedMailboxSendEmailV2",
+                      "connectionName": "shared_office365"
+                    }
+                  },
+                  "runAfter": {
+                    "Rename_Folder": [
+                      "Failed"
+                    ]
+                  }
+                },
+                "Reset_Folder_Name": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "strSync_FolderName",
+                    "value": "@split(\n  triggerBody()?['FilesFolder'],\n  '/'\n)[1]"
+                  },
+                  "runAfter": {
+                    "Send_email_alert_due_to_rename_failure": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              }
+            },
+            "Update_Folder__Path": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@triggerBody()?['ID']",
+                  "item/Title": "@triggerBody()?['Title']",
+                  "item/RadarID": "@triggerBody()?['RadarID']",
+                  "item/ReferenceReport": "@if(\r\n  not(empty(triggerBody()?['ReferenceReport'])),\r\n  if(\r\n    not(contains(triggerBody()?['ReferenceReport'], 'http')),\r\n    replace(\r\n      replace(\r\n        triggerBody()?['ReferenceReport'],\r\n        split(triggerBody()?['FilesFolder'], '/')[1],\r\n        trim(variables('strSync_FolderName'))\r\n      ),\r\n      split(triggerBody()?['ReferenceReport'], '/')[0],\r\n      replace(\r\n        parameters('UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)'),\r\n        '-',\r\n        ''\r\n      )\r\n    ),\r\n    triggerBody()?['ReferenceReport']\r\n  ),\r\n  null\r\n)",
+                  "item/FilesFolder": "@replace(\r\n  replace(\r\n    triggerBody()?['FilesFolder'],\r\n    split(triggerBody()?['FilesFolder'], '/')[1],\r\n    trim(variables('strSync_FolderName'))\r\n  ),\r\n  split(triggerBody()?['FilesFolder'], '/')[0],\r\n  replace(\r\n    parameters('UCH-AVP SharePoint Library (AVP-Sync | Name) (clr_UCHAVPSharePointLibraryNameAVPSync)'),\r\n    '-',\r\n    ''\r\n  )\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Create_Sync_Fld": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Init_Sync_Folder": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Sync_Folder": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "strSync_FolderName",
+                "type": "string",
+                "value": "@{if(\r\n  not(empty(triggerBody()?['Address'])),\r\n  concat(\r\n    replace(\r\n      replace(\r\n        trim(triggerBody()?['Address']),\r\n        '/',\r\n        '-'\r\n      ),\r\n      '#',\r\n      ''\r\n    ),\r\n    ' '\r\n  ),\r\n  ''\r\n)}@{if(\r\n  not(empty(triggerBody()?['City'])),\r\n  concat(\r\n    replace(\r\n      replace(\r\n        trim(triggerBody()?['City']),\r\n        '/',\r\n        '-'\r\n      ),\r\n      '#',\r\n      ''\r\n    ),\r\n    ' '\r\n  ),\r\n  ''\r\n)}@{if(\r\n  not(empty(triggerBody()?['State'])),\r\n  concat(\r\n    replace(\r\n      replace(\r\n        trim(triggerBody()?['State']),\r\n        '/',\r\n        '-'\r\n      ),\r\n      '#',\r\n      ''\r\n    ),\r\n    ' '\r\n  ),\r\n  ''\r\n)}@{trim(string(triggerBody()?['Zip']))}"
+              }
+            ]
+          },
+          "runAfter": {
+            "Get_changes_for_item": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

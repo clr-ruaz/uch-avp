@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPAzureOpenAISecretName">
+  <defaultvalue>UCH-OpenAI</defaultvalue>
+  <displayname default="UCH-AVP Azure OpenAI (Secret Name)">
+    <label description="UCH-AVP Azure OpenAI (Secret Name)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

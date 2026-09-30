@@ -1,0 +1,1826 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_excelonlinebusiness": {
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPExcelOnlineConnector"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (Manual Data Import) (clr_UCHAVPSharePointListManualDataImport)": {
+          "defaultValue": "3ca1aa96-6cbb-4b22-bc39-23d26d5f2f83",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListManualDataImport"
+          }
+        },
+        "UCH-AVP SharePoint Library ID (Imports) (clr_UCHAVPLabelSharePointLibraryImports)": {
+          "defaultValue": "b!lfZ-fLttl0uXwVca9xUFNI-PvMGqio1PtYRrMATM8ZjN6ESi72e3TaFDSGo_jLh1",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPLabelSharePointLibraryImports"
+          }
+        },
+        "UCH-AVP Excel Script ID (Convert to Table) (clr_UCHAVPExcelScriptIDConverttoTable)": {
+          "defaultValue": "01WMSSYFFN7W73ETW3BNHKQSSTLCVQ6CPC",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPExcelScriptIDConverttoTable"
+          }
+        },
+        "UCH-AVP SharePoint List (Counties) (clr_UCHAVPSharePointListCounties)": {
+          "defaultValue": "6bbd8e20-00cf-4fbf-b028-08264e46ddb3",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListCounties"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        },
+        "UCH-AVP SharePoint List (AVP API Config) (clr_UCHAVPSharePointListAVPAPIConfig)": {
+          "defaultValue": "691e8fb1-e680-476e-b5fb-e342447feff3",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListAVPAPIConfig"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP Property Type Codes (clr_UCHAVPPropertyTypeCodes)": {
+          "defaultValue": "fb4a4f01-5162-4120-be9f-e91cde8e938e",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyTypeCodes"
+          }
+        },
+        "UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "avp-exemptions@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP Notification (TO | Manual Import) (clr_UCHAVPNotificationChecker)": {
+          "defaultValue": "michael@upsidecapitalholdings.com;robert@upsidecapitalholdings.com;stephen@upsidecapitalholdings.com;josh@upsidecapitalholdings.com;chris@upsidecapitalholdings.com;earl@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationChecker"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created_or_modified": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Manual Data Import) (clr_UCHAVPSharePointListManualDataImport)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnUpdatedItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@equals(triggerBody()?['Status/Value'], 'Pending' )"
+            }
+          ],
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "2ec434f1-4179-4933-ae30-5c523ee97614"
+          }
+        }
+      },
+      "actions": {
+        "Fetch_Files": {
+          "type": "Scope",
+          "actions": {
+            "Get_attachments": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Manual Data Import) (clr_UCHAVPSharePointListManualDataImport)')",
+                  "itemId": "@triggerBody()?['ID']"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItemAttachments",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Filename_Prefix": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "XLSX_Attachments": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Get_attachments')",
+                "where": "@endsWith(toLower(item()?['DisplayName']),'.xlsx')"
+              },
+              "runAfter": {
+                "Get_attachments": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "XLSX_Attached": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(body('XLSX_Attachments'))",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Each_Attachment": {
+                  "type": "Foreach",
+                  "foreach": "@body('XLSX_Attachments')",
+                  "actions": {
+                    "Get_file_content": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Manual Data Import) (clr_UCHAVPSharePointListManualDataImport)')",
+                          "itemId": "@triggerBody()?['ID']",
+                          "attachmentId": "@items('Each_Attachment')?['Id']"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "GetAttachmentContent",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    },
+                    "Create_file_in_library": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "folderPath": "/Imports/@{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
+                          "name": "@{outputs('Filename_Prefix')}_@{items('Each_Attachment')?['DisplayName']}",
+                          "body": "@body('Get_file_content')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "CreateFile",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      },
+                      "runAfter": {
+                        "Get_file_content": [
+                          "Succeeded"
+                        ]
+                      },
+                      "runtimeConfiguration": {
+                        "contentTransfer": {
+                          "transferMode": "Chunked"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Terminate": {
+                    "type": "Terminate",
+                    "inputs": {
+                      "runStatus": "Succeeded"
+                    },
+                    "runAfter": {
+                      "Send_email_alert_re_missing_XLSX_file": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Send_email_alert_re_missing_XLSX_file": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                        "emailMessage/To": "@triggerBody()?['Author/Email']",
+                        "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: No XLSX attachmed (@{formatDateTime(\n  triggerBody()?['Created'],\n  'yyyy-MM-dd'\n)})",
+                        "emailMessage/Body": "<p class=\"editor-paragraph\">Hi @{split(\r\n  triggerBody()?['Author/DisplayName'],\r\n  ' '\r\n)[0]},</p><p class=\"editor-paragraph\">You created a new @{triggerBody()?['Format/Value']} record in <b><strong class=\"editor-text-bold\">AVP Data Manual Importer</strong></b> but might have missed to attach an XLSX file. Note that AVP currently only supports XLSX file format for importing.</p><p class=\"editor-paragraph\">Please edit the import record you just created and attach the XLSX file.</p><p class=\"editor-paragraph\">@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}</p>",
+                        "emailMessage/Cc": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                        "emailMessage/Importance": "Normal"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                        "operationId": "SharedMailboxSendEmailV2",
+                        "connectionName": "shared_office365"
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "XLSX_Attachments": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Filename_Prefix": {
+              "type": "Compose",
+              "inputs": "@formatDateTime(utcNow(), 'yyyyMMddmmss')"
+            }
+          },
+          "runAfter": {
+            "Handle_County": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Process_Files": {
+          "type": "Scope",
+          "actions": {
+            "Each_File": {
+              "type": "Foreach",
+              "foreach": "@body('XLSX_Attachments')",
+              "actions": {
+                "Get_worksheets": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "drive": "@parameters('UCH-AVP SharePoint Library ID (Imports) (clr_UCHAVPLabelSharePointLibraryImports)')",
+                      "file": "/@{formatDateTime(utcNow(), 'yyyy-MM-dd')}/@{outputs('Filename_Prefix')}_@{items('Each_File')?['DisplayName']}"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "GetAllWorksheets",
+                      "connectionName": "shared_excelonlinebusiness"
+                    }
+                  },
+                  "metadata": {
+                    "01WMSSYFD47GZPUOLHNVBKKYM3I4CXPBST": "/2025-11-20/Texas Foreclosure December.xlsx",
+                    "tableId": null
+                  }
+                },
+                "Run_script_from_SharePoint_library": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "drive": "@parameters('UCH-AVP SharePoint Library ID (Imports) (clr_UCHAVPLabelSharePointLibraryImports)')",
+                      "file": "/@{formatDateTime(utcNow(), 'yyyy-MM-dd')}/@{outputs('Filename_Prefix')}_@{items('Each_File')?['DisplayName']}",
+                      "scriptSource": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "scriptDrive": "@parameters('UCH-AVP SharePoint Library ID (Imports) (clr_UCHAVPLabelSharePointLibraryImports)')",
+                      "scriptId": "@parameters('UCH-AVP Excel Script ID (Convert to Table) (clr_UCHAVPExcelScriptIDConverttoTable)')",
+                      "ScriptParameters/jsonFields": "@variables('aryHeaders_Rename')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "RunScriptProdV2",
+                      "connectionName": "shared_excelonlinebusiness"
+                    }
+                  },
+                  "runAfter": {
+                    "Property_Source": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "01WMSSYFF2X4XPLCV66FDY6M65UDAPILM7": "/__Automation Tools/Convert to Excel Table.osts",
+                    "tableId": null,
+                    "01WMSSYFFN7W73ETW3BNHKQSSTLCVQ6CPC": "/__Tools/ConvertToTable.osts",
+                    "014UNVBYKFJJFVF4QJE5C3ELZYLM2HQLZO": "/Documents/Office Scripts/ConvertToTable.osts"
+                  }
+                },
+                "Excel_Data": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@outputs('Run_script_from_SharePoint_library')?['body/result']",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "columns": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "rows": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "Upload Time": {
+                                    "type": "string"
+                                  },
+                                  "Report ID": {
+                                    "type": "integer"
+                                  },
+                                  "Estimated Equity": {
+                                    "type": "integer"
+                                  },
+                                  "Estimated Margin percent": {
+                                    "type": "integer"
+                                  },
+                                  "Est Unpaid Bal": {
+                                    "type": "integer"
+                                  },
+                                  "Clerk Number": {
+                                    "type": "integer"
+                                  },
+                                  "Year of Report": {
+                                    "type": "integer"
+                                  },
+                                  "Month of Report": {
+                                    "type": "integer"
+                                  },
+                                  "City Name": {
+                                    "type": "string"
+                                  },
+                                  "County Code": {
+                                    "type": "string"
+                                  },
+                                  "Mapsco Page": {
+                                    "type": "string"
+                                  },
+                                  "Mapsco Section": {
+                                    "type": "string"
+                                  },
+                                  "Class": {
+                                    "type": "string"
+                                  },
+                                  "Loan Type": {
+                                    "type": "string"
+                                  },
+                                  "Street Number": {
+                                    "type": "integer"
+                                  },
+                                  "Address": {
+                                    "type": "string"
+                                  },
+                                  "B/B/G": {
+                                    "type": "string"
+                                  },
+                                  "Property Sq Footage": {
+                                    "type": "integer"
+                                  },
+                                  "Pool": {
+                                    "type": "string"
+                                  },
+                                  "Zip": {
+                                    "type": "string"
+                                  },
+                                  "Legal Description 1": {
+                                    "type": "string"
+                                  },
+                                  "Legal Description 2": {
+                                    "type": "string"
+                                  },
+                                  "Subdivision": {
+                                    "type": "string"
+                                  },
+                                  "Mortgagor First Name": {
+                                    "type": "string"
+                                  },
+                                  "Mortgagor Last Name": {
+                                    "type": "string"
+                                  },
+                                  "Mortgagee": {
+                                    "type": "string"
+                                  },
+                                  "Trustee": {
+                                    "type": "string"
+                                  },
+                                  "Auction Sale Time": {
+                                    "type": "string"
+                                  },
+                                  "Volume": {
+                                    "type": "string"
+                                  },
+                                  "Page": {
+                                    "type": "integer"
+                                  },
+                                  "Loan Month": {
+                                    "type": "integer"
+                                  },
+                                  "Loan Year": {
+                                    "type": "integer"
+                                  },
+                                  "Original Loan Amount": {
+                                    "type": "integer"
+                                  },
+                                  "Monthly Payment": {
+                                    "type": "integer"
+                                  },
+                                  "Interest Rate": {
+                                    "type": "integer"
+                                  },
+                                  "Loan Expires Month": {
+                                    "type": "integer"
+                                  },
+                                  "Loan Expires Year": {
+                                    "type": "integer"
+                                  },
+                                  "Year Of Construction": {
+                                    "type": "integer"
+                                  },
+                                  "Assessed Value": {
+                                    "type": "integer"
+                                  },
+                                  "City Code": {
+                                    "type": "string"
+                                  },
+                                  "Number of Units": {
+                                    "type": "integer"
+                                  },
+                                  "Previous Posting": {
+                                    "type": "string"
+                                  },
+                                  "Comment": {
+                                    "type": "string"
+                                  },
+                                  "Owner Street Number": {
+                                    "type": "integer"
+                                  },
+                                  "Owner Street Name": {
+                                    "type": "string"
+                                  },
+                                  "Owner Zip": {
+                                    "type": "integer"
+                                  },
+                                  "Owner City": {
+                                    "type": "string"
+                                  },
+                                  "Owner State": {
+                                    "type": "string"
+                                  },
+                                  "Tax ID": {
+                                    "type": "string"
+                                  },
+                                  "Georeference": {
+                                    "type": "string"
+                                  },
+                                  "fc cnty": {
+                                    "type": "string"
+                                  },
+                                  "Status": {
+                                    "type": "string"
+                                  },
+                                  "OpeningBid": {
+                                    "type": "integer"
+                                  },
+                                  "Auction Date": {
+                                    "type": "string"
+                                  },
+                                  "fc id": {
+                                    "type": "integer"
+                                  },
+                                  "Zillow URL": {
+                                    "type": "string"
+                                  },
+                                  "Acreage": {
+                                    "type": "number"
+                                  },
+                                  "Appraiser Link": {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  "Auction Status": {
+                                    "type": "string"
+                                  },
+                                  "Auction Win Type": {
+                                    "type": "string"
+                                  },
+                                  "Auction Winners Name": {
+                                    "type": "string"
+                                  },
+                                  "Auction Winning Bid": {
+                                    "type": "integer"
+                                  },
+                                  "Bedrooms": {
+                                    "type": "integer"
+                                  },
+                                  "Bidding Link": {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  "Case Number": {
+                                    "type": "string"
+                                  },
+                                  "Confidence Rating": {
+                                    "type": "integer"
+                                  },
+                                  "County Land Value": {
+                                    "type": "integer"
+                                  },
+                                  "County Market Value": {
+                                    "type": "integer"
+                                  },
+                                  "Defendants": {
+                                    "type": "string"
+                                  },
+                                  "Final Judgement Amount": {
+                                    "type": "integer"
+                                  },
+                                  "Final Judgement Docs": {
+                                    "type": "string"
+                                  },
+                                  "Last Sale": {
+                                    "type": "integer"
+                                  },
+                                  "Last Sale Date": {
+                                    "type": "string"
+                                  },
+                                  "Lot Size": {
+                                    "type": "integer"
+                                  },
+                                  "POV": {
+                                    "type": "integer"
+                                  },
+                                  "Plaintiff": {
+                                    "type": "string"
+                                  },
+                                  "Plaintiff Max Bid": {
+                                    "type": "integer"
+                                  },
+                                  "Previous Sale Price": {
+                                    "type": "integer"
+                                  },
+                                  "Previous Sale Type": {
+                                    "type": "string"
+                                  },
+                                  "Sale Type": {
+                                    "type": "string"
+                                  },
+                                  "Sum Building SqFt": {
+                                    "type": "integer"
+                                  },
+                                  "Total Baths": {
+                                    "type": "number"
+                                  },
+                                  "Total Lien Amount": {
+                                    "type": "integer"
+                                  },
+                                  "Total Liens": {
+                                    "type": "integer"
+                                  },
+                                  "Vacant Since": {
+                                    "type": "string"
+                                  },
+                                  "Parcel Number": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Run_script_from_SharePoint_library": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Set_Property_Tmp": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "aryProperty_Tmp",
+                    "value": "@variables('aryProperty_List')"
+                  },
+                  "runAfter": {
+                    "Excel_Data": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Set_Property_List": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "aryProperty_List",
+                    "value": "@union(\r\n  body('Excel_Data')?['rows'],\r\n  variables('aryProperty_Tmp')\r\n)"
+                  },
+                  "runAfter": {
+                    "Set_Property_Tmp": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Property_Source": {
+                  "type": "Switch",
+                  "expression": "@triggerBody()?['Format/Value']",
+                  "default": {
+                    "actions": {}
+                  },
+                  "cases": {
+                    "PropertyOnion.com": {
+                      "actions": {
+                        "Set_Onion_Headers": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "aryHeaders_Rename",
+                            "value": [
+                              {
+                                "originalHeader": "Area SQFT",
+                                "newHeader": "Property Sq Footage"
+                              },
+                              {
+                                "originalHeader": "Case Number",
+                                "newHeader": "Clerk Number"
+                              },
+                              {
+                                "originalHeader": "City",
+                                "newHeader": "City Name"
+                              },
+                              {
+                                "originalHeader": "County",
+                                "newHeader": "County Code"
+                              },
+                              {
+                                "originalHeader": "Legal Description",
+                                "newHeader": "Legal Description 1"
+                              },
+                              {
+                                "originalHeader": "Mortgage 1",
+                                "newHeader": "Original Loan Amount"
+                              },
+                              {
+                                "originalHeader": "Opening Bid",
+                                "newHeader": "OpeningBid"
+                              },
+                              {
+                                "originalHeader": "Owner 1 Name",
+                                "newHeader": "Mortgagor First Name"
+                              },
+                              {
+                                "originalHeader": "Property Type",
+                                "newHeader": "Class"
+                              },
+                              {
+                                "originalHeader": "Residential Units",
+                                "newHeader": "Number of Units"
+                              },
+                              {
+                                "originalHeader": "Street Address",
+                                "newHeader": "Address"
+                              },
+                              {
+                                "originalHeader": "Year Built",
+                                "newHeader": "Year Of Construction"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "case": "PropertyOnion.com"
+                    },
+                    "The_Warren_Group": {
+                      "actions": {
+                        "Set_TWG_Headers": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "aryHeaders_Rename",
+                            "value": [
+                              {
+                                "originalHeader": "ATTORNEYNAME",
+                                "newHeader": "Attorney"
+                              },
+                              {
+                                "originalHeader": "ATTORNEYPHONE",
+                                "newHeader": "Trustee Phone Number"
+                              },
+                              {
+                                "originalHeader": "COUNTY",
+                                "newHeader": "County Code"
+                              },
+                              {
+                                "originalHeader": "LATITUDE",
+                                "newHeader": "Latitude"
+                              },
+                              {
+                                "originalHeader": "LONGITUDE",
+                                "newHeader": "Longitude"
+                              },
+                              {
+                                "originalHeader": "NEIGHBORHOOD",
+                                "newHeader": "Subdivision"
+                              },
+                              {
+                                "originalHeader": "ORIGLENDERNAME",
+                                "newHeader": "Mortgage 1 Lender"
+                              },
+                              {
+                                "originalHeader": "PLAINTIFF1",
+                                "newHeader": "Plaintiff"
+                              },
+                              {
+                                "originalHeader": "STATE",
+                                "newHeader": "State"
+                              },
+                              {
+                                "originalHeader": "STREET",
+                                "newHeader": "Address"
+                              },
+                              {
+                                "originalHeader": "STREETNUMBER",
+                                "newHeader": "Street Number"
+                              },
+                              {
+                                "originalHeader": "TOWN",
+                                "newHeader": "City Name"
+                              },
+                              {
+                                "originalHeader": "ZIP",
+                                "newHeader": "Zip"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "case": "The Warren Group"
+                    },
+                    "CoStar_Report": {
+                      "actions": {
+                        "Set_CoStar_Headers": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "aryHeaders_Rename",
+                            "value": [
+                              {
+                                "originalHeader": "Property Address",
+                                "newHeader": "Address"
+                              },
+                              {
+                                "originalHeader": "Origination Amount",
+                                "newHeader": "Original Loan Amount"
+                              },
+                              {
+                                "originalHeader": "Origination Date",
+                                "newHeader": "First Loan Date"
+                              },
+                              {
+                                "originalHeader": "Originator",
+                                "newHeader": "Mortgage 1 Lender"
+                              },
+                              {
+                                "originalHeader": "Property Type",
+                                "newHeader": "Class"
+                              },
+                              {
+                                "originalHeader": "City",
+                                "newHeader": "City Name"
+                              },
+                              {
+                                "originalHeader": "County Name",
+                                "newHeader": "County Code"
+                              },
+                              {
+                                "originalHeader": "For Sale Price",
+                                "newHeader": "Sale Amount"
+                              },
+                              {
+                                "originalHeader": "Land Area (AC)",
+                                "newHeader": "Acreage"
+                              },
+                              {
+                                "originalHeader": "Land Area (SF)",
+                                "newHeader": "Property Sq Footage"
+                              },
+                              {
+                                "originalHeader": "Last Sale Date",
+                                "newHeader": "Last Sale Date"
+                              },
+                              {
+                                "originalHeader": "Owner Address",
+                                "newHeader": "Owner Street Name"
+                              },
+                              {
+                                "originalHeader": "Owner Contact",
+                                "newHeader": "Trustee"
+                              },
+                              {
+                                "originalHeader": "Owner Name",
+                                "newHeader": "Mortgagor First Name"
+                              },
+                              {
+                                "originalHeader": "Parcel Number 2(Max)",
+                                "newHeader": "Parcel Number"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "case": "CoStar Report"
+                    }
+                  },
+                  "runAfter": {
+                    "Get_worksheets": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Send_email_re_failure_to_convert_table": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                      "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                      "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed data conversion",
+                      "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encountered an issue when attempting to convert a @{triggerBody()?['Format/Value']} report, @{items('Each_File')?['DisplayName']}; refer to the error message below:</p><p class=\"editor-paragraph\">@{if(\r\n  empty(string(body('Run_script_from_SharePoint_library')?['message'])),\r\n  body('Run_script_from_SharePoint_library')?['error']?['message'], \r\n  body('Run_script_from_SharePoint_library')?['message']\r\n)}</p>",
+                      "emailMessage/Cc": "@triggerBody()?['Editor/Email']",
+                      "emailMessage/Importance": "High"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                      "operationId": "SharedMailboxSendEmailV2",
+                      "connectionName": "shared_office365"
+                    }
+                  },
+                  "runAfter": {
+                    "Run_script_from_SharePoint_library": [
+                      "Failed"
+                    ]
+                  }
+                }
+              }
+            },
+            "Get_Callback_URL": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                },
+                "body": {
+                  "text": "UCH-AVP Add to Property List"
+                }
+              },
+              "runAfter": {
+                "Each_File": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Set_Processing_Status": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Manual Data Import) (clr_UCHAVPSharePointListManualDataImport)')",
+                  "id": "@triggerBody()?['ID']",
+                  "item/Status/Value": "Processing"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Get_Callback_URL": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Fetch_Files": [
+              "Succeeded",
+              "Failed"
+            ]
+          }
+        },
+        "Init_Property_List": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryProperty_List",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Init_Property_Tmp": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryProperty_Tmp",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Property_List": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Each_Property": {
+          "type": "Foreach",
+          "foreach": "@variables('aryProperty_List')",
+          "actions": {
+            "Record_in_AVP": {
+              "type": "Scope",
+              "actions": {
+                "Transform_Data": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "Address": "@{if(\r\n  or(\r\n    empty(string(item()?['Street Number'])),\r\n    equals(string(item()?['Street Number']), '0')\r\n  ),\r\n  '',\r\n  concat(\r\n    string(item()?['Street Number']),\r\n    string(item()?['STREETNUMBEREXTENSION']),\r\n    ' '\r\n  )\r\n)}@{item()?['Address']}@{if(\r\n  not(empty(string(item()?['UNIT NUMBER']))),\r\n  concat(\r\n    ' Unit ',\r\n    item()?['UNIT NUMBER']\r\n  ),\r\n  ''\r\n)}",
+                      "APN": "@if(\r\n  empty(string(item()?['Parcel Number'])),\r\n  item()?['Tax ID'],\r\n  item()?['Parcel Number']\r\n)",
+                      "AssessmentFootage": "@if(\r\n  empty(string(item()?['Assessment Footage'])),\r\n  null,\r\n  if(\r\n    isInt(string(item()?['Assessment Footage'])),\r\n    item()?['Assessment Footage'],\r\n    null\r\n  )\r\n)",
+                      "Baths": "@if(\r\n  empty(trim(string(item()?['B/B/G']))),\r\n  item()?['Total Baths'],\r\n  if(\r\n    empty(trim(string(split(item()?['B/B/G'], '/')?[1]))),\r\n    null,\r\n    split(item()?['B/B/G'], '/')?[1]\r\n  )\r\n)",
+                      "Beds": "@if(\r\n  empty(trim(string(item()?['B/B/G']))),\r\n  item()?['Bedrooms'],\r\n  if(\r\n    empty(trim(string(split(item()?['B/B/G'], '/')?[0]))),\r\n    null,\r\n    split(item()?['B/B/G'], '/')?[0]\r\n  )\r\n)",
+                      "Defendants": "@{if(\r\n  not(empty(string(item()?['Defendants']))),\r\n  item()?['Defendants'],\r\n  concat(\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT1FIRSTNAME']))),\r\n      concat(item()?['DEFENDANT1FIRSTNAME'], ' '),\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT1LASTNAME']))),\r\n      concat(item()?['DEFENDANT1LASTNAME'], ' '),\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT1MIDDLENAME']))),\r\n      concat(item()?['DEFENDANT1MIDDLENAME'], ' '),\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT1NAMESUFFIX']))),\r\n      item()?['DEFENDANT1NAMESUFFIX'],\r\n      ''\r\n    ),\r\n    if(\r\n      or(\r\n        not(empty(string(item()?['DEFENDANT1FIRSTNAME']))),\r\n        not(empty(string(item()?['DEFENDANT1LASTNAME']))),\r\n        not(empty(string(item()?['DEFENDANT1MIDDLENAME']))),\r\n        not(empty(string(item()?['DEFENDANT1NAMESUFFIX'])))\r\n      ),\r\n      '; ',\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT2FIRSTNAME']))),\r\n      concat(item()?['DEFENDANT2FIRSTNAME'], ' '),\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT2LASTNAME']))),\r\n      concat(item()?['DEFENDANT2LASTNAME'], ' '),\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT2MIDDLENAME']))),\r\n      concat(item()?['DEFENDANT2MIDDLENAME'], ' '),\r\n      ''\r\n    ),\r\n    if(\r\n      not(empty(string(item()?['DEFENDANT2NAMESUFFIX']))),\r\n      concat(item()?['DEFENDANT2NAMESUFFIX'], ' '),\r\n      ''\r\n    )\r\n  )\r\n)}",
+                      "Latitude": "@if(\r\n  not(empty(string(item()?['Georeference']))),\r\n  split(\r\n    item()?['Georeference'],\r\n    ','\r\n  )?[0],\r\n  item()?['Latitude']\r\n)",
+                      "FloodZoneUpdated": "@if(\r\n  empty(string(item()?['Flood Zone Updated'])),\r\n  null,\r\n  if(\r\n    isInt(string(item()?['Flood Zone Updated'])),\r\n    formatDateTime(\r\n      addDays(\r\n        '1899-12-30', \r\n        int(item()?['Flood Zone Updated'])\r\n      ),\r\n      'yyyy-MM-dd'\r\n    ),\r\n    if(\r\n      contains(\r\n        item()?['Flood Zone Updated'],\r\n        '/'\r\n      ),\r\n      formatDateTime(\r\n        item()?['Flood Zone Updated'],\r\n        'yyyy-MM-dd'\r\n      ),\r\n      if(\r\n        and(\r\n          contains(\r\n            item()?['Flood Zone Updated'],\r\n            '-'\r\n          ),\r\n          equals(\r\n            length(item()?['Flood Zone Updated']),\r\n            10\r\n          )\r\n        ),\r\n        item()?['Flood Zone Updated'],\r\n        null\r\n      )\r\n    )\r\n  )\r\n)",
+                      "LegalDescription1": "@{if(\r\n  empty(string(item()?['Legal Description 1'])),\r\n  null,\r\n  substring(\r\n    item()?['Legal Description 1'], \r\n    0, \r\n    min(\r\n      length(item()?['Legal Description 1']), \r\n      255\r\n    )\r\n  )\r\n)}",
+                      "LegalDescription2": "@{if(\r\n  empty(string(item()?['Legal Description 2'])),\r\n  null,\r\n  substring(\r\n    item()?['Legal Description 2'], \r\n    0, \r\n    min(\r\n      length(item()?['Legal Description 2']), \r\n      255\r\n    )\r\n  )\r\n)}",
+                      "LoanYearLength": "@if(\r\n  not(empty(string(item()?['Mortgage 1 Term']))),\r\n  item()?['Mortgage 1 Term'],\r\n  if(\r\n    or(\r\n      empty(trim(string(item()?['Loan Expires Year']))),\r\n      empty(trim(string(item()?['Loan Year'])))\r\n    ),\r\n    null,\r\n    if(\r\n      and(\r\n        greater(\r\n          int(trim(string(item()?['Loan Expires Year']))),\r\n          0\r\n        ),\r\n        greater(\r\n          int(trim(string(item()?['Loan Year']))),\r\n          0\r\n        )\r\n      ),\r\n      sub(\r\n        int(trim(string(item()?['Loan Expires Year']))),\r\n        int(trim(string(item()?['Loan Year'])))\r\n      ),\r\n      null\r\n    )\r\n  )\r\n)",
+                      "Longitude": "@if(\r\n  not(empty(string(item()?['Georeference']))),\r\n  split(\r\n    item()?['Georeference'],\r\n    ','\r\n  )?[1],\r\n  item()?['Longitude']\r\n)",
+                      "LotSizeAcres": "@if(\r\n  empty(string(item()?['Acreage'])),\r\n  null,\r\n  if(\r\n    or(\r\n      isFloat(string(item()?['Acreage'])),\r\n      isInt(string(item()?['Acreage']))\r\n    ),\r\n    item()?['Acreage'],\r\n    null\r\n  )\r\n)",
+                      "OwnerOccupied": "@if(\r\n  empty(string(item()?['Owner Occupied'])),\r\n  null,\r\n  contains(\r\n    item()?['Owner Occupied'],\r\n    'Yes'\r\n  )\r\n)",
+                      "Plaintiff": "@concat(\r\n  if(\r\n    not(empty(string(item()?['Plaintiff']))),\r\n    item()?['Plaintiff'],\r\n    ''\r\n  ),\r\n  if(\r\n    and(\r\n      not(empty(string(item()?['Plaintiff']))),\r\n      not(empty(string(item()?['PLAINTIFF2'])))\r\n    ),\r\n    '; ',\r\n    ''\r\n  ),\r\n  if(\r\n    not(empty(string(item()?['PLAINTIFF2']))),\r\n    item()?['PLAINTIFF2'],\r\n    ''\r\n  )\r\n)",
+                      "PlaintiffMaxBid": "@if(\r\n  empty(\r\n    string(\r\n      item()?['Plaintiff Max Bid']\r\n    )\r\n  ),\r\n  null,\r\n  if(\r\n    or(\r\n      isFloat(string(item()?['Plaintiff Max Bid'])),\r\n      isInt(string(item()?['Plaintiff Max Bid']))\r\n    ),\r\n    item()?['Plaintiff Max Bid'],\r\n    null\r\n  )\r\n)",
+                      "Pool": "@if(\r\n  not(empty(string(item()?['Pool']))),\r\n  if(\r\n    isInt(string(item()?['Pool'])),\r\n    item()?['Pool'],\r\n    if(\r\n      contains(\r\n        item()?['Pool'],\r\n        'Yes'\r\n      ),\r\n      1,\r\n      null\r\n    )\r\n  ),\r\n  null\r\n)",
+                      "PreviousSaleDate": "@{if(\r\n  less(length(string(item()?['Last Sale Date'])), 4),\r\n  null,\r\n  if(\r\n    isInt(string(item()?['Last Sale Date'])),\r\n    formatDateTime(\r\n      addDays(\r\n        '1899-12-30', \r\n        int(item()?['Last Sale Date'])\r\n      ),\r\n      'yyyy-MM-dd'\r\n    ),\r\n    formatDateTime(\r\n      item()?['Last Sale Date'],\r\n      'yyyy-MM-dd'\r\n    )\r\n  )\r\n)}",
+                      "PreviousSaleType": "@{if(\r\n  less(\r\n    length(string(item()?['Previous Sale Type'])), \r\n    3\r\n  ),\r\n  null,\r\n  item()?['Previous Sale Type']\r\n)}",
+                      "PropertyType": "@if(\r\n  empty(string(item()?['Class'])),\r\n  'SFR',\r\n  if(\r\n    contains(\r\n      toLower(string(item()?['Class'])),\r\n      'mobile home'\r\n    ),\r\n    'OTHERS',\r\n    coalesce(\r\n      body('Match_Property_Type')?[0]?['PropertyTypeCode/Value'],\r\n      'COM'\r\n    )\r\n  )\r\n)",
+                      "PublicAccess": "@if(\r\n  greater(\r\n    length(string(item()?['Public Access'])),\r\n    1\r\n  ),\r\n  item()?['Public Access'],\r\n  null\r\n)",
+                      "RadarID": "@{if(\r\n  or(\r\n    not(empty(string(item()?['Parcel Number']))),\r\n    not(empty(string(item()?['PropertyID'])))\r\n  ),\r\n  concat(\r\n    if(\r\n      not(empty(string(item()?['PropertyID']))),\r\n      item()?['PropertyID'],\r\n      item()?['Parcel Number']\r\n    ),\r\n    '-',\r\n    if(\r\n      not(empty(string(item()?['Zip']))),\r\n      item()?['Zip'],\r\n      if(\r\n        not(empty(string(item()?['State']))),\r\n        item()?['State'],\r\n        triggerBody()?['State/Value']\r\n      )\r\n    )\r\n  ),\r\n  if(\r\n    not(empty(string(item()?['PREFORECLOSURETYPE']))),\r\n    concat(\r\n      if(\r\n        not(empty(string(item()?['Latitude']))),\r\n        item()?['Latitude'],\r\n        concat(\r\n          item()?['DOCUMENTNUM'],\r\n          '-'\r\n        )\r\n      ),\r\n      if(\r\n        not(empty(string(item()?['Longitude']))),\r\n        item()?['Longitude'],\r\n        if(\r\n          not(empty(string(item()?['DOCUMENTNUM']))),\r\n          if(\r\n            not(empty(string(item()?['Zip']))),\r\n            item()?['Zip'],\r\n            if(\r\n              not(empty(string(item()?['State']))),\r\n              item()?['State'],\r\n              triggerBody()?['State/Value']\r\n            )\r\n          ),\r\n          ''\r\n        )\r\n      )\r\n    ),\r\n    concat(\r\n      if(\r\n        equals(\r\n          string(item()?['Tax ID']),\r\n          '0'\r\n        ),\r\n        concat(\r\n          item()?['County Code'],\r\n          '-',\r\n          trim(\r\n            replace(\r\n              item()?['Volume'],\r\n              '`',\r\n              ''\r\n            )    \r\n          )\r\n        ),\r\n        item()?['Tax ID']\r\n      ),\r\n      '-',\r\n      item()?['Loan Year'],\r\n      '-',\r\n      item()?['Loan Month']\r\n    )\r\n  )\r\n)}",
+                      "RightofWayFlag": "@if(\r\n  greater(\r\n    length(string(item()?['Right-of-Way Flag'])),\r\n    1\r\n  ),\r\n  item()?['Right-of-Way Flag'],\r\n  null\r\n)",
+                      "SaleDate": "@{if(\r\n  or(\r\n    empty(string(item()?['Auction Date'])),\r\n    and(\r\n      not(isInt(string(item()?['Auction Date']))),\r\n      not(contains(string(item()?['Auction Date']), '/')),\r\n      not(contains(string(item()?['Auction Date']), '-'))\r\n    )\r\n  ),\r\n  if(\r\n    not(empty(string(triggerBody()?['SaleDate']))),\r\n    triggerBody()?['SaleDate'],\r\n    if(\r\n      and(\r\n        not(empty(string(item()?['AUCTIONDATETIME']))),\r\n        equals(\r\n          length(trim(string(item()?['AUCTIONDATETIME']))),\r\n          18\r\n        )\r\n      ),\r\n      formatDateTime(\r\n        substring(item()?['AUCTIONDATETIME'], 0, 10),\r\n        'yyyy-MM-dd'\r\n      ),\r\n      null\r\n    )\r\n  ),\r\n  if(\r\n    isInt(string(item()?['Auction Date'])),\r\n    formatDateTime(\r\n      addDays(\r\n        '1899-12-30', \r\n        int(item()?['Auction Date'])\r\n      ),\r\n      'yyyy-MM-dd'\r\n    ),\r\n    if(\r\n      contains(\r\n        item()?['Auction Date'],\r\n        '/'\r\n      ),\r\n      formatDateTime(\r\n        item()?['Auction Date'],\r\n        'yyyy-MM-dd'\r\n      ),\r\n      null\r\n    )\r\n  )\r\n)}",
+                      "State": "@{if(\r\n  empty(string(item()?['State'])),\r\n  triggerBody()?['State/Value'],\r\n  item()?['State']\r\n)}",
+                      "VacantSince": "@{if(\r\n  less(length(string(item()?['Vacant Since'])), 4),\r\n  null,\r\n  if(\r\n    isInt(string(item()?['Vacant Since'])),\r\n    formatDateTime(\r\n      addDays(\r\n        '1899-12-30', \r\n        int(item()?['Vacant Since'])\r\n      ),\r\n      'yyyy-MM-dd'\r\n    ),\r\n    formatDateTime(\r\n      item()?['Vacant Since'],\r\n      'yyyy-MM-dd'\r\n    )\r\n  )\r\n)}",
+                      "VieworInfluence": "@if(\r\n  greater(\r\n    length(string(item()?['View or Influence'])),\r\n    1\r\n  ),\r\n  item()?['View or Influence'],\r\n  null\r\n)",
+                      "Zip": "@if(\r\n  empty(string(item()?['Zip'])),\r\n  '',\r\n  substring(\r\n    string(item()?['Zip']),\r\n    0,\r\n    min(\r\n      5,\r\n      length(string(item()?['Zip']))\r\n    )\r\n  )\r\n)"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "Address": {},
+                        "APN": {},
+                        "AssessmentFootage": {},
+                        "Baths": {},
+                        "Beds": {},
+                        "Defendants": {},
+                        "FloodZoneUpdated": {},
+                        "Latitude": {},
+                        "LegalDescription1": {},
+                        "LegalDescription2": {},
+                        "LoanYearLength": {},
+                        "Longitude": {},
+                        "LotSizeAcres": {},
+                        "OwnerOccupied": {},
+                        "Plaintiff": {},
+                        "PlaintiffMaxBid": {},
+                        "Pool": {},
+                        "PreviousSaleDate": {},
+                        "PreviousSaleType": {},
+                        "PropertyType": {},
+                        "PublicAccess": {},
+                        "RadarID": {},
+                        "RightofWayFlag": {},
+                        "SaleDate": {},
+                        "State": {},
+                        "VacantSince": {},
+                        "VieworInfluence": {},
+                        "Zip": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Match_Property_Type": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Valid_Property": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "or": [
+                          {
+                            "not": {
+                              "equals": [
+                                "@body('Transform_Data')?['PropertyType']",
+                                "OTHERS"
+                              ]
+                            }
+                          },
+                          {
+                            "equals": [
+                              "@if(\r\n  not(empty(string(item()?['Property Sq Footage']))),\r\n  greaterOrEquals(\r\n    item()?['Property Sq Footage'],\r\n    130680\r\n  ),\r\n  false\r\n)",
+                              "@true"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "greater": [
+                          "@length(string(body('Transform_Data')?['RadarID']))",
+                          5
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Update_Payload": {
+                      "type": "Compose",
+                      "inputs": {
+                        "Address": "@body('Transform_Data')?['Address']",
+                        "APN": "@body('Transform_Data')?['APN']",
+                        "AnnualTaxes": "@item()?['Property Taxes']",
+                        "AppraiserLink": "@{item()?['Appraiser Link']}",
+                        "AssessedImprovement": "@item()?['Assessed Improvement']",
+                        "AssessedLand": "@item()?['Assessed Land']",
+                        "AssessedValue": "@item()?['Assessed Value']",
+                        "AssessmentFootage": "@body('Transform_Data')?['AssessmentFootage']",
+                        "Attorney": "@item()?['Attorney']",
+                        "AuctionStatus": "@{item()?['Auction Status']}",
+                        "AvailableEquity": "@item()?['Estimated Equity']",
+                        "Baths": "@if(\r\n  isInt(string(body('Transform_Data')?['Baths'])),\r\n  int(body('Transform_Data')?['Baths']),\r\n  null\r\n)",
+                        "Beds": "@body('Transform_Data')?['Beds']",
+                        "BiddingLink": "@{item()?['Bidding Link']}",
+                        "CaseNumber": "@{item()?['Clerk Number']}",
+                        "City": "@item()?['City Name']",
+                        "ConfidenceRating": "@item()?['Confidence Rating']",
+                        "CountyLandValue": "@item()?['County Land Value']",
+                        "CountyMarketValue": "@item()?['County Market Value']",
+                        "County": "@variables('strCountyName')",
+                        "Defendants": "@body('Transform_Data')?['Defendants']",
+                        "FEMAFloodMap": "@item()?['FEMA Flood Map']",
+                        "FinalJudgementAmount": "@item()?['Final Judgement Amount']",
+                        "FinalJudgementDocs": "@item()?['Final Judgement Docs']",
+                        "FirstLoanAmount": "@item()?['Original Loan Amount']",
+                        "FirstLoanDate": "@item()?['First Loan Date']",
+                        "FirstLoanLender": "@item()?['Mortgage 1 Lender']",
+                        "FloodZoneCode": "@item()?['Flood Zone']",
+                        "FloodZoneRaw": "@item()?['Flood Zone Raw']",
+                        "FloodZoneUpdated": "@body('Transform_Data')?['FloodZoneUpdated']",
+                        "InterestRate": "@{item()?['Interest Rate']}",
+                        "LandEconomicType": "@item()?['Land Economic Type']",
+                        "LastSale": "@{item()?['Last Sale']}",
+                        "Latitude": "@body('Transform_Data')?['Latitude']",
+                        "LegalDescription1": "@body('Transform_Data')?['LegalDescription1']",
+                        "LegalDescription2": "@body('Transform_Data')?['LegalDescription2']",
+                        "LoanExpiresYear": "@{item()?['Loan Expires Year']}",
+                        "LoanType": "@{item()?['Loan Type']}",
+                        "LoanYear": "@{item()?['Loan Year']}",
+                        "LoanYearLength": "@if(\n  or(\n    empty(trim(string(item()?['Loan Expires Year']))),\n    empty(trim(string(item()?['Loan Year'])))\n  ),\n  null,\n  if(\n    and(\n      greater(\n        int(trim(string(item()?['Loan Expires Year']))),\n        0\n      ),\n      greater(\n        int(trim(string(item()?['Loan Year']))),\n        0\n      )\n    ),\n    sub(\n      int(trim(string(item()?['Loan Expires Year']))),\n      int(trim(string(item()?['Loan Year'])))\n    ),\n    null\n  )\n)",
+                        "LoanMonth": "@{item()?['Loan Month']}",
+                        "Longitude": "@body('Transform_Data')?['Longitude']",
+                        "LotSizeAcres": "@body('Transform_Data')?['LotSizeAcres']",
+                        "MonthlyPayment": "@{item()?['Monthly Payment']}",
+                        "Mortgagor": "@{trim(\n  concat(\n    item()?['Mortgagor First Name'],\n    ' ',\n    item()?['Mortgagor Last Name']\n  )\n)}",
+                        "Mortgagee": "@{item()?['Mortgagee']}",
+                        "Mortgage1Position": "@item()?['Mortgage 1 Position']",
+                        "Mortgage2": "@item()?['Mortgage 2']",
+                        "Mortgage3": "@item()?['Mortgage 3']",
+                        "NumberLoans": "@item()?['Total Liens']",
+                        "OpeningBid": "@item()?['OpeningBid']",
+                        "OwnerAddress": "@{if(\n  or(\n    empty(string(item()?['Owner Street Number'])),\n    equals(string(item()?['Owner Street Number']), '0')\n  ),\n  '',\n  concat(\n    string(item()?['Owner Street Number']),\n    ' '\n  )\n)}@{item()?['Owner Street Name']}",
+                        "OwnerCity": "@item()?['Owner City']",
+                        "OwnerFirstName": "@item()?['Mortgagor First Name']",
+                        "OwnerLastName": "@item()?['Mortgagor Last Name']",
+                        "OwnerOccupied": "@body('Transform_Data')?['OwnerOccupied']",
+                        "OwnershipType": "@item()?['Ownership Type']",
+                        "OwnerState": "@item()?['Owner State']",
+                        "OwnerZipFive": "@item()?['Owner Zip']",
+                        "Plaintiff": "@body('Transform_Data')?['Plaintiff']",
+                        "PlaintiffMaxBid": "@body('Transform_Data')?['PlaintiffMaxBid']",
+                        "Pool": "@body('Transform_Data')?['Pool']",
+                        "POV": "@item()?['POV']",
+                        "PreviousPosting": "@{item()?['Previous Posting']}",
+                        "PreviousSaleDate": "@{body('Transform_Data')?['PreviousSaleDate']}",
+                        "PreviousSalePrice": "@item()?['Previous Sale Price']",
+                        "PreviousSaleType": "@{body('Transform_Data')?['PreviousSaleType']}",
+                        "PropertySource": "@{triggerBody()?['Format/Value']}",
+                        "PropertyType": "@body('Transform_Data')?['PropertyType']",
+                        "PublicAccess": "@body('Transform_Data')?['PublicAccess']",
+                        "RadarID": "@{if(\r\n  and(\r\n    lessOrEquals(\r\n      length(body('Transform_Data')?['RadarID']),\r\n      9\r\n    ),\r\n    contains(\r\n      body('Transform_Data')?['RadarID'],\r\n      '-0-0-0'\r\n    )\r\n  ),\r\n  outputs('Alternate_UID'),\r\n  body('Transform_Data')?['RadarID']\r\n)}",
+                        "RightofWayFlag": "@body('Transform_Data')?['RightofWayFlag']",
+                        "SaleAmount": "@item()?['Sale Amount']",
+                        "SaleDate": "@{body('Transform_Data')?['SaleDate']}",
+                        "SaleType": "@{item()?['Sale Type']}",
+                        "SaleTime": "@item()?['Auction Sale Time']",
+                        "SqFt": "@item()?['Property Sq Footage']",
+                        "State": "@body('Transform_Data')?['State']",
+                        "Subdivision": "@item()?['Subdivision']",
+                        "SumBuildingSqFt": "@item()?['Sum Building SqFt']",
+                        "TotalLoanBalance": "@item()?['Est Unpaid Bal']",
+                        "TotalLienAmount": "@item()?['Total Lien Amount']",
+                        "TriggerType": "New Upload",
+                        "Trustee": "@{item()?['Trustee']}",
+                        "Units": "@item()?['Number of Units']",
+                        "VacantSince": "@body('Transform_Data')?['VacantSince']",
+                        "VieworInfluence": "@body('Transform_Data')?['VieworInfluence']",
+                        "Volume": "@{item()?['Volume']}",
+                        "YearBuilt": "@if(\r\n  not(empty(string(item()?['Year Of Construction']))),\r\n  if(\r\n    greater(\r\n      int(item()?['Year Of Construction']),\r\n      1800\r\n    ),\r\n    int(item()?['Year Of Construction']),\r\n    null\r\n  ),\r\n  null\r\n)",
+                        "Zip": "@body('Transform_Data')?['Zip']",
+                        "ZipFive": "@body('Transform_Data')?['Zip']"
+                      },
+                      "runAfter": {
+                        "Format_County": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Format_County": {
+                      "type": "Scope",
+                      "actions": {
+                        "Set_County_Name": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "strCountyName",
+                            "value": "@toUpper(trim(string(item()?['County Code'])))"
+                          }
+                        },
+                        "County_Code": {
+                          "type": "If",
+                          "description": "Check if the County is a 2- or 3-character code",
+                          "expression": {
+                            "and": [
+                              {
+                                "lessOrEquals": [
+                                  "@length(trim(string(variables('strCountyName'))))",
+                                  "@3"
+                                ]
+                              },
+                              {
+                                "greater": [
+                                  "@length(trim(string(item()?['Zip'])))",
+                                  "@0"
+                                ]
+                              }
+                            ]
+                          },
+                          "actions": {
+                            "Get_County_Name": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@outputs('Get_County_Listing')?['body/value']",
+                                "where": "@equals(trim(item()?['Title']),string(items('Each_Property')?['Zip']))"
+                              }
+                            },
+                            "County_Matched": {
+                              "type": "If",
+                              "expression": {
+                                "and": [
+                                  {
+                                    "equals": [
+                                      "@empty(body('Get_County_Name'))",
+                                      "@false"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "actions": {
+                                "Final_County_Name": {
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "strCountyName",
+                                    "value": "@toUpper(first(body('Get_County_Name'))?['County'])"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Get_County_Name": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Set_County_Name": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "Valid_County": {
+                      "type": "If",
+                      "description": "County is valid if either of the following is true:\n(1) it's not in Texas\n(b) it's in Texas but ZIP is in County Listing (County Name is spelled out)",
+                      "expression": {
+                        "or": [
+                          {
+                            "not": {
+                              "equals": [
+                                "@body('Transform_Data')?['State']",
+                                "TX"
+                              ]
+                            }
+                          },
+                          {
+                            "greaterOrEquals": [
+                              "@length(variables('strCountyName'))",
+                              4
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Find_Matching_Item": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                              "$filter": "Title eq '@{body('Transform_Data')?['RadarID']}'"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "GetItems",
+                              "connectionName": "shared_sharepointonline"
+                            }
+                          }
+                        },
+                        "Matches_Found": {
+                          "type": "If",
+                          "expression": {
+                            "and": [
+                              {
+                                "equals": [
+                                  "@empty(body('Find_Matching_Item')?['value'])",
+                                  "@false"
+                                ]
+                              }
+                            ]
+                          },
+                          "actions": {
+                            "Data_Differences": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('AVP_API__Mapping')",
+                                "where": "@equals(and(\r\n  not(\r\n    empty(\r\n      string(\r\n          outputs('Update_Payload')?\r\n          [\r\n            item()?['API Key']\r\n          ]\r\n      )\r\n    )\r\n  ),\r\n  not(\r\n    equals(\r\n      toLower(\r\n        string(\r\n          first(body('Find_Matching_Item')?['value'])?\r\n            [\r\n              if(\r\n                equals(\r\n                  item()?['SPL Type'],\r\n                  'Choice'\r\n                ),\r\n                concat(\r\n                  item()?['SPL Column'],\r\n                  '/Value'\r\n                ),\r\n                item()?['SPL Column']\r\n              )\r\n            ]\r\n        )\r\n      ),\r\n      toLower(\r\n        string(\r\n          outputs('Update_Payload')?\r\n          [\r\n            item()?['API Key']\r\n          ]\r\n        )\r\n      )\r\n    )\r\n  )\r\n),true)"
+                              }
+                            },
+                            "Diffs_Found": {
+                              "type": "If",
+                              "expression": {
+                                "and": [
+                                  {
+                                    "equals": [
+                                      "@empty(body('Data_Differences'))",
+                                      "@false"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "actions": {
+                                "Differences_array": {
+                                  "type": "Select",
+                                  "inputs": {
+                                    "from": "@body('Data_Differences')",
+                                    "select": {
+                                      "@{item()?['API Key']}": "@concat(\r\n  string(\r\n    first(body('Find_Matching_Item')?['value'])?\r\n      [\r\n        if(\r\n          equals(\r\n            item()?['SPL Type'],\r\n            'Choice'\r\n          ),\r\n          concat(\r\n            item()?['SPL Column'],\r\n            '/Value'\r\n          ),\r\n          item()?['SPL Column']\r\n        )\r\n      ]\r\n  ),\r\n  ' <> ',\r\n  string(\r\n    outputs('Update_Payload')?\r\n    [\r\n      item()?['API Key']\r\n    ]\r\n  )\r\n)"
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Update_Property_List": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Differences_summary": {
+                                  "type": "Compose",
+                                  "inputs": "@json(\r\n  replace(\r\n    string(body('Differences_array')),\r\n    '},{',\r\n    ','\r\n  )\r\n)",
+                                  "runAfter": {
+                                    "Differences_array": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Append_Diff_Data": {
+                                  "type": "AppendToArrayVariable",
+                                  "inputs": {
+                                    "name": "aryDataDiff",
+                                    "value": {
+                                      "Property UID": "@body('Transform_Data')?['RadarID']",
+                                      "Differences": "@first(outputs('Differences_summary'))"
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Differences_summary": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Update_Property_List": {
+                                  "type": "Http",
+                                  "inputs": {
+                                    "uri": "@body('Get_Callback_URL')?['callback_url']",
+                                    "method": "POST",
+                                    "body": "@outputs('Update_Payload')"
+                                  },
+                                  "runtimeConfiguration": {
+                                    "contentTransfer": {
+                                      "transferMode": "Chunked"
+                                    }
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Data_Differences": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "else": {
+                            "actions": {
+                              "Add_Property_List": {
+                                "type": "Http",
+                                "inputs": {
+                                  "uri": "@body('Get_Callback_URL')?['callback_url']",
+                                  "method": "POST",
+                                  "body": "@outputs('Update_Payload')"
+                                },
+                                "runtimeConfiguration": {
+                                  "contentTransfer": {
+                                    "transferMode": "Chunked"
+                                  }
+                                }
+                              },
+                              "Append_New_Data": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "aryDataDiff",
+                                  "value": {
+                                    "Property UID": "@body('Transform_Data')?['RadarID']",
+                                    "New Property": "@true"
+                                  }
+                                },
+                                "runAfter": {
+                                  "Add_Property_List": [
+                                    "Succeeded"
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Find_Matching_Item": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Update_Payload": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Add_to_Excludes": {
+                        "type": "If",
+                        "expression": {
+                          "and": [
+                            {
+                              "greater": [
+                                "@length(string(body('Transform_Data')?['RadarID']))",
+                                5
+                              ]
+                            }
+                          ]
+                        },
+                        "actions": {
+                          "Append_to_Excludes": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "aryProperty_Excluded",
+                              "value": {
+                                "Address": "@body('Transform_Data')?['Address']",
+                                "Subdivision": "@item()?['Subdivision']",
+                                "State": "@{body('Transform_Data')?['State']}",
+                                "Zip": "@item()?['Zip']",
+                                "County": "@toUpper(trim(string(item()?['County Code'])))",
+                                "Class": "@item()?['Class']",
+                                "SqFt": "@item()?['Property Sq Footage']"
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "actions": {}
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Alternate_UID": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Alternate_UID": {
+                  "type": "Compose",
+                  "inputs": "@if(\r\n  and(\r\n    lessOrEquals(\r\n      length(body('Transform_Data')?['RadarID']),\r\n      9\r\n    ),\r\n    contains(\r\n      body('Transform_Data')?['RadarID'],\r\n      '-0-0-0'\r\n    )\r\n  ),\r\n  if(\r\n    not(empty(string(body('Transform_Data')?['Latitude']))),\r\n    concat(\r\n      body('Transform_Data')?['Latitude'],\r\n      body('Transform_Data')?['Longitude']\r\n    ),\r\n    body('Transform_Data')?['RadarID']\r\n  ),\r\n  body('Transform_Data')?['RadarID']\r\n)",
+                  "runAfter": {
+                    "Transform_Data": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Match_Property_Type": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('Get_PType_Codes')?['body/value']",
+                    "where": "@contains(toLower(string(items('Each_Property')?['Class'])),item()?['Title'])"
+                  }
+                }
+              }
+            },
+            "Send_email_re_failure_to_process_property": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                  "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                  "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed uploading property: @{body('Transform_Data')?['Address']}",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encountered an issue when processing the following @{triggerBody()?['Format/Value']} property: @{body('Transform_Data')?['Address']}.@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2",
+                  "connectionName": "shared_office365"
+                }
+              },
+              "runAfter": {
+                "Record_in_AVP": [
+                  "Failed"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Process_Files": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Handle_County": {
+          "type": "Scope",
+          "actions": {
+            "Get_County_Listing": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Counties) (clr_UCHAVPSharePointListCounties)')",
+                  "$filter": "State eq '@{triggerBody()?['State/Value']}'"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 5000
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Field_Mappings": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_County_Name": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "strCountyName",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Property_Tmp": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Excludes_ary": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryProperty_Excluded",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Headers_List": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Headers_List": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryHeaders_Rename",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_County_Name": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Field_Mappings": {
+          "type": "Scope",
+          "actions": {
+            "Get_AVP_API_Config": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (AVP API Config) (clr_UCHAVPSharePointListAVPAPIConfig)')",
+                  "$filter": "AVPProperty/Label ne ''",
+                  "$top": 5000
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Get_PType_Codes": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "AVP_API__Mapping": {
+              "type": "Select",
+              "inputs": {
+                "from": "@xpath(\r\n  xml(\r\n    json(\r\n      concat(\r\n        '{\"Root\":{\"Item\":', \r\n        body('Get_AVP_API_Config')?['value'], \r\n        '}}'\r\n      )\r\n    )\r\n  ),\r\n  '/Root/Item[AVPProperty/Value/text()]'\r\n)",
+                "select": {
+                  "API Key": "@trim(\n  replace(\n    replace(\n      xpath(item(), 'string(/Item/Title)'), \n      '_x005F_x', '_x'\n    ),\n    ')',\n    ''\n  )\n)",
+                  "SPL Column": "@trim(\r\n  replace(\r\n    replace(\r\n      last(\r\n        split(\r\n          replace(\r\n            xpath(item(), 'string(/Item/AVPProperty/Value)'), \r\n            '_x005F_x', '_x'\r\n          ),\r\n          'ID: '\r\n        )\r\n      ),\r\n      ')',\r\n      ''\r\n    ),\r\n    '/Value',\r\n    ''\r\n  )\r\n)",
+                  "SPL Type": "@trim(\r\n  first(\r\n    split(\r\n      last(\r\n        split(\r\n          replace(\r\n            xpath(item(), 'string(/Item/AVPProperty/Value)'), \r\n            '_x005F_x', '_x'\r\n          ),\r\n          'Data: '\r\n        )\r\n      ),\r\n      ', '\r\n    )\r\n  )\r\n)"
+                }
+              },
+              "runAfter": {
+                "Get_AVP_API_Config": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_PType_Codes": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP Property Type Codes (clr_UCHAVPPropertyTypeCodes)')",
+                  "$top": 5000
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Init_Data_Diff_ary": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Data_Diff_ary": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryDataDiff",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Excludes_ary": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Post-Processing": {
+          "type": "Scope",
+          "actions": {
+            "Update_item": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Manual Data Import) (clr_UCHAVPSharePointListManualDataImport)')",
+                  "id": "@triggerBody()?['ID']",
+                  "item/Format/Value": "@triggerBody()?['Format/Value']",
+                  "item/Status/Value": "Imported"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            },
+            "Differences_Reviewer": {
+              "type": "Compose",
+              "inputs": "@variables('aryDataDiff')",
+              "runAfter": {
+                "Update_item": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Exclusions": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(variables('aryProperty_Excluded'))",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Exclusions_Table": {
+                  "type": "Table",
+                  "inputs": {
+                    "from": "@variables('aryProperty_Excluded')",
+                    "format": "HTML"
+                  }
+                },
+                "Send_email_alert_about_exclusions": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                      "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Manual Import) (clr_UCHAVPNotificationChecker)')",
+                      "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Excluded from upload (@{formatDateTime(\n  triggerBody()?['Created'],\n  'yyyy-MM-dd'\n)})",
+                      "emailMessage/Body": "    <style>\n        table {\n            border-collapse: collapse; \n            border-spacing: 0;\n        }\n        td, th {\n            word-wrap: break-word; \n            white-space: normal;   \n            border: 1px solid #000;\n            padding: 1px 5px; \n        }\n    </style>\n<p>The following @{triggerBody()?['Format/Value']} properties, uploaded on @{formatDateTime(\r\n  triggerBody()?['Created'],\r\n  'yyyy-MM-dd'\r\n)}, were excluded from the import process because they didn't meet pre-defined criteria.</p><p class=\"editor-paragraph\">@{body('Exclusions_Table')}</p><p class=\"editor-paragraph\">@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}</p>",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                      "operationId": "SharedMailboxSendEmailV2",
+                      "connectionName": "shared_office365"
+                    }
+                  },
+                  "runAfter": {
+                    "Exclusions_Table": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Differences_Reviewer": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Each_Property": [
+              "Succeeded",
+              "Failed"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,15 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPSharePointListAVPAPIConfig">
+  <apiid>/providers/microsoft.powerapps/apis/shared_sharepointonline</apiid>
+  <displayname default="UCH-AVP SharePoint List (AVP API Config)">
+    <label description="UCH-AVP SharePoint List (AVP API Config)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.8</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <parameterkey>table</parameterkey>
+  <parentdefinitionid>
+    <schemaname>clr_UCHAVPSharePointSite</schemaname>
+  </parentdefinitionid>
+  <secretstore>0</secretstore>
+  <type>100000004</type>
+</environmentvariabledefinition>

@@ -1,0 +1,196 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_keyvault-1": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP M365 Copilot API (Bearer Token) (clr_UCHAVPM365CopilotAPIBearerToken)": {
+          "defaultValue": "M365-COPILOT-Bearer-PRD",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPIBearerToken"
+          }
+        },
+        "UCH-AVP M365 Copilot API (URL | Refresh Token) (clr_UCHAVPM365CopilotAPIURLRefreshToken)": {
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPIURLRefreshToken"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Resource Paths Filter": {
+                  "type": "string"
+                },
+                "User Query": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "94a460ce-456b-45ac-8c9d-f5c6c77400ca"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@body('Transform_Results')"
+          },
+          "runAfter": {
+            "Transform_Results": [
+              "SUCCEEDED"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "365769ce-4279-463d-aed5-6f8e583b85c3"
+          }
+        },
+        "Retrieve_Content": {
+          "type": "Scope",
+          "actions": {
+            "Do_until": {
+              "type": "Until",
+              "expression": "@equals(outputs('Retrieve_Data')?['statusCode'],200)",
+              "limit": {
+                "count": 3,
+                "timeout": "PT1M"
+              },
+              "actions": {
+                "Retrieve_Data": {
+                  "type": "Http",
+                  "inputs": {
+                    "uri": "https://graph.microsoft.com/v1.0/copilot/retrieval",
+                    "method": "POST",
+                    "headers": {
+                      "Authorization": "Bearer @{outputs('Get_Bearer_Token')?['body/value']}",
+                      "Content-Type": "application/json"
+                    },
+                    "body": {
+                      "queryString": "@{triggerBody()?['User Query']}",
+                      "dataSource": "sharePoint",
+                      "filterExpression": "@triggerBody()?['Resource Paths Filter']",
+                      "resourceMetadata": [
+                        "title",
+                        "created"
+                      ],
+                      "maximumNumberOfResults": 10
+                    }
+                  },
+                  "runAfter": {
+                    "Get_Bearer_Token": [
+                      "Succeeded"
+                    ]
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  }
+                },
+                "Invalid_Token": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@body('Retrieve_Data')?['error']?['code']",
+                          "InvalidAuthenticationToken"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Refresh_Bearer_Token": {
+                      "type": "Http",
+                      "inputs": {
+                        "uri": "@parameters('UCH-AVP M365 Copilot API (URL | Refresh Token) (clr_UCHAVPM365CopilotAPIURLRefreshToken)')",
+                        "method": "POST"
+                      },
+                      "runtimeConfiguration": {
+                        "contentTransfer": {
+                          "transferMode": "Chunked"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Retrieve_Data": [
+                      "Failed"
+                    ]
+                  }
+                },
+                "Get_Bearer_Token": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "secretName": "@parameters('UCH-AVP M365 Copilot API (Bearer Token) (clr_UCHAVPM365CopilotAPIBearerToken)')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                      "operationId": "GetSecret",
+                      "connectionName": "shared_keyvault-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Transform_Results": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Retrieve_Data')?['retrievalHits']",
+            "select": {
+              "webUrl": "@replace(\n  item()?['webUrl'],\n  ' ',\n  '%20'\n)",
+              "extracts": "@item()?['extracts']",
+              "resourceMetadata": "@item()?['resourceMetadata']"
+            }
+          },
+          "runAfter": {
+            "Retrieve_Content": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

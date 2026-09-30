@@ -1,0 +1,103 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (GPT Prompts) (clr_UCHAVPSharePointListGPTPrompts)": {
+          "defaultValue": "7737d1f4-74ad-44e9-8620-246995af22e8",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListGPTPrompts"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "0a547ae6-b9c3-4113-b2b2-7809b9f98854"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Title": {
+                  "type": "string"
+                }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Get_LLM_Prompt": {
+          "runAfter": {},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (GPT Prompts) (clr_UCHAVPSharePointListGPTPrompts)')",
+              "$filter": "Title eq '@{triggerBody()?['Title']}'"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          }
+        },
+        "Response": {
+          "runAfter": {
+            "Get_LLM_Prompt": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c8064dba-579c-46c0-b141-7e287f616ae3"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Successful",
+              "Prompt": "@{first(body('Get_LLM_Prompt')?['value'])?['SystemPrompt']}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

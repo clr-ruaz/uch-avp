@@ -1,0 +1,2193 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline-1": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        },
+        "UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)": {
+          "defaultValue": "AGR APT COM GOV IND LND MFR OFC REC RTL UTL",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidPropertyCodes"
+          }
+        },
+        "UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)": {
+          "defaultValue": "CND OTH RES SFR UNK",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidZillowCodes"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "UCH-AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP SharePoint List (Activity Stream) (clr_UCHAVPSharePointListActivityStream)": {
+          "defaultValue": "6dc132cb-a7e3-4efe-ab2b-96113188a313",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListActivityStream"
+          }
+        },
+        "UCH-AVP PropertyRadar (List Name | Feeder) (clr_UCHAVPPropertyRadarListNameFeeder)": {
+          "defaultValue": "AVP Sync Feeder",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPPropertyRadarListNameFeeder"
+          }
+        },
+        "UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "APN": {},
+                "AVM": {},
+                "Address": {},
+                "AnnualTaxes": {},
+                "AssessedValue": {},
+                "Attorney": {},
+                "AvailableEquity": {},
+                "Baths": {},
+                "Beds": {},
+                "CaseNumber": {},
+                "Change1": {},
+                "Change2": {},
+                "Change3": {},
+                "City": {},
+                "County": {},
+                "DOTPosition": {},
+                "DaysOnMarket": {},
+                "DefaultAmount": {},
+                "DefaultAsOf": {},
+                "EquityPercent": {},
+                "EstimatedTaxRate": {},
+                "EstimatedValue": {},
+                "FirstAmount": {},
+                "FirstDate": {},
+                "FirstLenderOriginal": {},
+                "FirstLoanAmount": {},
+                "FirstLoanDate": {},
+                "FirstLoanLender": {},
+                "FirstLoanPurpose": {},
+                "FirstLoanRate": {},
+                "FirstPurpose": {},
+                "FirstRate": {},
+                "ForeclosureRecDate": {},
+                "ForeclosureStage": {},
+                "LastTransferRecDate": {},
+                "LastTransferSeller": {},
+                "LastTransferType": {},
+                "LastTransferValue": {},
+                "Latitude": {},
+                "LegalOwner": {},
+                "LisPendensType": {},
+                "ListName": {},
+                "ListingPrice": {},
+                "Longitude": {},
+                "LotSize": {},
+                "LotSizeAcres": {},
+                "MailingAddress": {},
+                "MailingCity": {},
+                "MailingState": {},
+                "MailingZip": {},
+                "NumberLoans": {},
+                "OpenLoans": {},
+                "OpeningBid": {},
+                "OriginalSaleDate": {},
+                "Owner": {},
+                "OwnerAddress": {},
+                "OwnerCity": {},
+                "OwnerFirstName": {},
+                "OwnerLastName": {},
+                "OwnerSpouseFirstName": {},
+                "OwnerState": {},
+                "OwnerZipFive": {},
+                "PType": {},
+                "PhotoURL1": {},
+                "Pool": {},
+                "PostReason": {},
+                "PreviousSaleDate": {},
+                "PrimaryContactEmail": {},
+                "PrimaryContactFirst": {},
+                "PrimaryContactLast": {},
+                "PrimaryContactPhone": {},
+                "PrimaryEmail1": {},
+                "PrimaryEmail1Status": {},
+                "PrimaryFirstName": {},
+                "PrimaryLastName": {},
+                "PrimaryMobilePhone1": {},
+                "PrimaryMobilePhone1Status": {},
+                "PrimaryPhone1": {},
+                "PrimaryPhone1Status": {},
+                "PropertyType": {},
+                "PropertyURL": {},
+                "PurchaseAmount": {},
+                "PurchaseDate": {},
+                "PurchaseSeller": {},
+                "PurchaseType": {},
+                "RadarID": {},
+                "SaleAmount": {},
+                "SaleDate": {},
+                "SaleDateRelative": {},
+                "SalePlace": {},
+                "SaleTime": {},
+                "SecondaryEmail1": {},
+                "SecondaryEmail1Status": {},
+                "SecondaryFirstName": {},
+                "SecondaryLastName": {},
+                "SecondaryMobilePhone1": {},
+                "SecondaryMobilePhone1Status": {},
+                "SecondaryPhone1": {},
+                "SecondaryPhone1Status": {},
+                "SqFt": {},
+                "State": {},
+                "Stories": {},
+                "Subdivision": {},
+                "TotalLoanBalance": {},
+                "TriggerType": {},
+                "Units": {},
+                "WinningBid": {},
+                "YearBuilt": {},
+                "Zip": {},
+                "ZipFive": {},
+                "inForeclosure": {},
+                "isListedForSale": {},
+                "isMailVacant": {},
+                "isSameMailingOrExempt": {},
+                "isSiteVacant": {},
+                "PropertySource": {},
+                "LegalDescription1": {},
+                "LegalDescription2": {},
+                "LoanType": {},
+                "Mortgagor": {},
+                "Mortgagee": {},
+                "Trustee": {},
+                "Volume": {},
+                "LoanYear": {},
+                "LoanMonth": {},
+                "InterestRate": {},
+                "MonthlyPayment": {},
+                "LoanExpiresYear": {},
+                "LoanYearLength": {},
+                "PreviousPosting": {}
+              }
+            },
+            "method": "POST"
+          },
+          "metadata": {
+            "operationMetadataId": "90f358ba-fbbc-4c13-b03b-683626c04795"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Success",
+              "SharePoint Details": "@if(\r\n  variables('blnUpdate'),\r\n  body('Update_Dataset'),\r\n  body('Create_new_item')\r\n)"
+            }
+          },
+          "runAfter": {
+            "Update_AVP_DB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "595a636c-9a23-429e-a093-8d72a00a849b"
+          }
+        },
+        "Update_AVP_DB": {
+          "type": "Scope",
+          "actions": {
+            "Valuation_Source": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  contains(\r\n    parameters('UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)'),\r\n    body('Update_Payload')?['PropertyType']\r\n  ),\r\n  'CoStar',\r\n  if(\r\n    contains(\r\n      parameters('UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)'),\r\n      body('Update_Payload')?['PropertyType']\r\n    ),\r\n    'Zillow',\r\n    null\r\n  )\r\n)",
+              "runAfter": {
+                "Update_Payload": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5427384d-28ef-47c0-aaa1-a18b2670a83f"
+              }
+            },
+            "Update_Payload": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": {
+                  "APN": "@if(not(empty(string(triggerBody()?['APN']))), triggerBody()?['APN'], null)",
+                  "AppraiserLink": "@if(\r\n  not(empty(string(triggerBody()?['AppraiserLink']))), \r\n  triggerBody()?['AppraiserLink'], \r\n  null\r\n)",
+                  "AuctionStatus": "@if(\r\n  not(empty(string(triggerBody()?['AuctionStatus']))), \r\n  triggerBody()?['AuctionStatus'], \r\n  null\r\n)",
+                  "AVM": "@if(not(empty(string(triggerBody()?['AVM']))), triggerBody()?['AVM'], null)",
+                  "Address": "@if(not(empty(string(triggerBody()?['Address']))), triggerBody()?['Address'], null)",
+                  "AnnualTaxes": "@if(not(empty(string(triggerBody()?['AnnualTaxes']))), triggerBody()?['AnnualTaxes'], null)",
+                  "AssessedImprovement": "@if(not(empty(string(triggerBody()?['AssessedImprovement']))), triggerBody()?['AssessedImprovement'], null)",
+                  "AssessedLand": "@if(not(empty(string(triggerBody()?['AssessedLand']))), triggerBody()?['AssessedLand'], null)",
+                  "AssessedValue": "@if(not(empty(string(triggerBody()?['AssessedValue']))), triggerBody()?['AssessedValue'], null)",
+                  "AssessmentFootage": "@if(not(empty(string(triggerBody()?['AssessmentFootage']))), triggerBody()?['AssessmentFootage'], null)",
+                  "Attorney": "@if(not(empty(string(triggerBody()?['Attorney']))), triggerBody()?['Attorney'], null)",
+                  "AvailableEquity": "@if(not(empty(string(triggerBody()?['AvailableEquity']))), triggerBody()?['AvailableEquity'], null)",
+                  "Baths": "@if(not(empty(string(triggerBody()?['Baths']))), triggerBody()?['Baths'], null)",
+                  "Beds": "@if(not(empty(string(triggerBody()?['Beds']))), triggerBody()?['Beds'], null)",
+                  "BiddingLink": "@if(\r\n  not(empty(string(triggerBody()?['BiddingLink']))), \r\n  triggerBody()?['BiddingLink'], \r\n  null\r\n)",
+                  "CaseNumber": "@if(not(empty(string(triggerBody()?['CaseNumber']))), triggerBody()?['CaseNumber'], null)",
+                  "Change1": "@if(not(empty(string(triggerBody()?['Change1']))), triggerBody()?['Change1'], null)",
+                  "Change2": "@if(not(empty(string(triggerBody()?['Change2']))), triggerBody()?['Change2'], null)",
+                  "Change3": "@if(not(empty(string(triggerBody()?['Change3']))), triggerBody()?['Change3'], null)",
+                  "City": "@if(not(empty(string(triggerBody()?['City']))), triggerBody()?['City'], null)",
+                  "ConfidenceRating": "@if(\r\n  not(empty(string(triggerBody()?['ConfidenceRating']))), \r\n  triggerBody()?['ConfidenceRating'], \r\n  null\r\n)",
+                  "County": "@if(not(empty(string(triggerBody()?['County']))), triggerBody()?['County'], null)",
+                  "CountyLandValue": "@if(\r\n  not(empty(string(triggerBody()?['CountyLandValue']))), \r\n  triggerBody()?['CountyLandValue'], \r\n  null\r\n)",
+                  "CountyMarketValue": "@if(\r\n  not(empty(string(triggerBody()?['CountyMarketValue']))), \r\n  triggerBody()?['CountyMarketValue'], \r\n  null\r\n)",
+                  "DaysOnMarket": "@if(not(empty(string(triggerBody()?['DaysOnMarket']))), triggerBody()?['DaysOnMarket'], null)",
+                  "DefaultAmount": "@if(not(empty(string(triggerBody()?['DefaultAmount']))), triggerBody()?['DefaultAmount'], null)",
+                  "DefaultAsOf": "@if(not(empty(string(triggerBody()?['DefaultAsOf']))), triggerBody()?['DefaultAsOf'], null)",
+                  "Defendants": "@if(\r\n  not(empty(string(triggerBody()?['Defendants']))), \r\n  triggerBody()?['Defendants'], \r\n  null\r\n)",
+                  "DOTPosition": "@if(not(empty(string(triggerBody()?['DOTPosition']))), triggerBody()?['DOTPosition'], null)",
+                  "EquityPercent": "@if(not(empty(string(triggerBody()?['EquityPercent']))), triggerBody()?['EquityPercent'], null)",
+                  "EstimatedTaxRate": "@if(not(empty(string(triggerBody()?['EstimatedTaxRate']))), triggerBody()?['EstimatedTaxRate'], null)",
+                  "EstimatedValue": "@if(not(empty(string(triggerBody()?['EstimatedValue']))), triggerBody()?['EstimatedValue'], null)",
+                  "FEMAFloodMap": "@if(not(empty(string(triggerBody()?['FEMAFloodMap']))), triggerBody()?['FEMAFloodMap'], null)",
+                  "FinalJudgementAmount": "@if(\r\n  not(empty(string(triggerBody()?['FinalJudgementAmount']))), \r\n  triggerBody()?['FinalJudgementAmount'], \r\n  null\r\n)",
+                  "FinalJudgementDocs": "@if(\r\n  not(empty(string(triggerBody()?['FinalJudgementDocs']))), \r\n  triggerBody()?['FinalJudgementDocs'], \r\n  null\r\n)",
+                  "FirstAmount": "@if(not(empty(string(triggerBody()?['FirstAmount']))), triggerBody()?['FirstAmount'], null)",
+                  "FirstDate": "@if(not(empty(string(triggerBody()?['FirstDate']))), triggerBody()?['FirstDate'], null)",
+                  "FirstLenderOriginal": "@if(not(empty(string(triggerBody()?['FirstLenderOriginal']))), triggerBody()?['FirstLenderOriginal'], null)",
+                  "FirstLoanAmount": "@if(not(empty(string(triggerBody()?['FirstLoanAmount']))), triggerBody()?['FirstLoanAmount'], null)",
+                  "FirstLoanDate": "@if(not(empty(string(triggerBody()?['FirstLoanDate']))), triggerBody()?['FirstLoanDate'], null)",
+                  "FirstLoanLender": "@if(not(empty(string(triggerBody()?['FirstLoanLender']))), triggerBody()?['FirstLoanLender'], null)",
+                  "FirstLoanPurpose": "@if(not(empty(string(triggerBody()?['FirstLoanPurpose']))), triggerBody()?['FirstLoanPurpose'], null)",
+                  "FirstLoanRate": "@if(not(empty(string(triggerBody()?['FirstLoanRate']))), triggerBody()?['FirstLoanRate'], null)",
+                  "FirstPurpose": "@if(not(empty(string(triggerBody()?['FirstPurpose']))), triggerBody()?['FirstPurpose'], null)",
+                  "FirstRate": "@if(not(empty(string(triggerBody()?['FirstRate']))), triggerBody()?['FirstRate'], null)",
+                  "FloodZoneCode": "@if(not(empty(string(triggerBody()?['FloodZoneCode']))), triggerBody()?['FloodZoneCode'], null)",
+                  "FloodZoneRaw": "@if(not(empty(string(triggerBody()?['FloodZoneRaw']))), triggerBody()?['FloodZoneRaw'], null)",
+                  "FloodZoneUpdated": "@if(not(empty(string(triggerBody()?['FloodZoneUpdated']))), triggerBody()?['FloodZoneUpdated'], null)",
+                  "ForeclosureRecDate": "@if(not(empty(string(triggerBody()?['ForeclosureRecDate']))), triggerBody()?['ForeclosureRecDate'], null)",
+                  "ForeclosureStage": "@if(not(empty(string(triggerBody()?['ForeclosureStage']))), triggerBody()?['ForeclosureStage'], null)",
+                  "inForeclosure": "@if(not(empty(string(triggerBody()?['inForeclosure']))), triggerBody()?['inForeclosure'], null)",
+                  "InterestRate": "@if(\n  not(empty(string(triggerBody()?['InterestRate']))), \n  triggerBody()?['InterestRate'], \n  null\n)",
+                  "isListedForSale": "@if(not(empty(string(triggerBody()?['isListedForSale']))), triggerBody()?['isListedForSale'], null)",
+                  "isMailVacant": "@if(not(empty(string(triggerBody()?['isMailVacant']))), triggerBody()?['isMailVacant'], null)",
+                  "isSameMailingOrExempt": "@if(not(empty(string(triggerBody()?['isSameMailingOrExempt']))), triggerBody()?['isSameMailingOrExempt'], null)",
+                  "isSiteVacant": "@if(not(empty(string(triggerBody()?['isSiteVacant']))), triggerBody()?['isSiteVacant'], null)",
+                  "LandEconomicType": "@if(\r\n  not(empty(string(triggerBody()?['LandEconomicType']))), \r\n  triggerBody()?['LandEconomicType'], \r\n  null\r\n)",
+                  "LastSale": "@if(\r\n  not(empty(string(triggerBody()?['LastSale']))), \r\n  triggerBody()?['LastSale'], \r\n  null\r\n)",
+                  "LastTransferRecDate": "@if(not(empty(string(triggerBody()?['LastTransferRecDate']))), triggerBody()?['LastTransferRecDate'], null)",
+                  "LastTransferSeller": "@if(not(empty(string(triggerBody()?['LastTransferSeller']))), triggerBody()?['LastTransferSeller'], null)",
+                  "LastTransferType": "@if(not(empty(string(triggerBody()?['LastTransferType']))), triggerBody()?['LastTransferType'], null)",
+                  "LastTransferValue": "@if(not(empty(string(triggerBody()?['LastTransferValue']))), triggerBody()?['LastTransferValue'], null)",
+                  "Latitude": "@if(not(empty(string(triggerBody()?['Latitude']))), triggerBody()?['Latitude'], null)",
+                  "LegalDescription1": "@if(\n  not(empty(string(triggerBody()?['LegalDescription1']))), \n  triggerBody()?['LegalDescription1'], \n  null\n)",
+                  "LegalDescription2": "@if(\n  not(empty(string(triggerBody()?['LegalDescription2']))), \n  triggerBody()?['LegalDescription2'], \n  null\n)",
+                  "LegalOwner": "@if(not(empty(string(triggerBody()?['LegalOwner']))), triggerBody()?['LegalOwner'], null)",
+                  "LisPendensType": "@if(not(empty(string(triggerBody()?['LisPendensType']))), triggerBody()?['LisPendensType'], null)",
+                  "ListName": "@if(not(empty(string(triggerBody()?['ListName']))), triggerBody()?['ListName'], null)",
+                  "ListingPrice": "@if(not(empty(string(triggerBody()?['ListingPrice']))), triggerBody()?['ListingPrice'], null)",
+                  "LoanExpiresYear": "@if(\n  not(empty(string(triggerBody()?['LoanExpiresYear']))), \n  triggerBody()?['LoanExpiresYear'], \n  null\n)",
+                  "LoanMonth": "@if(\n  not(empty(string(triggerBody()?['LoanMonth']))), \n  triggerBody()?['LoanMonth'], \n  null\n)",
+                  "LoanType": "@if(\r\n  not(empty(string(triggerBody()?['LoanType']))), \r\n  triggerBody()?['LoanType'], \r\n  null\r\n)",
+                  "LoanYear": "@if(\n  not(empty(string(triggerBody()?['LoanYear']))), \n  triggerBody()?['LoanYear'], \n  null\n)",
+                  "LoanYearLength": "@if(\n  not(empty(string(triggerBody()?['LoanYearLength']))), \n  triggerBody()?['LoanYearLength'], \n  null\n)",
+                  "Longitude": "@if(not(empty(string(triggerBody()?['Longitude']))), triggerBody()?['Longitude'], null)",
+                  "LotSize": "@if(not(empty(string(triggerBody()?['LotSize']))), triggerBody()?['LotSize'], null)",
+                  "LotSizeAcres": "@if(not(empty(string(triggerBody()?['LotSizeAcres']))), triggerBody()?['LotSizeAcres'], null)",
+                  "MailingAddress": "@if(not(empty(string(triggerBody()?['MailingAddress']))), triggerBody()?['MailingAddress'], null)",
+                  "MailingCity": "@if(not(empty(string(triggerBody()?['MailingCity']))), triggerBody()?['MailingCity'], null)",
+                  "MailingState": "@if(not(empty(string(triggerBody()?['MailingState']))), triggerBody()?['MailingState'], null)",
+                  "MailingZip": "@if(not(empty(string(triggerBody()?['MailingZip']))), triggerBody()?['MailingZip'], null)",
+                  "MonthlyPayment": "@if(\n  not(empty(string(triggerBody()?['MonthlyPayment']))), \n  triggerBody()?['MonthlyPayment'], \n  null\n)",
+                  "Mortgagor": "@if(\n  not(empty(string(triggerBody()?['Mortgagor']))), \n  triggerBody()?['Mortgagor'], \n  null\n)",
+                  "Mortgagee": "@if(\n  not(empty(string(triggerBody()?['Mortgagee']))), \n  triggerBody()?['Mortgagee'], \n  null\n)",
+                  "Mortgage1Position": "@if(\r\n  not(empty(string(triggerBody()?['Mortgage1Position']))), \r\n  triggerBody()?['Mortgage1Position'], \r\n  null\r\n)",
+                  "Mortgage2": "@if(\r\n  not(empty(string(triggerBody()?['Mortgage2']))), \r\n  triggerBody()?['Mortgage2'], \r\n  null\r\n)",
+                  "Mortgage3": "@if(\r\n  not(empty(string(triggerBody()?['Mortgage3']))), \r\n  triggerBody()?['Mortgage3'], \r\n  null\r\n)",
+                  "NewRecordAttribute": "@if(\n  not(empty(string(triggerBody()?['NewRecordAttribute']))), \n  triggerBody()?['NewRecordAttribute'], \n  null\n)",
+                  "NewRecordType": "@if(\r\n  not(empty(string(triggerBody()?['NewRecordType']))), \r\n  triggerBody()?['NewRecordType'], \r\n  null\r\n)",
+                  "NumberLoans": "@if(not(empty(string(triggerBody()?['NumberLoans']))), triggerBody()?['NumberLoans'], null)",
+                  "OpenLoans": "@if(not(empty(string(triggerBody()?['OpenLoans']))), triggerBody()?['OpenLoans'], null)",
+                  "OpeningBid": "@if(not(empty(string(triggerBody()?['OpeningBid']))), triggerBody()?['OpeningBid'], null)",
+                  "OriginalSaleDate": "@if(not(empty(string(triggerBody()?['OriginalSaleDate']))), triggerBody()?['OriginalSaleDate'], null)",
+                  "Owner": "@if(not(empty(string(triggerBody()?['Owner']))), triggerBody()?['Owner'], null)",
+                  "OwnerAddress": "@if(not(empty(string(triggerBody()?['OwnerAddress']))), triggerBody()?['OwnerAddress'], null)",
+                  "OwnerCity": "@if(not(empty(string(triggerBody()?['OwnerCity']))), triggerBody()?['OwnerCity'], null)",
+                  "OwnerFirstName": "@if(not(empty(string(triggerBody()?['OwnerFirstName']))), triggerBody()?['OwnerFirstName'], null)",
+                  "OwnerLastName": "@if(not(empty(string(triggerBody()?['OwnerLastName']))), triggerBody()?['OwnerLastName'], null)",
+                  "OwnerOccupied": "@if(not(empty(string(triggerBody()?['OwnerOccupied']))), triggerBody()?['OwnerOccupied'], null)",
+                  "OwnershipType": "@if(not(empty(string(triggerBody()?['OwnershipType']))), triggerBody()?['OwnershipType'], null)",
+                  "OwnerSpouseFirstName": "@if(not(empty(string(triggerBody()?['OwnerSpouseFirstName']))), triggerBody()?['OwnerSpouseFirstName'], null)",
+                  "OwnerState": "@if(not(empty(string(triggerBody()?['OwnerState']))), triggerBody()?['OwnerState'], null)",
+                  "OwnerZipFive": "@if(\r\n  not(empty(string(triggerBody()?['OwnerZipFive']))), \r\n  if(\r\n    greater(\r\n      length(string(triggerBody()?['OwnerZipFive'])),\r\n      5\r\n    ),\r\n    substring(\r\n      string(triggerBody()?['OwnerZipFive']),\r\n      0,\r\n      5\r\n    ),\r\n    triggerBody()?['OwnerZipFive']\r\n  ), \r\n  null\r\n)",
+                  "PType": "@if(not(empty(string(triggerBody()?['PType']))), triggerBody()?['PType'], null)",
+                  "PhotoURL1": "@if(not(empty(string(triggerBody()?['PhotoURL1']))), triggerBody()?['PhotoURL1'], null)",
+                  "Plaintiff": "@if(\r\n  not(empty(string(triggerBody()?['Plaintiff']))), \r\n  triggerBody()?['Plaintiff'], \r\n  null\r\n)",
+                  "PlaintiffMaxBid": "@if(\r\n  not(empty(string(triggerBody()?['PlaintiffMaxBid']))), \r\n  triggerBody()?['PlaintiffMaxBid'], \r\n  null\r\n)",
+                  "Pool": "@if(not(empty(string(triggerBody()?['Pool']))), triggerBody()?['Pool'], null)",
+                  "PostReason": "@if(not(empty(string(triggerBody()?['PostReason']))), triggerBody()?['PostReason'], null)",
+                  "POV": "@if(\r\n  not(empty(string(triggerBody()?['POV']))), \r\n  triggerBody()?['POV'], \r\n  null\r\n)",
+                  "PreviousPosting": "@if(\n  not(empty(string(triggerBody()?['PreviousPosting']))), \n  triggerBody()?['PreviousPosting'], \n  null\n)",
+                  "PreviousSaleDate": "@if(not(empty(string(triggerBody()?['PreviousSaleDate']))), triggerBody()?['PreviousSaleDate'], null)",
+                  "PreviousSalePrice": "@if(\r\n  not(empty(string(triggerBody()?['PreviousSalePrice']))), \r\n  triggerBody()?['PreviousSalePrice'], \r\n  null\r\n)",
+                  "PreviousSaleType": "@if(\r\n  not(empty(string(triggerBody()?['PreviousSaleType']))), \r\n  triggerBody()?['PreviousSaleType'], \r\n  null\r\n)",
+                  "PrimaryContactEmail": "@if(not(empty(string(triggerBody()?['PrimaryContactEmail']))), triggerBody()?['PrimaryContactEmail'], null)",
+                  "PrimaryContactFirst": "@if(not(empty(string(triggerBody()?['PrimaryContactFirst']))), triggerBody()?['PrimaryContactFirst'], null)",
+                  "PrimaryContactLast": "@if(not(empty(string(triggerBody()?['PrimaryContactLast']))), triggerBody()?['PrimaryContactLast'], null)",
+                  "PrimaryContactPhone": "@if(not(empty(string(triggerBody()?['PrimaryContactPhone']))), triggerBody()?['PrimaryContactPhone'], null)",
+                  "PrimaryEmail1": "@if(not(empty(string(triggerBody()?['PrimaryEmail1']))), triggerBody()?['PrimaryEmail1'], null)",
+                  "PrimaryEmail1Status": "@if(not(empty(string(triggerBody()?['PrimaryEmail1Status']))), triggerBody()?['PrimaryEmail1Status'], null)",
+                  "PrimaryFirstName": "@if(not(empty(string(triggerBody()?['PrimaryFirstName']))), triggerBody()?['PrimaryFirstName'], null)",
+                  "PrimaryLastName": "@if(not(empty(string(triggerBody()?['PrimaryLastName']))), triggerBody()?['PrimaryLastName'], null)",
+                  "PrimaryMobilePhone1": "@if(not(empty(string(triggerBody()?['PrimaryMobilePhone1']))), triggerBody()?['PrimaryMobilePhone1'], null)",
+                  "PrimaryMobilePhone1Status": "@if(not(empty(string(triggerBody()?['PrimaryMobilePhone1Status']))), triggerBody()?['PrimaryMobilePhone1Status'], null)",
+                  "PrimaryPhone1": "@if(not(empty(string(triggerBody()?['PrimaryPhone1']))), triggerBody()?['PrimaryPhone1'], null)",
+                  "PrimaryPhone1Status": "@if(not(empty(string(triggerBody()?['PrimaryPhone1Status']))), triggerBody()?['PrimaryPhone1Status'], null)",
+                  "PropertySource": "@if(\r\n  not(empty(string(triggerBody()?['PropertySource']))), triggerBody()?['PropertySource'], \r\n  'PropertyRadar'\r\n)",
+                  "PropertyType": "@if(\r\n  not(empty(string(triggerBody()?['PropertyTypeOverride']))), \r\n  triggerBody()?['PropertyTypeOverride'], \r\n  if(\r\n    not(empty(string(triggerBody()?['PropertyType']))), \r\n    triggerBody()?['PropertyType'], \r\n    null\r\n  )\r\n)",
+                  "PropertyURL": "@if(not(empty(string(triggerBody()?['PropertyURL']))), triggerBody()?['PropertyURL'], null)",
+                  "PublicAccess": "@if(not(empty(string(triggerBody()?['PublicAccess']))), triggerBody()?['PublicAccess'], null)",
+                  "PurchaseAmount": "@if(not(empty(string(triggerBody()?['PurchaseAmount']))), triggerBody()?['PurchaseAmount'], null)",
+                  "PurchaseDate": "@if(not(empty(string(triggerBody()?['PurchaseDate']))), triggerBody()?['PurchaseDate'], null)",
+                  "PurchaseSeller": "@if(not(empty(string(triggerBody()?['PurchaseSeller']))), triggerBody()?['PurchaseSeller'], null)",
+                  "PurchaseType": "@if(not(empty(string(triggerBody()?['PurchaseType']))), triggerBody()?['PurchaseType'], null)",
+                  "RadarID": "@outputs('Radar_ID')",
+                  "RightofWayFlag": "@if(not(empty(string(triggerBody()?['RightofWayFlag']))), triggerBody()?['RightofWayFlag'], null)",
+                  "SaleAmount": "@if(not(empty(string(triggerBody()?['SaleAmount']))), triggerBody()?['SaleAmount'], null)",
+                  "SaleDate": "@if(not(empty(string(triggerBody()?['SaleDate']))), triggerBody()?['SaleDate'], null)",
+                  "SaleDateRelative": "@if(not(empty(string(triggerBody()?['SaleDateRelative']))), triggerBody()?['SaleDateRelative'], null)",
+                  "SalePeriod": "@{if(\r\n  not(empty(string(triggerBody()?['SaleDate']))),\r\n  formatDateTime(\r\n    triggerBody()?['SaleDate'],\r\n    'yyyy-MM'\r\n  ), \r\n  null\r\n)}",
+                  "SalePlace": "@if(not(empty(string(triggerBody()?['SalePlace']))), triggerBody()?['SalePlace'], null)",
+                  "SaleTime": "@if(not(empty(string(triggerBody()?['SaleTime']))), triggerBody()?['SaleTime'], null)",
+                  "SaleType": "@if(\r\n  not(empty(string(triggerBody()?['SaleType']))), \r\n  triggerBody()?['SaleType'], \r\n  null\r\n)",
+                  "SecondaryEmail1": "@if(not(empty(string(triggerBody()?['SecondaryEmail1']))), triggerBody()?['SecondaryEmail1'], null)",
+                  "SecondaryEmail1Status": "@if(not(empty(string(triggerBody()?['SecondaryEmail1Status']))), triggerBody()?['SecondaryEmail1Status'], null)",
+                  "SecondaryFirstName": "@if(not(empty(string(triggerBody()?['SecondaryFirstName']))), triggerBody()?['SecondaryFirstName'], null)",
+                  "SecondaryLastName": "@if(not(empty(string(triggerBody()?['SecondaryLastName']))), triggerBody()?['SecondaryLastName'], null)",
+                  "SecondaryMobilePhone1": "@if(not(empty(string(triggerBody()?['SecondaryMobilePhone1']))), triggerBody()?['SecondaryMobilePhone1'], null)",
+                  "SecondaryMobilePhone1Status": "@if(not(empty(string(triggerBody()?['SecondaryMobilePhone1Status']))), triggerBody()?['SecondaryMobilePhone1Status'], null)",
+                  "SecondaryPhone1": "@if(not(empty(string(triggerBody()?['SecondaryPhone1']))), triggerBody()?['SecondaryPhone1'], null)",
+                  "SecondaryPhone1Status": "@if(not(empty(string(triggerBody()?['SecondaryPhone1Status']))), triggerBody()?['SecondaryPhone1Status'], null)",
+                  "SqFt": "@if(not(empty(string(triggerBody()?['SqFt']))), triggerBody()?['SqFt'], null)",
+                  "State": "@if(not(empty(string(triggerBody()?['State']))), triggerBody()?['State'], null)",
+                  "Stories": "@if(not(empty(string(triggerBody()?['Stories']))), triggerBody()?['Stories'], null)",
+                  "Subdivision": "@if(not(empty(string(triggerBody()?['Subdivision']))), triggerBody()?['Subdivision'], null)",
+                  "SumBuildingSqFt": "@if(\r\n  not(empty(string(triggerBody()?['SumBuildingSqFt']))), \r\n  triggerBody()?['SumBuildingSqFt'], \r\n  null\r\n)",
+                  "TotalLienAmount": "@if(\r\n  not(empty(string(triggerBody()?['TotalLienAmount']))), \r\n  triggerBody()?['TotalLienAmount'], \r\n  null\r\n)",
+                  "TotalLoanBalance": "@if(not(empty(string(triggerBody()?['TotalLoanBalance']))), triggerBody()?['TotalLoanBalance'], null)",
+                  "TriggerType": "@if(not(empty(string(triggerBody()?['TriggerType']))), triggerBody()?['TriggerType'], null)",
+                  "Trustee": "@if(\n  not(empty(string(triggerBody()?['Trustee']))), \n  triggerBody()?['Trustee'], \n  null\n)",
+                  "Units": "@if(not(empty(string(triggerBody()?['Units']))), triggerBody()?['Units'], null)",
+                  "VacantSince": "@if(\r\n  not(empty(string(triggerBody()?['VacantSince']))), \r\n  triggerBody()?['VacantSince'], \r\n  null\r\n)",
+                  "VieworInfluence": "@if(\r\n  not(empty(string(triggerBody()?['VieworInfluence']))), \r\n  triggerBody()?['VieworInfluence'], \r\n  null\r\n)",
+                  "Volume": "@if(\n  not(empty(string(triggerBody()?['Volume']))), \n  triggerBody()?['Volume'], \n  null\n)",
+                  "WinningBid": "@if(not(empty(string(triggerBody()?['WinningBid']))), triggerBody()?['WinningBid'], null)",
+                  "YearBuilt": "@if(not(empty(string(triggerBody()?['YearBuilt']))), triggerBody()?['YearBuilt'], null)",
+                  "Zip": "@if(not(empty(string(triggerBody()?['Zip']))), triggerBody()?['Zip'], null)",
+                  "ZipFive": "@if(not(empty(string(triggerBody()?['ZipFive']))), triggerBody()?['ZipFive'], null)"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "APN": {},
+                    "AppraiserLink": {},
+                    "AssessedImprovement": {},
+                    "AssessedLand": {},
+                    "AssessmentFootage": {},
+                    "AuctionStatus": {},
+                    "AVM": {},
+                    "Address": {},
+                    "AnnualTaxes": {},
+                    "AssessedValue": {},
+                    "Attorney": {},
+                    "AvailableEquity": {},
+                    "Baths": {},
+                    "Beds": {},
+                    "BiddingLink": {},
+                    "CaseNumber": {},
+                    "Change1": {},
+                    "Change2": {},
+                    "Change3": {},
+                    "City": {},
+                    "ConfidenceRating": {},
+                    "County": {},
+                    "CountyLandValue": {},
+                    "CountyMarketValue": {},
+                    "DaysOnMarket": {},
+                    "DefaultAmount": {},
+                    "DefaultAsOf": {},
+                    "Defendants": {},
+                    "DOTPosition": {},
+                    "EquityPercent": {},
+                    "EstimatedTaxRate": {},
+                    "EstimatedValue": {},
+                    "FEMAFloodMap": {},
+                    "FinalJudgementAmount": {},
+                    "FinalJudgementDocs": {},
+                    "FirstAmount": {},
+                    "FirstDate": {},
+                    "FirstLenderOriginal": {},
+                    "FirstLoanAmount": {},
+                    "FirstLoanDate": {},
+                    "FirstLoanLender": {},
+                    "FirstLoanPurpose": {},
+                    "FirstLoanRate": {},
+                    "FirstPurpose": {},
+                    "FirstRate": {},
+                    "FloodZoneCode": {},
+                    "FloodZoneRaw": {},
+                    "FloodZoneUpdated": {},
+                    "ForeclosureRecDate": {},
+                    "ForeclosureStage": {},
+                    "inForeclosure": {},
+                    "InterestRate": {},
+                    "isListedForSale": {},
+                    "isMailVacant": {},
+                    "isSameMailingOrExempt": {},
+                    "isSiteVacant": {},
+                    "LandEconomicType": {},
+                    "LastSale": {},
+                    "LastTransferRecDate": {},
+                    "LastTransferSeller": {},
+                    "LastTransferType": {},
+                    "LastTransferValue": {},
+                    "Latitude": {},
+                    "LegalDescription1": {},
+                    "LegalDescription2": {},
+                    "LegalOwner": {},
+                    "LisPendensType": {},
+                    "ListName": {},
+                    "ListingPrice": {},
+                    "LoanExpiresYear": {},
+                    "LoanMonth": {},
+                    "LoanType": {},
+                    "LoanYear": {},
+                    "LoanYearLength": {},
+                    "Longitude": {},
+                    "LotSize": {},
+                    "LotSizeAcres": {},
+                    "MailingAddress": {},
+                    "MailingCity": {},
+                    "MailingState": {},
+                    "MailingZip": {},
+                    "MonthlyPayment": {},
+                    "Mortgagor": {},
+                    "Mortgagee": {},
+                    "Mortgage1Position": {},
+                    "Mortgage2": {},
+                    "Mortgage3": {},
+                    "NewRecordAttribute": {},
+                    "NewRecordType": {},
+                    "NumberLoans": {},
+                    "OpenLoans": {},
+                    "OpeningBid": {},
+                    "OriginalSaleDate": {},
+                    "Owner": {},
+                    "OwnerAddress": {},
+                    "OwnerCity": {},
+                    "OwnerFirstName": {},
+                    "OwnerLastName": {},
+                    "OwnerOccupied": {},
+                    "OwnershipType": {},
+                    "OwnerSpouseFirstName": {},
+                    "OwnerState": {},
+                    "OwnerZipFive": {},
+                    "PType": {},
+                    "PhotoURL1": {},
+                    "Plaintiff": {},
+                    "PlaintiffMaxBid": {},
+                    "Pool": {},
+                    "PostReason": {},
+                    "POV": {},
+                    "PreviousPosting": {},
+                    "PreviousSaleDate": {},
+                    "PreviousSalePrice": {},
+                    "PreviousSaleType": {},
+                    "PrimaryContactEmail": {},
+                    "PrimaryContactFirst": {},
+                    "PrimaryContactLast": {},
+                    "PrimaryContactPhone": {},
+                    "PrimaryEmail1": {},
+                    "PrimaryEmail1Status": {},
+                    "PrimaryFirstName": {},
+                    "PrimaryLastName": {},
+                    "PrimaryMobilePhone1": {},
+                    "PrimaryMobilePhone1Status": {},
+                    "PrimaryPhone1": {},
+                    "PrimaryPhone1Status": {},
+                    "PropertySource": {},
+                    "PropertyType": {},
+                    "PropertyURL": {},
+                    "PublicAccess": {},
+                    "PurchaseAmount": {},
+                    "PurchaseDate": {},
+                    "PurchaseSeller": {},
+                    "PurchaseType": {},
+                    "RadarID": {},
+                    "RightofWayFlag": {},
+                    "SaleAmount": {},
+                    "SaleDate": {},
+                    "SaleDateRelative": {},
+                    "SalePeriod": {},
+                    "SalePlace": {},
+                    "SaleTime": {},
+                    "SaleType": {},
+                    "SecondaryEmail1": {},
+                    "SecondaryEmail1Status": {},
+                    "SecondaryFirstName": {},
+                    "SecondaryLastName": {},
+                    "SecondaryMobilePhone1": {},
+                    "SecondaryMobilePhone1Status": {},
+                    "SecondaryPhone1": {},
+                    "SecondaryPhone1Status": {},
+                    "SqFt": {},
+                    "State": {},
+                    "Stories": {},
+                    "Subdivision": {},
+                    "SumBuildingSqFt": {},
+                    "TotalLienAmount": {},
+                    "TotalLoanBalance": {},
+                    "TriggerType": {},
+                    "Trustee": {},
+                    "Units": {},
+                    "VacantSince": {},
+                    "VieworInfluence": {},
+                    "Volume": {},
+                    "WinningBid": {},
+                    "YearBuilt": {},
+                    "Zip": {},
+                    "ZipFive": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Radar_ID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ec454a77-6377-4e9a-a48f-248f6baeeb02"
+              }
+            },
+            "Update_Existing": {
+              "type": "Scope",
+              "actions": {
+                "Valid_to_update": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(outputs('Get_existing_items')?['body/value'])",
+                          "@false"
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@variables('blnUpdate')",
+                          "@true"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Reset_Valuation": {
+                      "type": "If",
+                      "expression": {
+                        "or": [
+                          {
+                            "and": [
+                              {
+                                "not": {
+                                  "equals": [
+                                    "@body('Update_Payload')?['SaleDate']",
+                                    "@body('Existing_Dataset')?['SaleDate']"
+                                  ]
+                                }
+                              },
+                              {
+                                "equals": [
+                                  "@empty(body('Update_Payload')?['SaleDate'])",
+                                  "@false"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@body('Update_Payload')?['FirstLoanAmount']",
+                                "@body('Existing_Dataset')?['FirstLoanAmount']"
+                              ]
+                            }
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@body('Update_Payload')?['FinalJudgementAmount']",
+                                "@body('Existing_Dataset')?['FinalJudgementAmount']"
+                              ]
+                            }
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@body('Update_Payload')?['SaleAmount']",
+                                "@body('Existing_Dataset')?['SaleAmount']"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Set_Valuation_Status": {
+                          "type": "OpenApiConnection",
+                          "description": "Reset Valuation Status and related fields",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                              "id": "@outputs('Update_Dataset')?['body/ID']",
+                              "item/Title": "@outputs('Update_Dataset')?['body/Title']",
+                              "item/RadarID": "@outputs('Update_Dataset')?['body/RadarID']",
+                              "item/LTV_x0025_": "@null",
+                              "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+                              "item/ValuationStatus/Value": "@if(\r\n  equals(\r\n    body('Update_Dataset')?['RadarSynced'],\r\n    'Yes'\r\n  ),\r\n  'Pending',\r\n  'Queued'\r\n)",
+                              "item/Issue/Value": "@outputs('Valuation_Issue')",
+                              "item/AVPCounter": "@if(\r\n  equals(\r\n    string(body('Update_Payload')?['SaleDate']),\r\n    string(body('Existing_Dataset')?['SaleDate'])\r\n  ),\r\n  body('Existing_Dataset')?['Postponement'],\r\n  if(\r\n    empty(string(body('Existing_Dataset')?['Postponement'])),\r\n    1,\r\n    add(\r\n      body('Existing_Dataset')?['Postponement'],\r\n      1\r\n    )\r\n  )\r\n)",
+                              "item/AuctionCancelled": "@null"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "PatchItem",
+                              "connectionName": "shared_sharepointonline-1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "9636ae03-50ed-404f-b831-7491fc26d5a0"
+                          }
+                        },
+                        "Prev_Dropped": {
+                          "type": "If",
+                          "expression": {
+                            "and": [
+                              {
+                                "equals": [
+                                  "@outputs('Update_Dataset')?['body/Action/Value']",
+                                  "Drop-out"
+                                ]
+                              },
+                              {
+                                "equals": [
+                                  "@variables('blnReset')",
+                                  "@true"
+                                ]
+                              }
+                            ]
+                          },
+                          "actions": {
+                            "Set_Workflow_Status": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                                  "id": "@outputs('Update_Dataset')?['body/ID']",
+                                  "item/Title": "@outputs('Update_Dataset')?['body/Title']",
+                                  "item/RadarID": "@outputs('Update_Dataset')?['body/RadarID']",
+                                  "item/WorkflowStatus/Value": "@''",
+                                  "item/Action/Id": -1
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "operationId": "PatchItem",
+                                  "connectionName": "shared_sharepointonline-1"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "10a5dc9f-3e64-43ac-9c4a-84ebfba92e09"
+                              }
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Set_Valuation_Status": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "22095bb6-0868-4f99-bec1-26c4e991c72d"
+                          }
+                        },
+                        "Prev_Cancelled": {
+                          "type": "If",
+                          "expression": {
+                            "and": [
+                              {
+                                "equals": [
+                                  "@outputs('Update_Dataset')?['body/Action/Value']",
+                                  "Cancelled"
+                                ]
+                              }
+                            ]
+                          },
+                          "actions": {
+                            "Set_Workflow_Status_to_Senior_Stage": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                                  "id": "@outputs('Update_Dataset')?['body/ID']",
+                                  "item/Title": "@outputs('Update_Dataset')?['body/Title']",
+                                  "item/RadarID": "@outputs('Update_Dataset')?['body/RadarID']",
+                                  "item/WorkflowStatus/Value": "@''",
+                                  "item/Action/Id": 6
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "operationId": "PatchItem",
+                                  "connectionName": "shared_sharepointonline-1"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "10a5dc9f-3e64-43ac-9c4a-84ebfba92e09"
+                              }
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Prev_Dropped": [
+                              "SUCCEEDED"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "22095bb6-0868-4f99-bec1-26c4e991c72d"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Set_Updated_Header": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "1b3ead11-476e-48e3-838b-71a3d8921fa3"
+                      }
+                    },
+                    "Update_Dataset": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                          "id": "@body('Existing_Dataset')?['ID']",
+                          "item/Title": "@body('Existing_Dataset')?['PropertyUID']",
+                          "item/RadarID": "@body('Existing_Dataset')?['RadarID']",
+                          "item/Address": "@if(\r\n  not(empty(string(body('Update_Payload')?['Address']))),\r\n  body('Update_Payload')?['Address'],\r\n  body('Existing_Dataset')?['Address']\r\n)",
+                          "item/City": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['City']))),\r\n\tbody('Update_Payload')?['City'],\r\n  body('Existing_Dataset')?['City']\r\n)",
+                          "item/State": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['State']))),\r\n\tbody('Update_Payload')?['State'],\r\n  body('Existing_Dataset')?['State']\r\n)",
+                          "item/Zip": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Zip']))),\r\n\tbody('Update_Payload')?['Zip'],\r\n  body('Existing_Dataset')?['Zip']\r\n)",
+                          "item/County": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['County']))),\r\n\tbody('Update_Payload')?['County'],\r\n\tbody('Existing_Dataset')?['County']\r\n)",
+                          "item/SaleDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SaleDate']))),\r\n\tbody('Update_Payload')?['SaleDate'],\r\n\tbody('Existing_Dataset')?['SaleDate']\r\n)",
+                          "item/FirstLoanAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstLoanAmount']))),\r\n\tbody('Update_Payload')?['FirstLoanAmount'],\r\n\tbody('Existing_Dataset')?['FirstLoanAmount']\r\n)",
+                          "item/PropertyType": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PropertyType']))),\r\n\tbody('Update_Payload')?['PropertyType'],\r\n\tbody('Existing_Dataset')?['PropertyType']\r\n)",
+                          "item/SqFt": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SqFt']))),\r\n\tbody('Update_Payload')?['SqFt'],\r\n\tbody('Existing_Dataset')?['SqFt']\r\n)",
+                          "item/LotSizeAcres": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LotSizeAcres']))),\r\n\tbody('Update_Payload')?['LotSizeAcres'],\r\n\tbody('Existing_Dataset')?['LotSizeAcres']\r\n)",
+                          "item/PropertyURL": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PropertyURL']))),\r\n\tbody('Update_Payload')?['PropertyURL'],\r\n\tbody('Existing_Dataset')?['PropertyURL']\r\n)",
+                          "item/ValuationSource/Value": "@if(\r\n  and(\r\n    not(empty(string(body('Existing_Dataset')?['ValuationSource']))),\r\n    contains(\r\n      string(body('Existing_Dataset')?['ValuationSource']),\r\n      string(outputs('Valuation_Source'))\r\n    )\r\n  ),\r\n  body('Existing_Dataset')?['ValuationSource'],\r\n  outputs('Valuation_Source')\r\n)",
+                          "item/AssessedValue": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AssessedValue']))),\r\n\tbody('Update_Payload')?['AssessedValue'],\r\n\tbody('Existing_Dataset')?['AssessedValue']\r\n)",
+                          "item/SaleAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SaleAmount']))),\r\n\tbody('Update_Payload')?['SaleAmount'],\r\n\tbody('Existing_Dataset')?['SaleAmount']\r\n)",
+                          "item/EstimatedValue": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['EstimatedValue']))),\r\n\tbody('Update_Payload')?['EstimatedValue'],\r\n\tbody('Existing_Dataset')?['EstimatedValue']\r\n)",
+                          "item/TotalLoanBalance": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['TotalLoanBalance']))),\r\n\tbody('Update_Payload')?['TotalLoanBalance'],\r\n\tbody('Existing_Dataset')?['TotalLoanBalance']\r\n)",
+                          "item/ListName": "@body('Update_Payload')?['ListName']",
+                          "item/APN": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['APN']))),\r\n\tbody('Update_Payload')?['APN'],\r\n\tbody('Existing_Dataset')?['APN']\r\n)",
+                          "item/AVM": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AVM']))),\r\n\tbody('Update_Payload')?['AVM'],\r\n  body('Existing_Dataset')?['AVM']\r\n)",
+                          "item/FirstDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstDate']))),\r\n\tbody('Update_Payload')?['FirstDate'],\r\n\tbody('Existing_Dataset')?['FirstDate']\r\n)",
+                          "item/FirstLoanLender": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstLoanLender']))),\r\n\tbody('Update_Payload')?['FirstLoanLender'],\r\n\tbody('Existing_Dataset')?['FirstLoanLender']\r\n)",
+                          "item/FirstLenderOriginal": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstLenderOriginal']))),\r\n\tbody('Update_Payload')?['FirstLenderOriginal'],\r\n\tbody('Existing_Dataset')?['FirstLenderOriginal']\r\n)",
+                          "item/FirstLoanPurpose": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstLoanPurpose']))),\r\n\tbody('Update_Payload')?['FirstLoanPurpose'],\r\n\tbody('Existing_Dataset')?['FirstLoanPurpose']\r\n)",
+                          "item/FirstLoanDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstLoanDate']))),\r\n\tbody('Update_Payload')?['FirstLoanDate'],\r\n\tbody('Existing_Dataset')?['FirstLoanDate']\r\n)",
+                          "item/FirstLoanRate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstLoanRate']))),\r\n\tbody('Update_Payload')?['FirstLoanRate'],\r\n\tbody('Existing_Dataset')?['FirstLoanRate']\r\n)",
+                          "item/FirstRate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstRate']))),\r\n\tbody('Update_Payload')?['FirstRate'],\r\n\tbody('Existing_Dataset')?['FirstRate']\r\n)",
+                          "item/FirstPurpose": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstPurpose']))),\r\n\tbody('Update_Payload')?['FirstPurpose'],\r\n\tbody('Existing_Dataset')?['FirstPurpose']\r\n)",
+                          "item/YearBuilt": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['YearBuilt']))),\r\n\tbody('Update_Payload')?['YearBuilt'],\r\n\tbody('Existing_Dataset')?['YearBuilt']\r\n)",
+                          "item/Beds": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Beds']))),\r\n\tbody('Update_Payload')?['Beds'],\r\n\tbody('Existing_Dataset')?['Beds']\r\n)",
+                          "item/Baths": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Baths']))),\r\n\tbody('Update_Payload')?['Baths'],\r\n\tbody('Existing_Dataset')?['Baths']\r\n)",
+                          "item/Units": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Units']))),\r\n\tbody('Update_Payload')?['Units'],\r\n\tbody('Existing_Dataset')?['Units']\r\n)",
+                          "item/LotSize": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LotSize']))),\r\n\tbody('Update_Payload')?['LotSize'],\r\n\tbody('Existing_Dataset')?['LotSize']\r\n)",
+                          "item/OwnerZipFive": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerZipFive']))),\r\n\tbody('Update_Payload')?['OwnerZipFive'],\r\n\tbody('Existing_Dataset')?['OwnerZipFive']\r\n)",
+                          "item/OpenLoans": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OpenLoans']))),\r\n\tbody('Update_Payload')?['OpenLoans'],\r\n\tbody('Existing_Dataset')?['OpenLoans']\r\n)",
+                          "item/EquityPercent": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['EquityPercent']))),\r\n\tbody('Update_Payload')?['EquityPercent'],\r\n\tbody('Existing_Dataset')?['EquityPercent']\r\n)",
+                          "item/NumberLoans": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['NumberLoans']))),\r\n\tbody('Update_Payload')?['NumberLoans'],\r\n\tbody('Existing_Dataset')?['NumberLoans']\r\n)",
+                          "item/PType": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PType']))),\r\n\tbody('Update_Payload')?['PType'],\r\n\tbody('Existing_Dataset')?['PType']\r\n)",
+                          "item/PurchaseAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PurchaseAmount']))),\r\n\tbody('Update_Payload')?['PurchaseAmount'],\r\n\tbody('Existing_Dataset')?['PurchaseAmount']\r\n)",
+                          "item/LastTransferValue": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LastTransferValue']))),\r\n\tbody('Update_Payload')?['LastTransferValue'],\r\n\tbody('Existing_Dataset')?['LastTransferValue']\r\n)",
+                          "item/PurchaseDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PurchaseDate']))),\r\n\tbody('Update_Payload')?['PurchaseDate'],\r\n\tbody('Existing_Dataset')?['PurchaseDate']\r\n)",
+                          "item/LastTransferRecDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LastTransferRecDate']))),\r\n\tbody('Update_Payload')?['LastTransferRecDate'],\r\n\tbody('Existing_Dataset')?['LastTransferRecDate']\r\n)",
+                          "item/PurchaseSeller": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PurchaseSeller']))),\r\n\tbody('Update_Payload')?['PurchaseSeller'],\r\n\tbody('Existing_Dataset')?['PurchaseSeller']\r\n)",
+                          "item/LastTransferSeller": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LastTransferSeller']))),\r\n\tbody('Update_Payload')?['LastTransferSeller'],\r\n\tbody('Existing_Dataset')?['LastTransferSeller']\r\n)",
+                          "item/PurchaseType": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PurchaseType']))),\r\n\tbody('Update_Payload')?['PurchaseType'],\r\n\tbody('Existing_Dataset')?['PurchaseType']\r\n)",
+                          "item/ZipFive": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['ZipFive']))),\r\n\tbody('Update_Payload')?['ZipFive'],\r\n\tbody('Existing_Dataset')?['ZipFive']\r\n)",
+                          "item/PhotoURL1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PhotoURL1']))),\r\n\tbody('Update_Payload')?['PhotoURL1'],\r\n\tbody('Existing_Dataset')?['PhotoURL1']\r\n)",
+                          "item/AnnualTaxes": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AnnualTaxes']))),\r\n\tbody('Update_Payload')?['AnnualTaxes'],\r\n\tbody('Existing_Dataset')?['AnnualTaxes']\r\n)",
+                          "item/LastTransferType": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LastTransferType']))),\r\n\tbody('Update_Payload')?['LastTransferType'],\r\n\tbody('Existing_Dataset')?['LastTransferType']\r\n)",
+                          "item/DefaultAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['DefaultAmount']))),\r\n\tbody('Update_Payload')?['DefaultAmount'],\r\n\tbody('Existing_Dataset')?['DefaultAmount']\r\n)",
+                          "item/DefaultAsOf": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['DefaultAsOf']))),\r\n\tbody('Update_Payload')?['DefaultAsOf'],\r\n\tbody('Existing_Dataset')?['DefaultAsOf']\r\n)",
+                          "item/DOTPosition": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['DOTPosition']))),\r\n\tbody('Update_Payload')?['DOTPosition'],\r\n\tbody('Existing_Dataset')?['DOTPosition']\r\n)",
+                          "item/EstimatedTaxRate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['EstimatedTaxRate']))),\r\n\tbody('Update_Payload')?['EstimatedTaxRate'],\r\n\tbody('Existing_Dataset')?['EstimatedTaxRate']\r\n)",
+                          "item/DaysOnMarket": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['DaysOnMarket']))),\r\n\tbody('Update_Payload')?['DaysOnMarket'],\r\n\tbody('Existing_Dataset')?['DaysOnMarket']\r\n)",
+                          "item/ForeclosureStage": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['ForeclosureStage']))),\r\n\tbody('Update_Payload')?['ForeclosureStage'],\r\n\tbody('Existing_Dataset')?['ForeclosureStage']\r\n)",
+                          "item/inForeclosure": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['inForeclosure']))),\r\n\tbody('Update_Payload')?['inForeclosure'],\r\n\tbody('Existing_Dataset')?['inForeclosure']\r\n)",
+                          "item/isListedForSale": "@body('Update_Payload')?['isListedForSale']",
+                          "item/ListingPrice": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['ListingPrice']))),\r\n\tbody('Update_Payload')?['ListingPrice'],\r\n\tbody('Existing_Dataset')?['ListingPrice']\r\n)",
+                          "item/ForeclosureRecDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['ForeclosureRecDate']))),\r\n\tbody('Update_Payload')?['ForeclosureRecDate'],\r\n\tbody('Existing_Dataset')?['ForeclosureRecDate']\r\n)",
+                          "item/OriginalSaleDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OriginalSaleDate']))),\r\n\tbody('Update_Payload')?['OriginalSaleDate'],\r\n\tbody('Existing_Dataset')?['OriginalSaleDate']\r\n)",
+                          "item/Pool": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Pool']))),\r\n\tbody('Update_Payload')?['Pool'],\r\n\tbody('Existing_Dataset')?['Pool']\r\n)",
+                          "item/PostReason": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PostReason']))),\r\n\tbody('Update_Payload')?['PostReason'],\r\n\tbody('Existing_Dataset')?['PostReason']\r\n)",
+                          "item/SaleDateRelative": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SaleDateRelative']))),\r\n\tbody('Update_Payload')?['SaleDateRelative'],\r\n\tbody('Existing_Dataset')?['SaleDateRelative']\r\n)",
+                          "item/PreviousSaleDate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PreviousSaleDate']))),\r\n\tbody('Update_Payload')?['PreviousSaleDate'],\r\n\tbody('Existing_Dataset')?['PreviousSaleDate']\r\n)",
+                          "item/Period": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SalePeriod']))),\r\n\tbody('Update_Payload')?['SalePeriod'],\r\n\tbody('Existing_Dataset')?['Period']\r\n)",
+                          "item/Owner": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Owner']))),\r\n\tbody('Update_Payload')?['Owner'],\r\n\tbody('Existing_Dataset')?['Owner']\r\n)",
+                          "item/LegalOwner": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LegalOwner']))),\r\n\tbody('Update_Payload')?['LegalOwner'],\r\n\tbody('Existing_Dataset')?['LegalOwner']\r\n)",
+                          "item/OwnerFirstName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerFirstName']))),\r\n\tbody('Update_Payload')?['OwnerFirstName'],\r\n\tbody('Existing_Dataset')?['OwnerFirstName']\r\n)",
+                          "item/OwnerLastName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerLastName']))),\r\n\tbody('Update_Payload')?['OwnerLastName'],\r\n\tbody('Existing_Dataset')?['OwnerLastName']\r\n)",
+                          "item/OwnerSpouseFirstName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerSpouseFirstName']))),\r\n\tbody('Update_Payload')?['OwnerSpouseFirstName'],\r\n\tbody('Existing_Dataset')?['OwnerSpouseFirstName']\r\n)",
+                          "item/OwnerAddress": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerAddress']))),\r\n\tbody('Update_Payload')?['OwnerAddress'],\r\n\tbody('Existing_Dataset')?['OwnerAddress']\r\n)",
+                          "item/OwnerCity": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerCity']))),\r\n\tbody('Update_Payload')?['OwnerCity'],\r\n\tbody('Existing_Dataset')?['OwnerCity']\r\n)",
+                          "item/MailingState": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['MailingState']))),\r\n\tbody('Update_Payload')?['MailingState'],\r\n\tbody('Existing_Dataset')?['MailingState']\r\n)",
+                          "item/OwnerState": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerState']))),\r\n\tbody('Update_Payload')?['OwnerState'],\r\n\tbody('Existing_Dataset')?['OwnerState']\r\n)",
+                          "item/PrimaryContactEmail": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryContactEmail']))),\r\n\tbody('Update_Payload')?['PrimaryContactEmail'],\r\n\tbody('Existing_Dataset')?['PrimaryContactEmail']\r\n)",
+                          "item/PrimaryEmail1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryEmail1']))),\r\n\tbody('Update_Payload')?['PrimaryEmail1'],\r\n\tbody('Existing_Dataset')?['PrimaryEmail1']\r\n)",
+                          "item/PrimaryEmail1Status": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryEmail1Status']))),\r\n\tbody('Update_Payload')?['PrimaryEmail1Status'],\r\n\tbody('Existing_Dataset')?['PrimaryEmail1Status']\r\n)",
+                          "item/PrimaryContactFirst": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryContactFirst']))),\r\n\tbody('Update_Payload')?['PrimaryContactFirst'],\r\n\tbody('Existing_Dataset')?['PrimaryContactFirst']\r\n)",
+                          "item/PrimaryContactLast": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryContactLast']))),\r\n\tbody('Update_Payload')?['PrimaryContactLast'],\r\n\tbody('Existing_Dataset')?['PrimaryContactLast']\r\n)",
+                          "item/PrimaryContactPhone": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryContactPhone']))),\r\n\tbody('Update_Payload')?['PrimaryContactPhone'],\r\n\tbody('Existing_Dataset')?['PrimaryContactPhone']\r\n)",
+                          "item/PrimaryPhone1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryPhone1']))),\r\n\tbody('Update_Payload')?['PrimaryPhone1'],\r\n\tbody('Existing_Dataset')?['PrimaryPhone1']\r\n)",
+                          "item/PrimaryPhone1Status": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryPhone1Status']))),\r\n\tbody('Update_Payload')?['PrimaryPhone1Status'],\r\n\tbody('Existing_Dataset')?['PrimaryPhone1Status']\r\n)",
+                          "item/PrimaryMobilePhone1Status": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryMobilePhone1Status']))),\r\n\tbody('Update_Payload')?['PrimaryMobilePhone1Status'],\r\n\tbody('Existing_Dataset')?['PrimaryMobilePhone1Status']\r\n)",
+                          "item/LoanType/Value": "@if(\r\n  not(empty(string(body('Update_Payload')?['LoanType']))),\r\n  body('Update_Payload')?['LoanType'],\r\n  body('Existing_Dataset')?['LoanType']\r\n)",
+                          "item/Mortgagor": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Mortgagor']))),\r\n\tbody('Update_Payload')?['Mortgagor'],\r\n\tbody('Existing_Dataset')?['Mortgagor']\r\n)",
+                          "item/Mortgagee": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Mortgagee']))),\r\n\tbody('Update_Payload')?['Mortgagee'],\r\n\tbody('Existing_Dataset')?['Mortgagee']\r\n)",
+                          "item/Volume": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Volume']))),\r\n\tbody('Update_Payload')?['Volume'],\r\n\tbody('Existing_Dataset')?['Volume']\r\n)",
+                          "item/LoanYear": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LoanYear']))),\r\n\tbody('Update_Payload')?['LoanYear'],\r\n\tbody('Existing_Dataset')?['LoanYear']\r\n)",
+                          "item/LoanMonth": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LoanMonth']))),\r\n\tbody('Update_Payload')?['LoanMonth'],\r\n\tbody('Existing_Dataset')?['LoanMonth']\r\n)",
+                          "item/InterestRate": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['InterestRate']))),\r\n\tbody('Update_Payload')?['InterestRate'],\r\n\tbody('Existing_Dataset')?['InterestRate']\r\n)",
+                          "item/MonthlyPayment": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['MonthlyPayment']))),\r\n\tbody('Update_Payload')?['MonthlyPayment'],\r\n\tbody('Existing_Dataset')?['MonthlyPayment']\r\n)",
+                          "item/LoanExpiresYear": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LoanExpiresYear']))),\r\n\tbody('Update_Payload')?['LoanExpiresYear'],\r\n\tbody('Existing_Dataset')?['LoanExpiresYear']\r\n)",
+                          "item/LoanYearLength": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LoanYearLength']))),\r\n\tbody('Update_Payload')?['LoanYearLength'],\r\n\tbody('Existing_Dataset')?['LoanYearLength']\r\n)",
+                          "item/PreviousPosting": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PreviousPosting']))),\r\n\tbody('Update_Payload')?['PreviousPosting'],\r\n\tbody('Existing_Dataset')?['PreviousPosting']\r\n)",
+                          "item/LegalDescription1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LegalDescription1']))),\r\n\tbody('Update_Payload')?['LegalDescription1'],\r\n\tbody('Existing_Dataset')?['LegalDescription1']\r\n)",
+                          "item/LegalDescription2": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LegalDescription2']))),\r\n\tbody('Update_Payload')?['LegalDescription2'],\r\n\tbody('Existing_Dataset')?['LegalDescription2']\r\n)",
+                          "item/OwnerOccupied": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnerOccupied']))),\r\n\tbody('Update_Payload')?['OwnerOccupied'],\r\n\tbody('Existing_Dataset')?['OwnerOccupied']\r\n)",
+                          "item/OwnerEntityType/Value": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OwnershipType']))),\r\n\tbody('Update_Payload')?['OwnershipType'],\r\n\tbody('Existing_Dataset')?['OwnershipType']\r\n)",
+                          "item/Trustee": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Trustee']))),\r\n\tbody('Update_Payload')?['Trustee'],\r\n\tbody('Existing_Dataset')?['Trustee']\r\n)",
+                          "item/SaleTime": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SaleTime']))),\r\n\tbody('Update_Payload')?['SaleTime'],\r\n\tbody('Existing_Dataset')?['SaleTime']\r\n)",
+                          "item/SalePlace": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SalePlace']))),\r\n\tbody('Update_Payload')?['SalePlace'],\r\n\tbody('Existing_Dataset')?['SalePlace']\r\n)",
+                          "item/OpeningBid": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['OpeningBid']))),\r\n\tbody('Update_Payload')?['OpeningBid'],\r\n\tbody('Existing_Dataset')?['OpeningBid']\r\n)",
+                          "item/FloodZoneCode": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FloodZoneCode']))),\r\n\tbody('Update_Payload')?['FloodZoneCode'],\r\n\tbody('Existing_Dataset')?['FloodZoneCode']\r\n)",
+                          "item/POV": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['POV']))),\r\n\tbody('Update_Payload')?['POV'],\r\n\tbody('Existing_Dataset')?['POV']\r\n)",
+                          "item/ConfidenceRating": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['ConfidenceRating']))),\r\n\tbody('Update_Payload')?['ConfidenceRating'],\r\n\tbody('Existing_Dataset')?['ConfidenceRating']\r\n)",
+                          "item/AppraiserLink": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AppraiserLink']))),\r\n\tbody('Update_Payload')?['AppraiserLink'],\r\n\tbody('Existing_Dataset')?['AppraiserLink']\r\n)",
+                          "item/FinalJudgementDocs": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FinalJudgementDocs']))),\r\n\tbody('Update_Payload')?['FinalJudgementDocs'],\r\n\tbody('Existing_Dataset')?['FinalJudgementDocs']\r\n)",
+                          "item/BiddingLink": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['BiddingLink']))),\r\n\tbody('Update_Payload')?['BiddingLink'],\r\n\tbody('Existing_Dataset')?['BiddingLink']\r\n)",
+                          "item/CountyLandValue": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['CountyLandValue']))),\r\n\tbody('Update_Payload')?['CountyLandValue'],\r\n\tbody('Existing_Dataset')?['CountyLandValue']\r\n)",
+                          "item/CountyMarketValue": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['CountyMarketValue']))),\r\n\tbody('Update_Payload')?['CountyMarketValue'],\r\n\tbody('Existing_Dataset')?['CountyMarketValue']\r\n)",
+                          "item/Defendants": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Defendants']))),\r\n\tbody('Update_Payload')?['Defendants'],\r\n\tbody('Existing_Dataset')?['Defendants']\r\n)",
+                          "item/FinalJudgementAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FinalJudgementAmount']))),\r\n\tbody('Update_Payload')?['FinalJudgementAmount'],\r\n\tbody('Existing_Dataset')?['FinalJudgementAmount']\r\n)",
+                          "item/LastSale": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LastSale']))),\r\n\tbody('Update_Payload')?['LastSale'],\r\n\tbody('Existing_Dataset')?['LastSale']\r\n)",
+                          "item/Plaintiff": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Plaintiff']))),\r\n\tbody('Update_Payload')?['Plaintiff'],\r\n\tbody('Existing_Dataset')?['Plaintiff']\r\n)",
+                          "item/PlaintiffMaxBid": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PlaintiffMaxBid']))),\r\n\tbody('Update_Payload')?['PlaintiffMaxBid'],\r\n\tbody('Existing_Dataset')?['PlaintiffMaxBid']\r\n)",
+                          "item/PreviousSalePrice": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PreviousSalePrice']))),\r\n\tbody('Update_Payload')?['PreviousSalePrice'],\r\n\tbody('Existing_Dataset')?['PreviousSalePrice']\r\n)",
+                          "item/PreviousSaleType/Value": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PreviousSaleType']))),\r\n\tbody('Update_Payload')?['PreviousSaleType'],\r\n\tbody('Existing_Dataset')?['PreviousSaleType']\r\n)",
+                          "item/SaleType/Value": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SaleType']))),\r\n\tbody('Update_Payload')?['SaleType'],\r\n\tbody('Existing_Dataset')?['SaleType']\r\n)",
+                          "item/SumBuildingSqFt": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SumBuildingSqFt']))),\r\n\tbody('Update_Payload')?['SumBuildingSqFt'],\r\n\tbody('Existing_Dataset')?['SumBuildingSqFt']\r\n)",
+                          "item/TotalLienAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['TotalLienAmount']))),\r\n\tbody('Update_Payload')?['TotalLienAmount'],\r\n  body('Existing_Dataset')?['TotalLienAmount']\r\n)",
+                          "item/VacantSince": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['VacantSince']))),\r\n\tbody('Update_Payload')?['VacantSince'],\r\n\tbody('Existing_Dataset')?['VacantSince']\r\n)",
+                          "item/AssessedImprovement": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AssessedImprovement']))),\r\n\tbody('Update_Payload')?['AssessedImprovement'],\r\n\tbody('Existing_Dataset')?['AssessedImprovement']\r\n)",
+                          "item/AssessedLand": "@if(\n\tnot(empty(string(body('Update_Payload')?['AssessedLand']))),\n\tbody('Update_Payload')?['AssessedLand'],\n\tbody('Existing_Dataset')?['AssessedLand']\n)",
+                          "item/AssessmentFootage": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AssessmentFootage']))),\r\n\tbody('Update_Payload')?['AssessmentFootage'],\r\n\tbody('Existing_Dataset')?['AssessmentFootage']\r\n)",
+                          "item/FEMAFloodMap": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FEMAFloodMap']))),\r\n\tbody('Update_Payload')?['FEMAFloodMap'],\r\n\tbody('Existing_Dataset')?['FEMAFloodMap']\r\n)",
+                          "item/FloodZoneRaw": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FloodZoneRaw']))),\r\n\tbody('Update_Payload')?['FloodZoneRaw'],\r\n\tbody('Existing_Dataset')?['FloodZoneRaw']\r\n)",
+                          "item/FloodZoneUpdated": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FloodZoneUpdated']))),\r\n\tbody('Update_Payload')?['FloodZoneUpdated'],\r\n\tbody('Existing_Dataset')?['FloodZoneUpdated']\r\n)",
+                          "item/LandEconomicType": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LandEconomicType']))),\r\n\tbody('Update_Payload')?['LandEconomicType'],\r\n\tbody('Existing_Dataset')?['LandEconomicType']\r\n)",
+                          "item/Mortgage1Position": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Mortgage1Position']))),\r\n\tbody('Update_Payload')?['Mortgage1Position'],\r\n\tbody('Existing_Dataset')?['Mortgage1Position']\r\n)",
+                          "item/Mortgage2": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Mortgage2']))),\r\n\tbody('Update_Payload')?['Mortgage2'],\r\n\tbody('Existing_Dataset')?['Mortgage2']\r\n)",
+                          "item/Mortgage3": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Mortgage3']))),\r\n\tbody('Update_Payload')?['Mortgage3'],\r\n\tbody('Existing_Dataset')?['Mortgage3']\r\n)",
+                          "item/RightofWayFlag": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['RightofWayFlag']))),\r\n\tbody('Update_Payload')?['RightofWayFlag'],\r\n\tbody('Existing_Dataset')?['RightofWayFlag']\r\n)",
+                          "item/PublicAccess": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PublicAccess']))),\r\n\tbody('Update_Payload')?['PublicAccess'],\r\n\tbody('Existing_Dataset')?['PublicAccess']\r\n)",
+                          "item/VieworInfluence": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['VieworInfluence']))),\r\n\tbody('Update_Payload')?['VieworInfluence'],\r\n\tbody('Existing_Dataset')?['VieworInfluence']\r\n)",
+                          "item/CaseNumber": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['CaseNumber']))),\r\n\tbody('Update_Payload')?['CaseNumber'],\r\n\tbody('Existing_Dataset')?['CaseNumber']\r\n)",
+                          "item/AuctionCancelled": "@if(\r\n\tor(\r\n    contains(\r\n      string(body('Update_Payload')?['Change1']),\r\n      'Stage:Auction:Cancelled'\r\n    ),\r\n    contains(\r\n      string(body('Update_Payload')?['Change2']),\r\n      'Stage:Auction:Cancelled'\r\n    ),\r\n    contains(\r\n      string(body('Update_Payload')?['Change3']),\r\n      'Stage:Auction:Cancelled'\r\n    )\r\n  ),\r\n\t'Yes',\r\n\tbody('Existing_Dataset')?['AuctionCancelled']\r\n)",
+                          "item/FirstAmount": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['FirstAmount']))),\r\n\tbody('Update_Payload')?['FirstAmount'],\r\n\tbody('Existing_Dataset')?['FirstAmount']\r\n)",
+                          "item/MailingAddress": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['MailingAddress']))),\r\n\tbody('Update_Payload')?['MailingAddress'],\r\n\tbody('Existing_Dataset')?['MailingAddress']\r\n)",
+                          "item/MailingCity": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['MailingCity']))),\r\n\tbody('Update_Payload')?['MailingCity'],\r\n\tbody('Existing_Dataset')?['MailingCity']\r\n)",
+                          "item/MailingZip": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['MailingZip']))),\r\n\tbody('Update_Payload')?['MailingZip'],\r\n\tbody('Existing_Dataset')?['MailingZip']\r\n)",
+                          "item/PrimaryFirstName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryFirstName']))),\r\n\tbody('Update_Payload')?['PrimaryFirstName'],\r\n\tbody('Existing_Dataset')?['PrimaryFirstName']\r\n)",
+                          "item/PrimaryLastName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryLastName']))),\r\n\tbody('Update_Payload')?['PrimaryLastName'],\r\n\tbody('Existing_Dataset')?['PrimaryLastName']\r\n)",
+                          "item/SecondaryPhone1Status": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryPhone1Status']))),\r\n\tbody('Update_Payload')?['SecondaryPhone1Status'],\r\n\tbody('Existing_Dataset')?['SecondaryPhone1Status']\r\n)",
+                          "item/SecondaryMobilePhone1Status": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryMobilePhone1Status']))),\r\n\tbody('Update_Payload')?['SecondaryMobilePhone1Status'],\r\n\tbody('Existing_Dataset')?['SecondaryMobilePhone1Status']\r\n)",
+                          "item/PrimaryMobilePhone1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['PrimaryMobilePhone1']))),\r\n\tbody('Update_Payload')?['PrimaryMobilePhone1'],\r\n\tbody('Existing_Dataset')?['PrimaryMobilePhone1']\r\n)",
+                          "item/SecondaryFirstName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryFirstName']))),\r\n\tbody('Update_Payload')?['SecondaryFirstName'],\r\n\tbody('Existing_Dataset')?['SecondaryFirstName']\r\n)",
+                          "item/SecondaryLastName": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryLastName']))),\r\n\tbody('Update_Payload')?['SecondaryLastName'],\r\n\tbody('Existing_Dataset')?['SecondaryLastName']\r\n)",
+                          "item/SecondaryMobilePhone1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryMobilePhone1']))),\r\n\tbody('Update_Payload')?['SecondaryMobilePhone1'],\r\n\tbody('Existing_Dataset')?['SecondaryMobilePhone1']\r\n)",
+                          "item/SecondaryPhone1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryPhone1']))),\r\n\tbody('Update_Payload')?['SecondaryPhone1'],\r\n\tbody('Existing_Dataset')?['SecondaryPhone1']\r\n)",
+                          "item/SecondaryEmail1": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryEmail1']))),\r\n\tbody('Update_Payload')?['SecondaryEmail1'],\r\n\tbody('Existing_Dataset')?['SecondaryEmail1']\r\n)",
+                          "item/SecondaryEmail1Status": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['SecondaryEmail1Status']))),\r\n\tbody('Update_Payload')?['SecondaryEmail1Status'],\r\n\tbody('Existing_Dataset')?['SecondaryEmail1Status']\r\n)",
+                          "item/AvailableEquity": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['AvailableEquity']))),\r\n\tbody('Update_Payload')?['AvailableEquity'],\r\n\tbody('Existing_Dataset')?['AvailableEquity']\r\n)",
+                          "item/isMailVacant": "@body('Update_Payload')?['isMailVacant']",
+                          "item/isSameMailingOrExempt": "@body('Update_Payload')?['isSameMailingOrExempt']",
+                          "item/isSiteVacant": "@body('Update_Payload')?['isSiteVacant']",
+                          "item/Stories": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Stories']))),\r\n\tbody('Update_Payload')?['Stories'],\r\n\tbody('Existing_Dataset')?['Stories']\r\n)",
+                          "item/Subdivision": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Subdivision']))),\r\n\tbody('Update_Payload')?['Subdivision'],\r\n\tbody('Existing_Dataset')?['Subdivision']\r\n)",
+                          "item/WinningBid": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['WinningBid']))),\r\n\tbody('Update_Payload')?['WinningBid'],\r\n\tbody('Existing_Dataset')?['WinningBid']\r\n)",
+                          "item/Attorney": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Attorney']))),\r\n\tbody('Update_Payload')?['Attorney'],\r\n\tbody('Existing_Dataset')?['Attorney']\r\n)",
+                          "item/LisPendensType": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['LisPendensType']))),\r\n\tbody('Update_Payload')?['LisPendensType'],\r\n\tbody('Existing_Dataset')?['LisPendensType']\r\n)",
+                          "item/Longitude": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Longitude']))),\r\n\tbody('Update_Payload')?['Longitude'],\r\n\tbody('Existing_Dataset')?['Longitude']\r\n)",
+                          "item/Latitude": "@if(\r\n\tnot(empty(string(body('Update_Payload')?['Latitude']))),\r\n\tbody('Update_Payload')?['Latitude'],\r\n\tbody('Existing_Dataset')?['Latitude']\r\n)",
+                          "item/TriggerType": "@body('Update_Payload')?['TriggerType']",
+                          "item/Change1": "@body('Update_Payload')?['Change1']",
+                          "item/Change2": "@body('Update_Payload')?['Change2']",
+                          "item/Change3": "@body('Update_Payload')?['Change3']"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "connectionName": "shared_sharepointonline-1"
+                        }
+                      },
+                      "runAfter": {
+                        "Set_Reset_Flag": [
+                          "Succeeded",
+                          "Failed"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "f2a5d742-1222-493d-941b-320037bebee1"
+                      }
+                    },
+                    "Existing_Dataset": {
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": {
+                          "ID": "@first(body('Get_existing_items')?['value'])?['ID']",
+                          "AssessedImprovement": "@first(body('Get_existing_items')?['value'])?['AssessedImprovement']",
+                          "AssessedLand": "@first(body('Get_existing_items')?['value'])?['AssessedLand']",
+                          "AssessmentFootage": "@first(body('Get_existing_items')?['value'])?['AssessmentFootage']",
+                          "AuctionCancelled": "@first(body('Get_existing_items')?['value'])?['AuctionCancelled']",
+                          "FEMAFloodMap": "@first(body('Get_existing_items')?['value'])?['FEMAFloodMap']",
+                          "FloodZoneRaw": "@first(body('Get_existing_items')?['value'])?['FloodZoneRaw']",
+                          "FloodZoneUpdated": "@first(body('Get_existing_items')?['value'])?['FloodZoneUpdated']",
+                          "LandEconomicType": "@first(body('Get_existing_items')?['value'])?['LandEconomicType']",
+                          "Mortgage1Position": "@first(body('Get_existing_items')?['value'])?['Mortgage1Position']",
+                          "Mortgage2": "@first(body('Get_existing_items')?['value'])?['Mortgage2']",
+                          "Mortgage3": "@first(body('Get_existing_items')?['value'])?['Mortgage3']",
+                          "OwnerOccupied": "@first(body('Get_existing_items')?['value'])?['OwnerOccupied']",
+                          "OwnershipType": "@first(body('Get_existing_items')?['value'])?['OwnerEntityType/Value']",
+                          "PublicAccess": "@first(body('Get_existing_items')?['value'])?['PublicAccess']",
+                          "RightofWayFlag": "@first(body('Get_existing_items')?['value'])?['RightofWayFlag']",
+                          "VieworInfluence": "@first(body('Get_existing_items')?['value'])?['VieworInfluence']",
+                          "PropertyUID": "@first(body('Get_existing_items')?['value'])?['Title']",
+                          "RadarID": "@first(body('Get_existing_items')?['value'])?['RadarID']",
+                          "Address": "@first(body('Get_existing_items')?['value'])?['Address']",
+                          "City": "@first(body('Get_existing_items')?['value'])?['City']",
+                          "State": "@first(body('Get_existing_items')?['value'])?['State']",
+                          "Zip": "@first(body('Get_existing_items')?['value'])?['Zip']",
+                          "County": "@first(body('Get_existing_items')?['value'])?['County']",
+                          "SaleDate": "@first(body('Get_existing_items')?['value'])?['SaleDate']",
+                          "ValuationSource": "@first(body('Get_existing_items')?['value'])?['ValuationSource/Value']",
+                          "PreviousSaleType": "@first(body('Get_existing_items')?['value'])?['PreviousSaleType/Value']",
+                          "SaleType": "@first(body('Get_existing_items')?['value'])?['SaleType/Value']",
+                          "FirstLoanAmount": "@first(body('Get_existing_items')?['value'])?['FirstLoanAmount']",
+                          "PropertyType": "@first(body('Get_existing_items')?['value'])?['PropertyType']",
+                          "SqFt": "@first(body('Get_existing_items')?['value'])?['SqFt']",
+                          "PropertyURL": "@first(body('Get_existing_items')?['value'])?['PropertyURL']",
+                          "AssessedValue": "@first(body('Get_existing_items')?['value'])?['AssessedValue']",
+                          "SaleAmount": "@first(body('Get_existing_items')?['value'])?['SaleAmount']",
+                          "EstimatedValue": "@first(body('Get_existing_items')?['value'])?['EstimatedValue']",
+                          "TotalLoanBalance": "@first(body('Get_existing_items')?['value'])?['TotalLoanBalance']",
+                          "ListName": "@first(body('Get_existing_items')?['value'])?['ListName']",
+                          "APN": "@first(body('Get_existing_items')?['value'])?['APN']",
+                          "AVM": "@first(body('Get_existing_items')?['value'])?['AVM']",
+                          "FirstDate": "@first(body('Get_existing_items')?['value'])?['FirstDate']",
+                          "FirstLoanLender": "@first(body('Get_existing_items')?['value'])?['FirstLoanLender']",
+                          "FirstLenderOriginal": "@first(body('Get_existing_items')?['value'])?['FirstLenderOriginal']",
+                          "FirstLoanPurpose": "@first(body('Get_existing_items')?['value'])?['FirstLoanPurpose']",
+                          "FirstLoanDate": "@first(body('Get_existing_items')?['value'])?['FirstLoanDate']",
+                          "FirstLoanRate": "@first(body('Get_existing_items')?['value'])?['FirstLoanRate']",
+                          "FirstRate": "@first(body('Get_existing_items')?['value'])?['FirstRate']",
+                          "FirstPurpose": "@first(body('Get_existing_items')?['value'])?['FirstPurpose']",
+                          "YearBuilt": "@first(body('Get_existing_items')?['value'])?['YearBuilt']",
+                          "LegalOwner": "@first(body('Get_existing_items')?['value'])?['LegalOwner']",
+                          "Beds": "@first(body('Get_existing_items')?['value'])?['Beds']",
+                          "Baths": "@first(body('Get_existing_items')?['value'])?['Baths']",
+                          "Units": "@first(body('Get_existing_items')?['value'])?['Units']",
+                          "LotSize": "@first(body('Get_existing_items')?['value'])?['LotSize']",
+                          "LotSizeAcres": "@first(body('Get_existing_items')?['value'])?['LotSizeAcres']",
+                          "OwnerZipFive": "@first(body('Get_existing_items')?['value'])?['OwnerZipFive']",
+                          "OpenLoans": "@first(body('Get_existing_items')?['value'])?['OpenLoans']",
+                          "EquityPercent": "@first(body('Get_existing_items')?['value'])?['EquityPercent']",
+                          "NumberLoans": "@first(body('Get_existing_items')?['value'])?['NumberLoans']",
+                          "PType": "@first(body('Get_existing_items')?['value'])?['PType']",
+                          "PurchaseAmount": "@first(body('Get_existing_items')?['value'])?['PurchaseAmount']",
+                          "LastTransferValue": "@first(body('Get_existing_items')?['value'])?['LastTransferValue']",
+                          "PurchaseDate": "@first(body('Get_existing_items')?['value'])?['PurchaseDate']",
+                          "LastTransferRecDate": "@first(body('Get_existing_items')?['value'])?['LastTransferRecDate']",
+                          "PurchaseSeller": "@first(body('Get_existing_items')?['value'])?['PurchaseSeller']",
+                          "LastTransferSeller": "@first(body('Get_existing_items')?['value'])?['LastTransferSeller']",
+                          "PurchaseType": "@first(body('Get_existing_items')?['value'])?['PurchaseType']",
+                          "ZipFive": "@first(body('Get_existing_items')?['value'])?['ZipFive']",
+                          "PhotoURL1": "@first(body('Get_existing_items')?['value'])?['PhotoURL1']",
+                          "AnnualTaxes": "@first(body('Get_existing_items')?['value'])?['AnnualTaxes']",
+                          "AvailableEquity": "@first(body('Get_existing_items')?['value'])?['AvailableEquity']",
+                          "LastTransferType": "@first(body('Get_existing_items')?['value'])?['LastTransferType']",
+                          "DefaultAmount": "@first(body('Get_existing_items')?['value'])?['DefaultAmount']",
+                          "DefaultAsOf": "@first(body('Get_existing_items')?['value'])?['DefaultAsOf']",
+                          "DOTPosition": "@first(body('Get_existing_items')?['value'])?['DOTPosition']",
+                          "EstimatedTaxRate": "@first(body('Get_existing_items')?['value'])?['EstimatedTaxRate']",
+                          "DaysOnMarket": "@first(body('Get_existing_items')?['value'])?['DaysOnMarket']",
+                          "ForeclosureStage": "@first(body('Get_existing_items')?['value'])?['ForeclosureStage']",
+                          "inForeclosure": "@first(body('Get_existing_items')?['value'])?['inForeclosure']",
+                          "isListedForSale": "@first(body('Get_existing_items')?['value'])?['isListedForSale']",
+                          "ListingPrice": "@first(body('Get_existing_items')?['value'])?['ListingPrice']",
+                          "ForeclosureRecDate": "@first(body('Get_existing_items')?['value'])?['ForeclosureRecDate']",
+                          "OriginalSaleDate": "@first(body('Get_existing_items')?['value'])?['OriginalSaleDate']",
+                          "Pool": "@first(body('Get_existing_items')?['value'])?['Pool']",
+                          "PostReason": "@first(body('Get_existing_items')?['value'])?['PostReason']",
+                          "SaleDateRelative": "@first(body('Get_existing_items')?['value'])?['SaleDateRelative']",
+                          "PreviousSaleDate": "@first(body('Get_existing_items')?['value'])?['PreviousSaleDate']",
+                          "OwnerFirstName": "@first(body('Get_existing_items')?['value'])?['OwnerFirstName']",
+                          "OwnerLastName": "@first(body('Get_existing_items')?['value'])?['OwnerLastName']",
+                          "OwnerSpouseFirstName": "@first(body('Get_existing_items')?['value'])?['OwnerSpouseFirstName']",
+                          "OwnerAddress": "@first(body('Get_existing_items')?['value'])?['OwnerAddress']",
+                          "OwnerCity": "@first(body('Get_existing_items')?['value'])?['OwnerCity']",
+                          "MailingState": "@first(body('Get_existing_items')?['value'])?['MailingState']",
+                          "OwnerState": "@first(body('Get_existing_items')?['value'])?['OwnerState']",
+                          "PrimaryContactEmail": "@first(body('Get_existing_items')?['value'])?['PrimaryContactEmail']",
+                          "PrimaryEmail1": "@first(body('Get_existing_items')?['value'])?['PrimaryEmail1']",
+                          "PrimaryEmail1Status": "@first(body('Get_existing_items')?['value'])?['PrimaryEmail1Status']",
+                          "PrimaryContactFirst": "@first(body('Get_existing_items')?['value'])?['PrimaryContactFirst']",
+                          "PrimaryContactLast": "@first(body('Get_existing_items')?['value'])?['PrimaryContactLast']",
+                          "PrimaryContactPhone": "@first(body('Get_existing_items')?['value'])?['PrimaryContactPhone']",
+                          "PrimaryPhone1": "@first(body('Get_existing_items')?['value'])?['PrimaryPhone1']",
+                          "PrimaryPhone1Status": "@first(body('Get_existing_items')?['value'])?['PrimaryPhone1Status']",
+                          "PrimaryMobilePhone1Status": "@first(body('Get_existing_items')?['value'])?['PrimaryMobilePhone1Status']",
+                          "LoanType": "@first(body('Get_existing_items')?['value'])?['LoanType/Value']",
+                          "Mortgagor": "@first(body('Get_existing_items')?['value'])?['Mortgagor']",
+                          "Mortgagee": "@first(body('Get_existing_items')?['value'])?['Mortgagee']",
+                          "Volume": "@first(body('Get_existing_items')?['value'])?['Volume']",
+                          "LoanYear": "@first(body('Get_existing_items')?['value'])?['LoanYear']",
+                          "LoanMonth": "@first(body('Get_existing_items')?['value'])?['LoanMonth']",
+                          "InterestRate": "@first(body('Get_existing_items')?['value'])?['InterestRate']",
+                          "MonthlyPayment": "@first(body('Get_existing_items')?['value'])?['MonthlyPayment']",
+                          "LoanExpiresYear": "@first(body('Get_existing_items')?['value'])?['LoanExpiresYear']",
+                          "LoanYearLength": "@first(body('Get_existing_items')?['value'])?['LoanYearLength']",
+                          "PreviousPosting": "@first(body('Get_existing_items')?['value'])?['PreviousPosting']",
+                          "LegalDescription1": "@first(body('Get_existing_items')?['value'])?['LegalDescription1']",
+                          "LegalDescription2": "@first(body('Get_existing_items')?['value'])?['LegalDescription2']",
+                          "Trustee": "@first(body('Get_existing_items')?['value'])?['Trustee']",
+                          "SaleTime": "@first(body('Get_existing_items')?['value'])?['SaleTime']",
+                          "SalePlace": "@first(body('Get_existing_items')?['value'])?['SalePlace']",
+                          "OpeningBid": "@first(body('Get_existing_items')?['value'])?['OpeningBid']",
+                          "FloodZoneCode": "@first(body('Get_existing_items')?['value'])?['FloodZoneCode']",
+                          "POV": "@first(body('Get_existing_items')?['value'])?['POV']",
+                          "ConfidenceRating": "@first(body('Get_existing_items')?['value'])?['ConfidenceRating']",
+                          "AppraiserLink": "@first(body('Get_existing_items')?['value'])?['AppraiserLink']",
+                          "FinalJudgementDocs": "@first(body('Get_existing_items')?['value'])?['FinalJudgementDocs']",
+                          "BiddingLink": "@first(body('Get_existing_items')?['value'])?['BiddingLink']",
+                          "CountyLandValue": "@first(body('Get_existing_items')?['value'])?['CountyLandValue']",
+                          "CountyMarketValue": "@first(body('Get_existing_items')?['value'])?['CountyMarketValue']",
+                          "Defendants": "@first(body('Get_existing_items')?['value'])?['Defendants']",
+                          "FinalJudgementAmount": "@first(body('Get_existing_items')?['value'])?['FinalJudgementAmount']",
+                          "LastSale": "@first(body('Get_existing_items')?['value'])?['LastSale']",
+                          "Plaintiff": "@first(body('Get_existing_items')?['value'])?['Plaintiff']",
+                          "PlaintiffMaxBid": "@first(body('Get_existing_items')?['value'])?['PlaintiffMaxBid']",
+                          "PreviousSalePrice": "@first(body('Get_existing_items')?['value'])?['PreviousSalePrice']",
+                          "SumBuildingSqFt": "@first(body('Get_existing_items')?['value'])?['SumBuildingSqFt']",
+                          "TotalLienAmount": "@first(body('Get_existing_items')?['value'])?['TotalLienAmount']",
+                          "VacantSince": "@first(body('Get_existing_items')?['value'])?['VacantSince']",
+                          "FirstAmount": "@first(body('Get_existing_items')?['value'])?['FirstAmount']",
+                          "Owner": "@first(body('Get_existing_items')?['value'])?['Owner']",
+                          "MailingAddress": "@first(body('Get_existing_items')?['value'])?['MailingAddress']",
+                          "MailingCity": "@first(body('Get_existing_items')?['value'])?['MailingCity']",
+                          "MailingZip": "@first(body('Get_existing_items')?['value'])?['MailingZip']",
+                          "Postponement": "@first(body('Get_existing_items')?['value'])?['AVPCounter']",
+                          "PrimaryFirstName": "@first(body('Get_existing_items')?['value'])?['PrimaryFirstName']",
+                          "PrimaryLastName": "@first(body('Get_existing_items')?['value'])?['PrimaryLastName']",
+                          "SecondaryPhone1Status": "@first(body('Get_existing_items')?['value'])?['SecondaryPhone1Status']",
+                          "SecondaryMobilePhone1Status": "@first(body('Get_existing_items')?['value'])?['SecondaryMobilePhone1Status']",
+                          "PrimaryMobilePhone1": "@first(body('Get_existing_items')?['value'])?['PrimaryMobilePhone1']",
+                          "SecondaryFirstName": "@first(body('Get_existing_items')?['value'])?['SecondaryFirstName']",
+                          "SecondaryLastName": "@first(body('Get_existing_items')?['value'])?['SecondaryLastName']",
+                          "SecondaryMobilePhone1": "@first(body('Get_existing_items')?['value'])?['SecondaryMobilePhone1']",
+                          "SecondaryPhone1": "@first(body('Get_existing_items')?['value'])?['SecondaryPhone1']",
+                          "SecondaryEmail1": "@first(body('Get_existing_items')?['value'])?['SecondaryEmail1']",
+                          "SecondaryEmail1Status": "@first(body('Get_existing_items')?['value'])?['SecondaryEmail1Status']",
+                          "isMailVacant": "@first(body('Get_existing_items')?['value'])?['isMailVacant']",
+                          "isSameMailingOrExempt": "@first(body('Get_existing_items')?['value'])?['isMailVacant']",
+                          "isSiteVacant": "@first(body('Get_existing_items')?['value'])?['isSiteVacant']",
+                          "Stories": "@first(body('Get_existing_items')?['value'])?['Stories']",
+                          "Subdivision": "@first(body('Get_existing_items')?['value'])?['Subdivision']",
+                          "WinningBid": "@first(body('Get_existing_items')?['value'])?['WinningBid']",
+                          "Attorney": "@first(body('Get_existing_items')?['value'])?['Attorney']",
+                          "CaseNumber": "@first(body('Get_existing_items')?['value'])?['CaseNumber']",
+                          "LisPendensType": "@first(body('Get_existing_items')?['value'])?['LisPendensType']",
+                          "Longitude": "@first(body('Get_existing_items')?['value'])?['Longitude']",
+                          "Latitude": "@first(body('Get_existing_items')?['value'])?['Latitude']"
+                        },
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "APN": {},
+                            "AVM": {},
+                            "Address": {},
+                            "AnnualTaxes": {},
+                            "AppraiserLink": {},
+                            "AssessedImprovement": {},
+                            "AssessedLand": {},
+                            "AssessedValue": {},
+                            "AssessmentFootage": {},
+                            "AuctionCancelled": {},
+                            "Attorney": {},
+                            "AvailableEquity": {},
+                            "Baths": {},
+                            "Beds": {},
+                            "BiddingLink": {},
+                            "CaseNumber": {},
+                            "City": {},
+                            "ConfidenceRating": {},
+                            "County": {},
+                            "CountyLandValue": {},
+                            "CountyMarketValue": {},
+                            "DOTPosition": {},
+                            "DaysOnMarket": {},
+                            "DefaultAmount": {},
+                            "DefaultAsOf": {},
+                            "Defendants": {},
+                            "EquityPercent": {},
+                            "EstimatedTaxRate": {},
+                            "EstimatedValue": {},
+                            "FEMAFloodMap": {},
+                            "FinalJudgementAmount": {},
+                            "FinalJudgementDocs": {},
+                            "FirstAmount": {},
+                            "FirstDate": {},
+                            "FirstLenderOriginal": {},
+                            "FirstLoanAmount": {},
+                            "FirstLoanDate": {},
+                            "FirstLoanLender": {},
+                            "FirstLoanPurpose": {},
+                            "FirstLoanRate": {},
+                            "FirstPurpose": {},
+                            "FirstRate": {},
+                            "FloodZoneCode": {},
+                            "FloodZoneRaw": {},
+                            "FloodZoneUpdated": {},
+                            "ForeclosureRecDate": {},
+                            "ForeclosureStage": {},
+                            "ID": {},
+                            "InterestRate": {},
+                            "LandEconomicType": {},
+                            "LastSale": {},
+                            "LastTransferRecDate": {},
+                            "LastTransferSeller": {},
+                            "LastTransferType": {},
+                            "LastTransferValue": {},
+                            "Latitude": {},
+                            "LegalDescription1": {},
+                            "LegalDescription2": {},
+                            "LegalOwner": {},
+                            "LisPendensType": {},
+                            "ListName": {},
+                            "ListingPrice": {},
+                            "LoanExpiresYear": {},
+                            "LoanMonth": {},
+                            "LoanType": {},
+                            "LoanYear": {},
+                            "LoanYearLength": {},
+                            "Longitude": {},
+                            "LotSize": {},
+                            "LotSizeAcres": {},
+                            "MailingAddress": {},
+                            "MailingCity": {},
+                            "MailingState": {},
+                            "MailingZip": {},
+                            "MonthlyPayment": {},
+                            "Mortgagee": {},
+                            "Mortgage1Position": {},
+                            "Mortgage2": {},
+                            "Mortgage3": {},
+                            "Mortgagor": {},
+                            "NumberLoans": {},
+                            "OpenLoans": {},
+                            "OpeningBid": {},
+                            "OriginalSaleDate": {},
+                            "Owner": {},
+                            "OwnerAddress": {},
+                            "OwnerCity": {},
+                            "OwnerFirstName": {},
+                            "OwnerLastName": {},
+                            "OwnerOccupied": {},
+                            "OwnershipType": {},
+                            "OwnerSpouseFirstName": {},
+                            "OwnerState": {},
+                            "OwnerZipFive": {},
+                            "PType": {},
+                            "PhotoURL1": {},
+                            "Plaintiff": {},
+                            "PlaintiffMaxBid": {},
+                            "Pool": {},
+                            "Postponement": {},
+                            "PostReason": {},
+                            "POV": {},
+                            "PreviousPosting": {},
+                            "PreviousSaleDate": {},
+                            "PreviousSalePrice": {},
+                            "PreviousSaleType": {},
+                            "PrimaryContactEmail": {},
+                            "PrimaryContactFirst": {},
+                            "PrimaryContactLast": {},
+                            "PrimaryContactPhone": {},
+                            "PrimaryEmail1": {},
+                            "PrimaryEmail1Status": {},
+                            "PrimaryFirstName": {},
+                            "PrimaryLastName": {},
+                            "PrimaryMobilePhone1": {},
+                            "PrimaryMobilePhone1Status": {},
+                            "PrimaryPhone1": {},
+                            "PrimaryPhone1Status": {},
+                            "PropertyType": {},
+                            "PropertyUID": {},
+                            "PropertyURL": {},
+                            "PurchaseAmount": {},
+                            "PurchaseDate": {},
+                            "PurchaseSeller": {},
+                            "PurchaseType": {},
+                            "RadarID": {},
+                            "SaleAmount": {},
+                            "SaleDate": {},
+                            "SaleDateRelative": {},
+                            "SalePlace": {},
+                            "SaleTime": {},
+                            "SaleType": {},
+                            "SecondaryEmail1": {},
+                            "SecondaryEmail1Status": {},
+                            "SecondaryFirstName": {},
+                            "SecondaryLastName": {},
+                            "SecondaryMobilePhone1": {},
+                            "SecondaryMobilePhone1Status": {},
+                            "SecondaryPhone1": {},
+                            "SecondaryPhone1Status": {},
+                            "SqFt": {},
+                            "State": {},
+                            "Stories": {},
+                            "Subdivision": {},
+                            "SumBuildingSqFt": {},
+                            "TotalLienAmount": {},
+                            "TotalLoanBalance": {},
+                            "Trustee": {},
+                            "Units": {},
+                            "VacantSince": {},
+                            "ValuationSource": {},
+                            "Volume": {},
+                            "WinningBid": {},
+                            "YearBuilt": {},
+                            "Zip": {},
+                            "ZipFive": {},
+                            "inForeclosure": {},
+                            "isListedForSale": {},
+                            "isMailVacant": {},
+                            "isSameMailingOrExempt": {},
+                            "isSiteVacant": {}
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e800f399-6c4a-4473-8cf8-cc4b46ccd758"
+                      }
+                    },
+                    "Set_Existing_Item_ID": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "intItemId",
+                        "value": "@outputs('Update_Dataset')?['body/ID']"
+                      },
+                      "runAfter": {
+                        "Update_Dataset": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "cb969f0f-1869-4d43-8e6f-6c4d1ef1315c"
+                      }
+                    },
+                    "Set_Reset_Flag": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "blnReset",
+                        "value": "@if(\r\n  and(\r\n    not(empty(string(body('Update_Payload')?['SaleAmount']))),\r\n    not(empty(string(body('Existing_Dataset')?['SaleAmount'])))\r\n  ),\r\n  lessOrEquals(\r\n    div(\r\n      body('Update_Payload')?['SaleAmount'],\r\n      body('Existing_Dataset')?['SaleAmount']\r\n    ),\r\n    0.9\r\n  ),\r\n  if(\r\n    and(\r\n      not(empty(string(body('Update_Payload')?['FinalJudgementAmount']))),\r\n      not(empty(string(body('Existing_Dataset')?['FinalJudgementAmount'])))\r\n    ),\r\n    lessOrEquals(\r\n      div(\r\n        body('Update_Payload')?['FinalJudgementAmount'],\r\n        body('Existing_Dataset')?['FinalJudgementAmount']\r\n      ),\r\n      0.9\r\n    ),\r\n    if(\r\n      and(\r\n        not(empty(string(body('Update_Payload')?['FirstLoanAmount']))),\r\n        not(empty(string(body('Existing_Dataset')?['FirstLoanAmount'])))\r\n      ),\r\n      lessOrEquals(\r\n        div(\r\n          body('Update_Payload')?['FirstLoanAmount'],\r\n          body('Existing_Dataset')?['FirstLoanAmount']\r\n        ),\r\n        0.9\r\n      ),\r\n      false\r\n    )\r\n  )\r\n)"
+                      },
+                      "runAfter": {
+                        "Existing_Dataset": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "dc514b62-ecf0-41aa-83ab-cbfa57970543"
+                      }
+                    },
+                    "Update_Error": {
+                      "type": "Scope",
+                      "actions": {
+                        "Send_email_alert_re_failure_to_update": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                              "emailMessage/To": "@parameters('UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                              "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed updating @{body('Update_Payload')?['RadarID']}",
+                              "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encountered an error when attempting to update the property record @{body('Update_Payload')?['RadarID']} in AVP.</p><p class=\"editor-paragraph\"><i>@{body('Update_Dataset')?['message']}</i></p>@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SharedMailboxSendEmailV2",
+                              "connectionName": "shared_office365"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "b1a92b18-ef20-4f50-aa43-7c653a42ea62"
+                          }
+                        },
+                        "UPD_Fail_Response": {
+                          "type": "Response",
+                          "kind": "Http",
+                          "inputs": {
+                            "statusCode": 200,
+                            "body": {
+                              "Status": "Failed",
+                              "Message": "@body('Update_Dataset')?['message']"
+                            }
+                          },
+                          "runAfter": {
+                            "Send_email_alert_re_failure_to_update": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "595a636c-9a23-429e-a093-8d72a00a849b"
+                          }
+                        },
+                        "Terminate_due_to_failure_to_add_update": {
+                          "type": "Terminate",
+                          "inputs": {
+                            "runStatus": "Failed"
+                          },
+                          "runAfter": {
+                            "UPD_Fail_Response": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "b815739f-9448-483e-a018-48ea38a76c1f"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Update_Dataset": [
+                          "Failed"
+                        ]
+                      }
+                    },
+                    "Set_Updated_Header": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "objPriperty_Hdr",
+                        "value": {
+                          "ID": "@outputs('Update_Dataset')?['body/ID']",
+                          "Property UID": "@outputs('Update_Dataset')?['body/Title']",
+                          "RadarID": "@outputs('Update_Dataset')?['body/RadarID']",
+                          "ListImportItemID": "@outputs('Update_Dataset')?['body/ListImportItemID']",
+                          "RadarSynced": "@outputs('Update_Dataset')?['body/RadarSynced']"
+                        }
+                      },
+                      "runAfter": {
+                        "Set_Existing_Item_ID": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e3504a3b-e791-415e-afde-1ba93053bf6f"
+                  }
+                }
+              },
+              "runAfter": {
+                "Create_Item": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "225bb324-3834-4e4d-aeac-060767891bab"
+              }
+            },
+            "Create_Item": {
+              "type": "Scope",
+              "actions": {
+                "Valid_to_create": {
+                  "type": "If",
+                  "description": "If item is coming from the AVP Sync Feeder listing from PropertyRadar, we can only do UPDATE (i.e., cannot create new item)",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(outputs('Get_existing_items')?['body/value'])",
+                          "@true"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "startsWith": [
+                            "@string(triggerBody()?['ListName'])",
+                            "@parameters('UCH-AVP PropertyRadar (List Name | Feeder) (clr_UCHAVPPropertyRadarListNameFeeder)')"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Update_AVP_Item": {
+                      "type": "SetVariable",
+                      "description": "When a new item is successfully created, this flag causes the downstream update operation to be skipped",
+                      "inputs": {
+                        "name": "blnUpdate",
+                        "value": false
+                      },
+                      "runAfter": {
+                        "Create_new_item": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "354c218e-9b56-426c-8744-67b8e383ec9a"
+                      }
+                    },
+                    "Send_email_alert_re_failure_to_add_item": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                          "emailMessage/To": "@parameters('UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                          "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed adding @{body('Update_Payload')?['RadarID']}",
+                          "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encountered an error when attempting to add the property record @{body('Update_Payload')?['RadarID']} in AVP.</p><p><i>@{body('Create_new_item')?['message']}</i></p>@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                          "operationId": "SharedMailboxSendEmailV2",
+                          "connectionName": "shared_office365"
+                        }
+                      },
+                      "runAfter": {
+                        "Create_new_item": [
+                          "Failed"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "68d5f988-ac87-4d8b-93a6-1fa3347a0ef9"
+                      }
+                    },
+                    "Create_new_item": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                          "item/Title": "@body('Update_Payload')?['RadarID']",
+                          "item/RadarID": "@body('Update_Payload')?['RadarID']",
+                          "item/Address": "@body('Update_Payload')?['Address']",
+                          "item/City": "@body('Update_Payload')?['City']",
+                          "item/State": "@body('Update_Payload')?['State']",
+                          "item/Zip": "@body('Update_Payload')?['Zip']",
+                          "item/County": "@body('Update_Payload')?['County']",
+                          "item/SaleDate": "@body('Update_Payload')?['SaleDate']",
+                          "item/FirstLoanAmount": "@body('Update_Payload')?['FirstLoanAmount']",
+                          "item/PropertyType": "@body('Update_Payload')?['PropertyType']",
+                          "item/SqFt": "@body('Update_Payload')?['SqFt']",
+                          "item/LotSizeAcres": "@body('Update_Payload')?['LotSizeAcres']",
+                          "item/PropertyURL": "@body('Update_Payload')?['PropertyURL']",
+                          "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+                          "item/PropertySource/Value": "@body('Update_Payload')?['PropertySource']",
+                          "item/ValuationStatus/Value": "Queued",
+                          "item/Issue/Value": "@outputs('Valuation_Issue')",
+                          "item/AssessedValue": "@body('Update_Payload')?['AssessedValue']",
+                          "item/SaleAmount": "@body('Update_Payload')?['SaleAmount']",
+                          "item/EstimatedValue": "@body('Update_Payload')?['EstimatedValue']",
+                          "item/TotalLoanBalance": "@body('Update_Payload')?['TotalLoanBalance']",
+                          "item/ListName": "@body('Update_Payload')?['ListName']",
+                          "item/APN": "@body('Update_Payload')?['APN']",
+                          "item/AVM": "@body('Update_Payload')?['AVM']",
+                          "item/FirstDate": "@body('Update_Payload')?['FirstDate']",
+                          "item/FirstLoanLender": "@body('Update_Payload')?['FirstLoanLender']",
+                          "item/FirstLenderOriginal": "@body('Update_Payload')?['FirstLenderOriginal']",
+                          "item/FirstLoanPurpose": "@body('Update_Payload')?['FirstLoanPurpose']",
+                          "item/FirstLoanDate": "@body('Update_Payload')?['FirstLoanDate']",
+                          "item/FirstLoanRate": "@body('Update_Payload')?['FirstLoanRate']",
+                          "item/FirstRate": "@body('Update_Payload')?['FirstRate']",
+                          "item/FirstPurpose": "@body('Update_Payload')?['FirstPurpose']",
+                          "item/YearBuilt": "@body('Update_Payload')?['YearBuilt']",
+                          "item/Beds": "@body('Update_Payload')?['Beds']",
+                          "item/Baths": "@body('Update_Payload')?['Baths']",
+                          "item/Units": "@body('Update_Payload')?['Units']",
+                          "item/LotSize": "@body('Update_Payload')?['LotSize']",
+                          "item/OwnerZipFive": "@body('Update_Payload')?['OwnerZipFive']",
+                          "item/OpenLoans": "@body('Update_Payload')?['OpenLoans']",
+                          "item/EquityPercent": "@body('Update_Payload')?['EquityPercent']",
+                          "item/NumberLoans": "@body('Update_Payload')?['NumberLoans']",
+                          "item/PType": "@body('Update_Payload')?['PType']",
+                          "item/PurchaseAmount": "@body('Update_Payload')?['PurchaseAmount']",
+                          "item/LastTransferValue": "@body('Update_Payload')?['LastTransferValue']",
+                          "item/PurchaseDate": "@body('Update_Payload')?['PurchaseDate']",
+                          "item/LastTransferRecDate": "@body('Update_Payload')?['LastTransferRecDate']",
+                          "item/PurchaseSeller": "@body('Update_Payload')?['PurchaseSeller']",
+                          "item/LastTransferSeller": "@body('Update_Payload')?['LastTransferSeller']",
+                          "item/PurchaseType": "@body('Update_Payload')?['PurchaseType']",
+                          "item/ZipFive": "@body('Update_Payload')?['ZipFive']",
+                          "item/PhotoURL1": "@body('Update_Payload')?['PhotoURL1']",
+                          "item/AnnualTaxes": "@body('Update_Payload')?['AnnualTaxes']",
+                          "item/LastTransferType": "@body('Update_Payload')?['LastTransferType']",
+                          "item/DefaultAmount": "@body('Update_Payload')?['DefaultAmount']",
+                          "item/DefaultAsOf": "@body('Update_Payload')?['DefaultAsOf']",
+                          "item/DOTPosition": "@body('Update_Payload')?['DOTPosition']",
+                          "item/EstimatedTaxRate": "@body('Update_Payload')?['EstimatedTaxRate']",
+                          "item/DaysOnMarket": "@body('Update_Payload')?['DaysOnMarket']",
+                          "item/ForeclosureStage": "@body('Update_Payload')?['ForeclosureStage']",
+                          "item/inForeclosure": "@body('Update_Payload')?['inForeclosure']",
+                          "item/isListedForSale": "@body('Update_Payload')?['isListedForSale']",
+                          "item/ListingPrice": "@body('Update_Payload')?['ListingPrice']",
+                          "item/ForeclosureRecDate": "@body('Update_Payload')?['ForeclosureRecDate']",
+                          "item/OriginalSaleDate": "@body('Update_Payload')?['OriginalSaleDate']",
+                          "item/Pool": "@body('Update_Payload')?['Pool']",
+                          "item/PostReason": "@body('Update_Payload')?['PostReason']",
+                          "item/SaleDateRelative": "@body('Update_Payload')?['SaleDateRelative']",
+                          "item/PreviousSaleDate": "@body('Update_Payload')?['PreviousSaleDate']",
+                          "item/Period": "@body('Update_Payload')?['SalePeriod']",
+                          "item/Owner": "@body('Update_Payload')?['Owner']",
+                          "item/LegalOwner": "@body('Update_Payload')?['LegalOwner']",
+                          "item/OwnerFirstName": "@body('Update_Payload')?['OwnerFirstName']",
+                          "item/OwnerLastName": "@body('Update_Payload')?['OwnerLastName']",
+                          "item/OwnerSpouseFirstName": "@body('Update_Payload')?['OwnerSpouseFirstName']",
+                          "item/OwnerAddress": "@body('Update_Payload')?['OwnerAddress']",
+                          "item/OwnerCity": "@body('Update_Payload')?['OwnerCity']",
+                          "item/MailingState": "@body('Update_Payload')?['MailingState']",
+                          "item/OwnerState": "@body('Update_Payload')?['OwnerState']",
+                          "item/PrimaryContactEmail": "@body('Update_Payload')?['PrimaryContactEmail']",
+                          "item/PrimaryEmail1": "@body('Update_Payload')?['PrimaryEmail1']",
+                          "item/PrimaryEmail1Status": "@body('Update_Payload')?['PrimaryEmail1Status']",
+                          "item/PrimaryContactFirst": "@body('Update_Payload')?['PrimaryContactFirst']",
+                          "item/PrimaryContactLast": "@body('Update_Payload')?['PrimaryContactLast']",
+                          "item/PrimaryContactPhone": "@body('Update_Payload')?['PrimaryContactPhone']",
+                          "item/PrimaryPhone1": "@body('Update_Payload')?['PrimaryPhone1']",
+                          "item/PrimaryPhone1Status": "@body('Update_Payload')?['PrimaryPhone1Status']",
+                          "item/PrimaryMobilePhone1Status": "@body('Update_Payload')?['PrimaryMobilePhone1Status']",
+                          "item/LoanType/Value": "@body('Update_Payload')?['LoanType']",
+                          "item/Mortgagor": "@body('Update_Payload')?['Mortgagor']",
+                          "item/Mortgagee": "@body('Update_Payload')?['Mortgagee']",
+                          "item/Volume": "@body('Update_Payload')?['Volume']",
+                          "item/LoanYear": "@body('Update_Payload')?['LoanYear']",
+                          "item/LoanMonth": "@body('Update_Payload')?['LoanMonth']",
+                          "item/InterestRate": "@body('Update_Payload')?['InterestRate']",
+                          "item/MonthlyPayment": "@body('Update_Payload')?['MonthlyPayment']",
+                          "item/LoanExpiresYear": "@body('Update_Payload')?['LoanExpiresYear']",
+                          "item/LoanYearLength": "@body('Update_Payload')?['LoanYearLength']",
+                          "item/PreviousPosting": "@body('Update_Payload')?['PreviousPosting']",
+                          "item/LegalDescription1": "@body('Update_Payload')?['LegalDescription1']",
+                          "item/LegalDescription2": "@body('Update_Payload')?['LegalDescription2']",
+                          "item/OwnerOccupied": "@body('Update_Payload')?['OwnerOccupied']",
+                          "item/OwnerEntityType/Value": "@body('Update_Payload')?['OwnershipType']",
+                          "item/Trustee": "@body('Update_Payload')?['Trustee']",
+                          "item/SaleTime": "@body('Update_Payload')?['SaleTime']",
+                          "item/SalePlace": "@body('Update_Payload')?['SalePlace']",
+                          "item/OpeningBid": "@body('Update_Payload')?['OpeningBid']",
+                          "item/FloodZoneCode": "@body('Update_Payload')?['FloodZoneCode']",
+                          "item/POV": "@body('Update_Payload')?['POV']",
+                          "item/ConfidenceRating": "@body('Update_Payload')?['ConfidenceRating']",
+                          "item/AppraiserLink": "@body('Update_Payload')?['AppraiserLink']",
+                          "item/FinalJudgementDocs": "@body('Update_Payload')?['FinalJudgementDocs']",
+                          "item/BiddingLink": "@body('Update_Payload')?['BiddingLink']",
+                          "item/CountyLandValue": "@body('Update_Payload')?['CountyLandValue']",
+                          "item/CountyMarketValue": "@body('Update_Payload')?['CountyMarketValue']",
+                          "item/Defendants": "@body('Update_Payload')?['Defendants']",
+                          "item/FinalJudgementAmount": "@body('Update_Payload')?['FinalJudgementAmount']",
+                          "item/LastSale": "@body('Update_Payload')?['LastSale']",
+                          "item/Plaintiff": "@body('Update_Payload')?['Plaintiff']",
+                          "item/PlaintiffMaxBid": "@body('Update_Payload')?['PlaintiffMaxBid']",
+                          "item/PreviousSalePrice": "@body('Update_Payload')?['PreviousSalePrice']",
+                          "item/PreviousSaleType/Value": "@body('Update_Payload')?['PreviousSaleType']",
+                          "item/SaleType/Value": "@body('Update_Payload')?['SaleType']",
+                          "item/SumBuildingSqFt": "@body('Update_Payload')?['SumBuildingSqFt']",
+                          "item/TotalLienAmount": "@body('Update_Payload')?['TotalLienAmount']",
+                          "item/VacantSince": "@body('Update_Payload')?['VacantSince']",
+                          "item/AssessedImprovement": "@body('Update_Payload')?['AssessedImprovement']",
+                          "item/AssessedLand": "@body('Update_Payload')?['AssessedLand']",
+                          "item/AssessmentFootage": "@body('Update_Payload')?['AssessmentFootage']",
+                          "item/FEMAFloodMap": "@body('Update_Payload')?['FEMAFloodMap']",
+                          "item/FloodZoneRaw": "@body('Update_Payload')?['FloodZoneRaw']",
+                          "item/FloodZoneUpdated": "@body('Update_Payload')?['FloodZoneUpdated']",
+                          "item/LandEconomicType": "@body('Update_Payload')?['LandEconomicType']",
+                          "item/Mortgage1Position": "@body('Update_Payload')?['Mortgage1Position']",
+                          "item/Mortgage2": "@body('Update_Payload')?['Mortgage2']",
+                          "item/Mortgage3": "@body('Update_Payload')?['Mortgage3']",
+                          "item/RightofWayFlag": "@body('Update_Payload')?['RightofWayFlag']",
+                          "item/PublicAccess": "@body('Update_Payload')?['PublicAccess']",
+                          "item/VieworInfluence": "@body('Update_Payload')?['VieworInfluence']",
+                          "item/CaseNumber": "@body('Update_Payload')?['CaseNumber']",
+                          "item/AuctionCancelled": "@if(\r\n\tor(\r\n    contains(\r\n      string(body('Update_Payload')?['Change1']),\r\n      'Stage:Auction:Cancelled'\r\n    ),\r\n    contains(\r\n      string(body('Update_Payload')?['Change2']),\r\n      'Stage:Auction:Cancelled'\r\n    ),\r\n    contains(\r\n      string(body('Update_Payload')?['Change3']),\r\n      'Stage:Auction:Cancelled'\r\n    )\r\n  ),\r\n\t'Yes',\r\n\tnull\r\n)",
+                          "item/FirstAmount": "@body('Update_Payload')?['FirstAmount']",
+                          "item/MailingAddress": "@body('Update_Payload')?['MailingAddress']",
+                          "item/MailingCity": "@body('Update_Payload')?['MailingCity']",
+                          "item/MailingZip": "@body('Update_Payload')?['MailingZip']",
+                          "item/PrimaryFirstName": "@body('Update_Payload')?['PrimaryFirstName']",
+                          "item/PrimaryLastName": "@body('Update_Payload')?['PrimaryLastName']",
+                          "item/SecondaryPhone1Status": "@body('Update_Payload')?['SecondaryPhone1Status']",
+                          "item/SecondaryMobilePhone1Status": "@body('Update_Payload')?['SecondaryMobilePhone1Status']",
+                          "item/PrimaryMobilePhone1": "@body('Update_Payload')?['PrimaryMobilePhone1']",
+                          "item/SecondaryFirstName": "@body('Update_Payload')?['SecondaryFirstName']",
+                          "item/SecondaryLastName": "@body('Update_Payload')?['SecondaryLastName']",
+                          "item/SecondaryMobilePhone1": "@body('Update_Payload')?['SecondaryMobilePhone1']",
+                          "item/SecondaryPhone1": "@body('Update_Payload')?['SecondaryPhone1']",
+                          "item/SecondaryEmail1": "@body('Update_Payload')?['SecondaryEmail1']",
+                          "item/SecondaryEmail1Status": "@body('Update_Payload')?['SecondaryEmail1Status']",
+                          "item/AvailableEquity": "@body('Update_Payload')?['AvailableEquity']",
+                          "item/isMailVacant": "@body('Update_Payload')?['isMailVacant']",
+                          "item/isSameMailingOrExempt": "@body('Update_Payload')?['isSameMailingOrExempt']",
+                          "item/isSiteVacant": "@body('Update_Payload')?['isSiteVacant']",
+                          "item/Stories": "@body('Update_Payload')?['Stories']",
+                          "item/Subdivision": "@body('Update_Payload')?['Subdivision']",
+                          "item/WinningBid": "@body('Update_Payload')?['WinningBid']",
+                          "item/Attorney": "@body('Update_Payload')?['Attorney']",
+                          "item/LisPendensType": "@body('Update_Payload')?['LisPendensType']",
+                          "item/Longitude": "@body('Update_Payload')?['Longitude']",
+                          "item/Latitude": "@body('Update_Payload')?['Latitude']",
+                          "item/TriggerType": "@body('Update_Payload')?['TriggerType']",
+                          "item/Change1": "@body('Update_Payload')?['Change1']",
+                          "item/Change2": "@body('Update_Payload')?['Change2']",
+                          "item/Change3": "@body('Update_Payload')?['Change3']"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PostItem",
+                          "connectionName": "shared_sharepointonline-1"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e95fcffd-8dec-450f-8c7c-32c6a1213531"
+                      }
+                    },
+                    "Set_New_Item_ID": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "intItemId",
+                        "value": "@outputs('Create_new_item')?['body/ID']"
+                      },
+                      "runAfter": {
+                        "Update_AVP_Item": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "a5845fb3-2ca9-4ce5-b536-7bef226e3f52"
+                      }
+                    },
+                    "Terminate_due_to_failure_to_add_item": {
+                      "type": "Terminate",
+                      "inputs": {
+                        "runStatus": "Failed"
+                      },
+                      "runAfter": {
+                        "Add_Fail_Response": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "b815739f-9448-483e-a018-48ea38a76c1f"
+                      }
+                    },
+                    "Add_Fail_Response": {
+                      "type": "Response",
+                      "kind": "Http",
+                      "inputs": {
+                        "statusCode": 200,
+                        "body": {
+                          "Status": "Failed",
+                          "Message": "@body('Create_new_item')?['message']"
+                        }
+                      },
+                      "runAfter": {
+                        "Send_email_alert_re_failure_to_add_item": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "595a636c-9a23-429e-a093-8d72a00a849b"
+                      }
+                    },
+                    "Set_New_Header": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "objPriperty_Hdr",
+                        "value": {
+                          "ID": "@outputs('Create_new_item')?['body/ID']",
+                          "Property UID": "@outputs('Create_new_item')?['body/Title']",
+                          "RadarID": "@outputs('Create_new_item')?['body/RadarID']",
+                          "ListImportItemID": null,
+                          "RadarSynced": null
+                        }
+                      },
+                      "runAfter": {
+                        "Set_New_Item_ID": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Get_existing_items": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "50d6e634-69ad-4d5a-81b9-a5f3f5a9430c"
+                  }
+                },
+                "Get_existing_items": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                      "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                      "$filter": "Title eq '@{outputs('Radar_ID')}' or RadarID eq '@{outputs('Radar_ID')}'"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "connectionName": "shared_sharepointonline-1"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "paginationPolicy": {
+                      "minimumItemCount": 5000
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9773ffc1-4b7c-47aa-b86b-9fa3d64148d6"
+                  }
+                }
+              },
+              "runAfter": {
+                "Valuation_Issue": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8c003a7a-3c38-4fba-aec6-933da03fff9a"
+              }
+            },
+            "Valuation_Status": {
+              "type": "Compose",
+              "description": "Queued - record will go through PropertyRadar matching first\nPending - record will go straight to validation (CoStar, Zillow, or Redfin)",
+              "inputs": "@if(\r\n  contains(\r\n    body('Update_Payload')?['PropertySource'],\r\n    'PropertyRadar'\r\n  ),\r\n  'Pending',\r\n  'Queued'\r\n)",
+              "runAfter": {
+                "Valuation_Source": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2891eeee-fcfa-4156-8a9b-6fb8e5af1379"
+              }
+            },
+            "Valuation_Issue": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  or(\r\n    or(\r\n      empty(trim(string(body('Update_Payload')?['Address']))),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['Address'])),\r\n        'unknown'\r\n      ),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['Address'])),\r\n        'available'\r\n      ),\r\n      and(\r\n        and(\r\n          not(\r\n            equals(\r\n              body('Update_Payload')?['PropertyType'],\r\n              'LND'\r\n            )\r\n          ),\r\n          not(\r\n            equals(\r\n              body('Update_Payload')?['PropertyType'],\r\n              'AGR'\r\n            )\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '1'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '2'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '3'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '4'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '5'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '6'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '7'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '8'\r\n          )\r\n        ),\r\n        not(\r\n          startsWith(\r\n            string(body('Update_Payload')?['Address']),\r\n            '9'\r\n          )\r\n        )\r\n      )\r\n    ),\r\n    or(\r\n      empty(trim(string(body('Update_Payload')?['County']))),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['County'])),\r\n        'unknown'\r\n      ),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['County'])),\r\n        'available'\r\n      )\r\n    ),\r\n    or(\r\n      empty(trim(string(body('Update_Payload')?['City']))),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['City'])),\r\n        'unknown'\r\n      ),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['City'])),\r\n        'available'\r\n      )\r\n    ),\r\n    or(\r\n      empty(trim(string(body('Update_Payload')?['State']))),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['State'])),\r\n        'unknown'\r\n      ),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['State'])),\r\n        'available'\r\n      )\r\n    ),\r\n    or(\r\n      empty(trim(string(body('Update_Payload')?['Zip']))),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['Zip'])),\r\n        'unknown'\r\n      ),\r\n      contains(\r\n        toLower(string(body('Update_Payload')?['Zip'])),\r\n        'available'\r\n      )\r\n    )\r\n  ),\r\n  'Incomplete Address',\r\n  null\r\n)",
+              "runAfter": {
+                "Valuation_Status": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a7c1a8ab-2285-4814-a595-4a51373966ab"
+              }
+            },
+            "Radar_ID": {
+              "type": "Compose",
+              "inputs": "@if(\r\n  not(empty(string(triggerBody()?['RadarID']))),\r\n  triggerBody()?['RadarID'],\r\n  null\r\n)",
+              "metadata": {
+                "operationMetadataId": "b3b38c14-de5d-4606-8399-487b3aa35655"
+              }
+            },
+            "Update_Activity": {
+              "type": "Scope",
+              "actions": {
+                "Parent_Exists": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(string(variables('intItemId')))",
+                          "@false"
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@empty(body('Update_Payload')?['TriggerType'])",
+                          "@false"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Trigger_Type": {
+                      "type": "Switch",
+                      "expression": "@body('Update_Payload')?['TriggerType']",
+                      "default": {
+                        "actions": {}
+                      },
+                      "cases": {
+                        "New_Record": {
+                          "actions": {
+                            "Set_New_Record": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "aryActivity",
+                                "value": [
+                                  {
+                                    "ForeclosureRecDate": "@body('Update_Payload')?['ForeclosureRecDate']",
+                                    "Activity": "@body('Update_Payload')?['NewRecordType']",
+                                    "Details": "@if(\n  and(\n    not(empty(string(body('Update_Payload')?['NewRecordAttribute']))),\n    contains(\n      string(body('Update_Payload')?['NewRecordAttribute']),\n      ':'\n    )\n  ),\n  concat(\n    '(',\n    split(\n      body('Update_Payload')?['NewRecordAttribute'],\n      ':'\n    )[0],\n    ' set to ',\n    split(\n      body('Update_Payload')?['NewRecordAttribute'],\n      ':'\n    )[1],\n    ')'\n  ),\n  ''\n)",
+                                    "ID": "@variables('intItemId')"
+                                  }
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "61f25cf0-a5a7-462b-b220-884083190de8"
+                              }
+                            }
+                          },
+                          "case": "New Record"
+                        },
+                        "Change": {
+                          "actions": {
+                            "Set_Change_Details": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "aryActivity",
+                                "value": [
+                                  {
+                                    "ForeclosureRecDate": "@body('Update_Payload')?['ForeclosureRecDate']",
+                                    "Activity": "@if(\r\n  and(\r\n    not(empty(string(body('Update_Payload')?['Change1']))),\r\n    contains(\r\n      string(body('Update_Payload')?['Change1']),\r\n      ':'\r\n    )\r\n  ),\r\n  split(\r\n    body('Update_Payload')?['Change1'],\r\n    ':'\r\n  )[0],\r\n  ''\r\n)",
+                                    "Details": "@if(\r\n  and(\r\n    not(empty(string(body('Update_Payload')?['Change1']))),\r\n    contains(\r\n      string(body('Update_Payload')?['Change1']),\r\n      ':'\r\n    )\r\n  ),\r\n  concat(\r\n    '(Set from \"',\r\n    split(\r\n      body('Update_Payload')?['Change1'],\r\n      ':'\r\n    )[1],\r\n    '\" to \"',\r\n    split(\r\n      body('Update_Payload')?['Change1'],\r\n      ':'\r\n    )[2],\r\n    '\")'\r\n  ),\r\n  ''\r\n)",
+                                    "ID": "@variables('intItemId')"
+                                  },
+                                  {
+                                    "ForeclosureRecDate": "@body('Update_Payload')?['ForeclosureRecDate']",
+                                    "Activity": "@if(\n  and(\n    not(empty(string(body('Update_Payload')?['Change2']))),\n    contains(\n      string(body('Update_Payload')?['Change2']),\n      ':'\n    )\n  ),\n  split(\n    body('Update_Payload')?['Change2'],\n    ':'\n  )[0],\n  ''\n)",
+                                    "Details": "@if(\r\n  and(\r\n    not(empty(string(body('Update_Payload')?['Change2']))),\r\n    contains(\r\n      string(body('Update_Payload')?['Change2']),\r\n      ':'\r\n    )\r\n  ),\r\n  concat(\r\n    '(Set from \"',\r\n    split(\r\n      body('Update_Payload')?['Change2'],\r\n      ':'\r\n    )[1],\r\n    '\" to \"',\r\n    split(\r\n      body('Update_Payload')?['Change2'],\r\n      ':'\r\n    )[2],\r\n    '\")'\r\n  ),\r\n  ''\r\n)",
+                                    "ID": "@variables('intItemId')"
+                                  },
+                                  {
+                                    "ForeclosureRecDate": "@body('Update_Payload')?['ForeclosureRecDate']",
+                                    "Activity": "@if(\r\n  and(\r\n    not(empty(string(body('Update_Payload')?['Change3']))),\r\n    contains(\r\n      string(body('Update_Payload')?['Change3']),\r\n      ':'\r\n    )\r\n  ),\r\n  split(\r\n    body('Update_Payload')?['Change3'],\r\n    ':'\r\n  )[0],\r\n  ''\r\n)",
+                                    "Details": "@if(\r\n  and(\r\n    not(empty(string(body('Update_Payload')?['Change3']))),\r\n    contains(\r\n      string(body('Update_Payload')?['Change3']),\r\n      ':'\r\n    )\r\n  ),\r\n  concat(\r\n    '(Set from \"',\r\n    split(\r\n      body('Update_Payload')?['Change3'],\r\n      ':'\r\n    )[1],\r\n    '\" to \"',\r\n    split(\r\n      body('Update_Payload')?['Change3'],\r\n      ':'\r\n    )[2],\r\n    '\")'\r\n  ),\r\n  ''\r\n)",
+                                    "ID": "@variables('intItemId')"
+                                  }
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "d4ef36f5-1fee-46d4-9185-9e9b83d02347"
+                              }
+                            }
+                          },
+                          "case": "Change"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "1bd7e6d9-b0f9-491b-95dc-7368e4e03724"
+                      }
+                    },
+                    "Activity_Details": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@variables('aryActivity')",
+                        "where": "@equals(empty(item()?['Activity']),false)"
+                      },
+                      "runAfter": {
+                        "Trigger_Type": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "eb98593c-e081-4ad5-bcaf-3e0a473138eb"
+                      }
+                    },
+                    "Each_Activity": {
+                      "type": "Foreach",
+                      "foreach": "@body('Activity_Details')",
+                      "actions": {
+                        "Create_Activity_Log": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                              "table": "@parameters('UCH-AVP SharePoint List (Activity Stream) (clr_UCHAVPSharePointListActivityStream)')",
+                              "item/Title": "@outputs('Radar_ID')",
+                              "item/ForeclosureRecDate": "@items('Each_Activity')?['ForeclosureRecDate']",
+                              "item/Activity": "@{if(\r\n  equals(\r\n    items('Each_Activity')?['Activity'],\r\n    'Stage'\r\n  ),\r\n  'Foreclosure Stage',\r\n  items('Each_Activity')?['Activity']\r\n)}@{if(\r\n  not(empty(string(items('Each_Activity')?['Activity']))),\r\n  concat(' ', items('Each_Activity')?['Details']),\r\n  ''\r\n)}",
+                              "item/ParentID": "@items('Each_Activity')?['ID']"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "PostItem",
+                              "connectionName": "shared_sharepointonline-1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "fc71605f-38a2-4059-9aec-655463217069"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Activity_Details": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d03e643f-22ad-49a4-bc40-f2853529e3fd"
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c482090a-752b-4c38-9876-f4557232bebd"
+                  }
+                }
+              },
+              "runAfter": {
+                "Update_Existing": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7f5f0d89-97d2-492f-ae5a-778bcaf34a64"
+              }
+            }
+          },
+          "runAfter": {
+            "Init_Header_obj": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "915cbc04-a244-48b6-8b61-0ad42817a637"
+          }
+        },
+        "Init_Update_flag": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "blnUpdate",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "54fddcc1-3b65-453b-849f-43aa66ee3864"
+          }
+        },
+        "Init_Activity_ary": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryActivity",
+                "type": "array",
+                "value": [
+                  {
+                    "ForeclosureRecDate": null,
+                    "Activity": null,
+                    "Detais": null,
+                    "ID": null
+                  }
+                ]
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Reset_flag": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dd5fbaa2-0930-495b-82fd-e914640a9064"
+          }
+        },
+        "Init_Item_ID_int": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "intItemId",
+                "type": "integer"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Activity_ary": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e719a9d-6ed1-46d7-9e38-4f8906439995"
+          }
+        },
+        "Init_Reset_flag": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "blnReset",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Update_flag": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3024aab-0844-49fd-82e6-0779f11cfccf"
+          }
+        },
+        "Init_Header_obj": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "objPriperty_Hdr",
+                "type": "object"
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Item_ID_int": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

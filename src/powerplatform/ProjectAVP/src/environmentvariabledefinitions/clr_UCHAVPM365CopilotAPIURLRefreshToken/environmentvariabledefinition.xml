@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPM365CopilotAPIURLRefreshToken">
+  <displayname default="UCH-AVP M365 Copilot API (URL | Refresh Token)">
+    <label description="UCH-AVP M365 Copilot API (URL | Refresh Token)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.9</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

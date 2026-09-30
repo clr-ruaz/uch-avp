@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26084.171" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26084.00171">
+  <Entities />
+  <Roles />
+  <Workflows />
+  <FieldSecurityProfiles />
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships />
+  <OrganizationSettings />
+  <optionsets />
+  <CustomControls />
+  <EntityDataProviders />
+  <CanvasApps />
+  <connectionreferences>
+    <connectionreference connectionreferencelogicalname="clr_sharedflowmanagement_0e55f">
+      <connectionreferencedisplayname>UCH-AVP PAM Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_flowmanagement</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_sharedwebcontents_81f3d">
+      <connectionreferencedisplayname>UCH-AVP Microsoft Entra Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_webcontents</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_UCHAVPAzureVaultConnection">
+      <connectionreferencedisplayname>UCH-AVP Azure Vault Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_keyvault</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_UCHAVPDesktopFlowConnection">
+      <connectionreferencedisplayname>UCH-AVP Desktop Flow Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_uiflow</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_UCHAVPExcelOnlineConnector">
+      <connectionreferencedisplayname>UCH-AVP Excel Online Connector</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_UCHAVPOfficeOutlookConnection">
+      <connectionreferencedisplayname>UCH-AVP Office Outlook Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_office365</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_UCHAVPSharePointConnection">
+      <connectionreferencedisplayname>UCH-AVP SharePoint Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_sharepointonline</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="clr_UPMAVPO365UserConnection">
+      <connectionreferencedisplayname>UPM-AVP O365 User Connection</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_office365users</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="msdyn_Dataverse"></connectionreference>
+  </connectionreferences>
+  <Languages>
+    <Language>1033</Language>
+  </Languages>
+</ImportExportXml>

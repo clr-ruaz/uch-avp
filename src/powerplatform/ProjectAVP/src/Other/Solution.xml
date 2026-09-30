@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.26084.171" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26084.171" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26084.00171">
+  <SolutionManifest>
+    <UniqueName>ProjectAVP</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Project Automated Valuation" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>0.0.0.10</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>ChristianRuazol</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Chris Ruazol" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress>clr@doqsmart.com</EMailAddress>
+      <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
+      <CustomizationPrefix>clr</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>76825</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+        <Address>
+          <AddressNumber>2</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="29" id="{04018dd2-ebcc-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{06107a9a-75bf-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{09c0113b-555b-f111-bec7-7ced8d3c06df}" behavior="0" />
+      <RootComponent type="29" id="{0df4d05d-68f0-f011-8407-6045bd051327}" behavior="0" />
+      <RootComponent type="29" id="{13c004f3-8805-f111-8406-7ced8d3c0f0b}" behavior="0" />
+      <RootComponent type="29" id="{1f6f7ed0-41cc-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{25a83390-5d27-f111-8341-7ced8d3c06df}" behavior="0" />
+      <RootComponent type="29" id="{2e6975e7-8c20-4f15-9fec-ac412e9a55dd}" behavior="0" />
+      <RootComponent type="29" id="{331b4b1b-b70c-b30d-8c38-ce2d7f36ac5b}" behavior="0" />
+      <RootComponent type="29" id="{3553a92a-aff5-f011-8406-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{36752642-fcbe-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{46d7b9c3-2532-f111-88b4-7ced8d3c00cf}" behavior="0" />
+      <RootComponent type="29" id="{4e7bf09c-595b-f111-bec7-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{52d44bd7-e228-f111-8341-7ced8d3c00cf}" behavior="0" />
+      <RootComponent type="29" id="{5614f716-373d-f111-88b5-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{5bc386ff-ca80-f111-ab0e-70a8a5afcc95}" behavior="0" />
+      <RootComponent type="29" id="{6a1c7505-310d-f111-8406-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{736370ec-8ecb-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{7522eb76-33e4-fce7-9d68-51df51765368}" behavior="0" />
+      <RootComponent type="29" id="{821b8546-78cf-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{882705e8-ab1e-f111-8341-7ced8d3c00cf}" behavior="0" />
+      <RootComponent type="29" id="{8d085789-d4c5-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{90a5396e-1cdc-f011-8544-6045bd056ac0}" behavior="0" />
+      <RootComponent type="29" id="{94ee58ab-f2ba-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{9b3a2388-a7c3-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{a0be04ea-77cf-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{a46f2477-575b-f111-bec7-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{a6fc842b-ab59-f111-bec7-7ced8d3c00cf}" behavior="0" />
+      <RootComponent type="29" id="{ad87f198-5454-f111-bec7-7ced8d3c0784}" behavior="0" />
+      <RootComponent type="29" id="{cca40e71-0946-f111-bec7-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{ccf43295-ffd4-f011-8544-6045bd056ac0}" behavior="0" />
+      <RootComponent type="29" id="{d5683cec-463a-f111-88b5-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{da0dcff9-f6be-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{db89759a-f8be-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{ef3b2e0e-5254-f111-bec7-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="29" id="{efe9cc19-fcbe-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{f95a485f-cdd9-f011-8544-6045bd056ac0}" behavior="0" />
+      <RootComponent type="29" id="{fcb8413c-c959-f111-bec7-7ced8d3c078d}" behavior="0" />
+      <RootComponent type="300" schemaName="clr_uchavppropertiescounter_ae25f" behavior="0" />
+    </RootComponents>
+    <MissingDependencies>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="msdyn_Dataverse" solution="msdynce_KnowledgeManagementOnlineExtension (9.0.26083.3004)" id.connectionreferencelogicalname="msdyn_Dataverse">
+          <package appName="msdynce_KnowledgeManagement" version="9.0.26083.3004">msdynce_KnowledgeManagementAnchor (9.0.26083.3004)</package>
+        </Required>
+        <Dependent type="connectionreference" displayName="msdyn_Dataverse" id.connectionreferencelogicalname="msdyn_Dataverse" />
+      </MissingDependency>
+    </MissingDependencies>
+  </SolutionManifest>
+</ImportExportXml>

@@ -1,0 +1,13 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPSharePointSite">
+  <apiid>/providers/microsoft.powerapps/apis/shared_sharepointonline</apiid>
+  <defaultvalue>https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP</defaultvalue>
+  <displayname default="UCH-AVP SharePoint Site">
+    <label description="UCH-AVP SharePoint Site" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <parameterkey>dataset</parameterkey>
+  <secretstore>0</secretstore>
+  <type>100000004</type>
+</environmentvariabledefinition>

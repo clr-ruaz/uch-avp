@@ -1,0 +1,136 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "metadata": {
+        "defaultToEmbeddedConnections": true
+      },
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Search OneDrive Connector (URL) (clr_UCHAVPSearchOneDriveConnectorURL)": {
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSearchOneDriveConnectorURL"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Value of Files Folder. Example: \"Shared Documents/68452-2015-8\"",
+                  "title": "Files Folder",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "Last message from the user",
+                  "title": "User Query",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "64d69485-fa6b-4386-b121-103be67a6012"
+          }
+        }
+      },
+      "actions": {
+        "Respond_to_Copilot": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "response": {
+                  "title": "Response",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "response": "@{body('Search_OneDrive')}"
+            }
+          },
+          "runAfter": {
+            "Search_OneDrive": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "735ed846-3917-4af7-8be3-f7d0b62c56a1"
+          }
+        },
+        "Search_OneDrive": {
+          "type": "Http",
+          "inputs": {
+            "uri": "@parameters('UCH-AVP Search OneDrive Connector (URL) (clr_UCHAVPSearchOneDriveConnectorURL)')",
+            "method": "POST",
+            "body": {
+              "Resource Paths Filter": "@outputs('Resource_Paths_Filter')",
+              "User Query": "@{triggerBody()?['text_1']}"
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT20S"
+            }
+          },
+          "runAfter": {
+            "Resource_Paths_Filter": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Resource_Paths_Filter": {
+          "type": "Compose",
+          "inputs": "@if(\n  empty(string(triggerBody()?['text'])),\n  '',\n  concat(\n    'path:\"',\n    parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)'),\n    '/',\n    triggerBody()?['text'],\n    '\"'\n  )\n)",
+          "runAfter": {}
+        }
+      },
+      "description": "This flow starts when a manual trigger receives two inputs: a unique ID and a user query. It then sends the user query to a specified URL using an HTTP POST request. After receiving a response from the external service, the flow returns that response to the original caller. The flow includes retry logic for the HTTP request and ensures the response is only sent after the external service successfully replies. The process is designed to search for information based on the user’s query and provide the results efficiently."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

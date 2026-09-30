@@ -1,0 +1,16 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPSharePointListPropertyRadar">
+  <apiid>/providers/microsoft.powerapps/apis/shared_sharepointonline</apiid>
+  <defaultvalue>e591c56c-826f-4dd6-bd51-12f5232b3b28</defaultvalue>
+  <displayname default="UCH-AVP SharePoint List (Property Listing)">
+    <label description="UCH-AVP SharePoint List (Property Listing)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <parameterkey>table</parameterkey>
+  <parentdefinitionid>
+    <schemaname>clr_UCHAVPSharePointSite</schemaname>
+  </parentdefinitionid>
+  <secretstore>0</secretstore>
+  <type>100000004</type>
+</environmentvariabledefinition>

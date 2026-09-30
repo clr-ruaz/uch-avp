@@ -1,0 +1,80 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "System Message": {
+                  "type": "string"
+                },
+                "User Message": {
+                  "type": "string"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "metadata": {
+            "operationMetadataId": "80e956b7-386f-4a04-8201-d5b4a9a54770"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Status": "Successful",
+              "Response": "@body('OpenAI_Request')?['response']"
+            }
+          },
+          "runAfter": {
+            "OpenAI_Request": [
+              "SUCCEEDED"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2b922b20-b6e8-4041-ac1e-e04f8612b949"
+          }
+        },
+        "OpenAI_Request": {
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "9b3a2388-a7c3-f011-bbd3-7c1e5217e110"
+            },
+            "body": {
+              "text": "@triggerBody()?['System Message']",
+              "text_1": "[\n    {\n        \"type\": \"input_text\",\n        \"text\": \"@{triggerBody()?['User Message']}\"\n    }\n]",
+              "boolean": false
+            }
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,175 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)": {
+          "defaultValue": "AGR APT COM IND LND MFR OFC REC RTL UTL",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidPropertyCodes"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)": {
+          "defaultValue": "CND OTH RES SFR UNK",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPParameterValidZillowCodes"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sharepoint_id": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6d3df9c3-a861-496c-bdda-7e9f8052d4e8"
+          }
+        }
+      },
+      "actions": {
+        "Success_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "Address": "@outputs('Set_Valuation_Status')?['body/Address']",
+              "City": "@outputs('Set_Valuation_Status')?['body/City']",
+              "State": "@outputs('Set_Valuation_Status')?['body/State']",
+              "Zip": "@outputs('Set_Valuation_Status')?['body/Zip']",
+              "Property UID": "@outputs('Set_Valuation_Status')?['body/Title']",
+              "Property Type": "@outputs('Set_Valuation_Status')?['body/PropertyType']",
+              "Valuation Status": "@outputs('Set_Valuation_Status')?['body/ValuationStatus/Value']"
+            }
+          },
+          "runAfter": {
+            "Set_Valuation_Status": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c86100f2-b364-4b05-85d8-663c9b6a6192"
+          }
+        },
+        "Valuation_Source": {
+          "type": "Compose",
+          "inputs": "@if(\r\n  contains(\r\n    parameters('UCH-AVP Parameter (Valid CoStar Codes) (clr_UCHAVPParameterValidPropertyCodes)'),\r\n    outputs('Get_SharePoint_Item')?['body/PropertyType']\r\n  ),\r\n  'CoStar',\r\n  if(\r\n    contains(\r\n      parameters('UCH-AVP Parameter (Valid Zillow Codes) (clr_UCHAVPParameterValidZillowCodes)'),\r\n      outputs('Get_SharePoint_Item')?['body/PropertyType']\r\n    ),\r\n    'Zillow',\r\n    null\r\n  )\r\n)",
+          "runAfter": {
+            "Get_SharePoint_Item": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5427384d-28ef-47c0-aaa1-a18b2670a83f"
+          }
+        },
+        "Get_SharePoint_Item": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@triggerBody()?['sharepoint_id']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {}
+        },
+        "Set_Valuation_Status": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+              "id": "@outputs('Get_SharePoint_Item')?['body/ID']",
+              "item/Title": "@outputs('Get_SharePoint_Item')?['body/Title']",
+              "item/RadarID": "@outputs('Get_SharePoint_Item')?['body/RadarID']",
+              "item/ValuationSource/Value": "@outputs('Valuation_Source')",
+              "item/ValuationStatus/Value": "Pending"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "PatchItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Valuation_Source": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Fail_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": "@body('Get_SharePoint_Item')?['status']",
+            "body": {
+              "Message": "@body('Get_SharePoint_Item')?['message']"
+            }
+          },
+          "runAfter": {
+            "Get_SharePoint_Item": [
+              "FAILED"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c86100f2-b364-4b05-85d8-663c9b6a6192"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

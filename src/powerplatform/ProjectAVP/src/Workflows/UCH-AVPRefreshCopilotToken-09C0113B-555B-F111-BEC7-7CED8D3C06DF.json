@@ -1,0 +1,234 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_keyvault-1": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP M365 Copilot API (Client ID) (clr_UCHAVPM365CopilotAPIClientID)": {
+          "defaultValue": "c80953eb-27d8-4ca2-b329-3461398d519a",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPIClientID"
+          }
+        },
+        "UCH-AVP M365 Copilot API (Tenant ID) (clr_UCHAVPM365CopilotAPITenantID)": {
+          "defaultValue": "61ff08c6-421b-40a9-84bc-63b218640989",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPITenantID"
+          }
+        },
+        "UCH-AVP M365 Copilot API (Refresh Token) (clr_UCHAVPM365CopilotAPIRefreshToken)": {
+          "defaultValue": "M365-COPILOT-Refresh-PRD",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPIRefreshToken"
+          }
+        },
+        "UCH-AVP M365 Copilot API (Client Secret) (clr_UCHAVPM365CopilotAPIClientSecret)": {
+          "defaultValue": "M365-COPILOT-Client-PRD",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPIClientSecret"
+          }
+        },
+        "UCH-AVP M365 Copilot API (Bearer Token) (clr_UCHAVPM365CopilotAPIBearerToken)": {
+          "defaultValue": "M365-COPILOT-Bearer-PRD",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPIBearerToken"
+          }
+        },
+        "UCH-AVP Azure Key Vault (URI) (clr_UCHAVPAzureKeyVaultURI)": {
+          "defaultValue": "https://avp-vault.vault.azure.net/",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPAzureKeyVaultURI"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All"
+          },
+          "metadata": {
+            "operationMetadataId": "11120567-2c5f-4d13-b1e3-ba5de25b78aa"
+          }
+        }
+      },
+      "actions": {
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200
+          },
+          "runAfter": {
+            "Store_Token": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c4d9fe65-c4ab-4c40-9b3c-61039d2805a9"
+          }
+        },
+        "Copilot_Token": {
+          "type": "Scope",
+          "actions": {
+            "Get_Refresh_Token": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "secretName": "@parameters('UCH-AVP M365 Copilot API (Refresh Token) (clr_UCHAVPM365CopilotAPIRefreshToken)')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                  "operationId": "GetSecret",
+                  "connectionName": "shared_keyvault-1"
+                }
+              }
+            },
+            "Get_Client_Secret": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "secretName": "@parameters('UCH-AVP M365 Copilot API (Client Secret) (clr_UCHAVPM365CopilotAPIClientSecret)')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                  "operationId": "GetSecret",
+                  "connectionName": "shared_keyvault-1"
+                }
+              },
+              "runAfter": {
+                "Get_Refresh_Token": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Copilot_Token": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://login.microsoftonline.com/@{parameters('UCH-AVP M365 Copilot API (Tenant ID) (clr_UCHAVPM365CopilotAPITenantID)')}/oauth2/v2.0/token",
+                "method": "POST",
+                "headers": {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "body": "client_id=@{parameters('UCH-AVP M365 Copilot API (Client ID) (clr_UCHAVPM365CopilotAPIClientID)')}\n&client_secret=@{outputs('Get_Client_Secret')?['body/value']}\n&grant_type=refresh_token\n&refresh_token=@{outputs('Get_Refresh_Token')?['body/value']}\n&scope=Files.Read.All Sites.Read.All"
+              },
+              "runAfter": {
+                "Get_Client_Secret": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Store_Token": {
+          "type": "Scope",
+          "actions": {
+            "Store_Access_Token": {
+              "type": "Http",
+              "inputs": {
+                "uri": "@{parameters('UCH-AVP Azure Key Vault (URI) (clr_UCHAVPAzureKeyVaultURI)')}secrets/@{parameters('UCH-AVP M365 Copilot API (Bearer Token) (clr_UCHAVPM365CopilotAPIBearerToken)')}?api-version=7.4",
+                "method": "PUT",
+                "headers": {
+                  "Authorization": "Bearer @{body('Get_Vault_Token')?['access_token']}",
+                  "Content-Type": "application/json"
+                },
+                "body": {
+                  "value": "@body('Get_Copilot_Token')?['access_token']"
+                }
+              },
+              "runAfter": {
+                "Get_Vault_Token": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Get_Vault_Token": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://login.microsoftonline.com/@{parameters('UCH-AVP M365 Copilot API (Tenant ID) (clr_UCHAVPM365CopilotAPITenantID)')}/oauth2/v2.0/token",
+                "method": "POST",
+                "headers": {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "body": "client_id=@{parameters('UCH-AVP M365 Copilot API (Client ID) (clr_UCHAVPM365CopilotAPIClientID)')}\n&client_secret=@{outputs('Get_Client_Secret')?['body/value']}\n&grant_type=client_credentials\n&scope=https://vault.azure.net/.default"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Store_Refresh_Token": {
+              "type": "Http",
+              "inputs": {
+                "uri": "@{parameters('UCH-AVP Azure Key Vault (URI) (clr_UCHAVPAzureKeyVaultURI)')}secrets/@{parameters('UCH-AVP M365 Copilot API (Refresh Token) (clr_UCHAVPM365CopilotAPIRefreshToken)')}?api-version=7.4",
+                "method": "PUT",
+                "headers": {
+                  "Authorization": "Bearer @{body('Get_Vault_Token')?['access_token']}",
+                  "Content-Type": "application/json"
+                },
+                "body": {
+                  "value": "@body('Get_Copilot_Token')?['refresh_token']"
+                }
+              },
+              "runAfter": {
+                "Store_Access_Token": [
+                  "SUCCEEDED"
+                ]
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Copilot_Token": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

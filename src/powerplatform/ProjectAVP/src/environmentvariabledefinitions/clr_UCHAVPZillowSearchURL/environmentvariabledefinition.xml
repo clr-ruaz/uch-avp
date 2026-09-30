@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPZillowSearchURL">
+  <defaultvalue>https://www.zillow.com/homes/</defaultvalue>
+  <displayname default="UCH-AVP Zillow Search URL">
+    <label description="UCH-AVP Zillow Search URL" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.2</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

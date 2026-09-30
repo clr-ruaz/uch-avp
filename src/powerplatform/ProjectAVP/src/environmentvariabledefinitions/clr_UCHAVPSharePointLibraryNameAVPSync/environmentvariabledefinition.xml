@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPSharePointLibraryNameAVPSync">
+  <defaultvalue>AVP-Sync</defaultvalue>
+  <displayname default="UCH-AVP SharePoint Library (AVP-Sync | Name)">
+    <label description="UCH-AVP SharePoint Library (AVP-Sync | Name)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.3</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

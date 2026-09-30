@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPM365CopilotAPITenantID">
+  <displayname default="UCH-AVP M365 Copilot API (Tenant ID)">
+    <label description="UCH-AVP M365 Copilot API (Tenant ID)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.9</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

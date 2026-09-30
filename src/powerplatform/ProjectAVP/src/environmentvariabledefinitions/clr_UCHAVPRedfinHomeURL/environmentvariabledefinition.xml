@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPRedfinHomeURL">
+  <defaultvalue>https://www.redfin.com/</defaultvalue>
+  <displayname default="UCH-AVP Redfin Home URL">
+    <label description="UCH-AVP Redfin Home URL" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.6</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

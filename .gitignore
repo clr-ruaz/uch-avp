@@ -1,0 +1,6 @@
+# Machine-specific Power Platform configuration and downloaded solution artifacts
+/powerplatform.config.local.json
+/.artifacts/
+.env
+.env.*
+!.env.example

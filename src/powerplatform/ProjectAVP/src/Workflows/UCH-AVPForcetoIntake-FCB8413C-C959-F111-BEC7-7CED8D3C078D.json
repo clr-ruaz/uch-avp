@@ -1,0 +1,196 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (OData Filters) (clr_UCHAVPSharePointListODataFilters)": {
+          "defaultValue": "a79a66a0-8553-4f7f-882b-6ca11a55621f",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListODataFilters"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Week",
+            "interval": 1,
+            "timeZone": "Pacific Standard Time",
+            "startTime": "2026-05-27T13:00:00Z",
+            "schedule": {
+              "hours": [
+                "7"
+              ],
+              "weekDays": [
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "63202c6c-b662-4025-b10d-4a4dc223f687"
+          }
+        }
+      },
+      "actions": {
+        "Due_Records": {
+          "type": "Scope",
+          "actions": {
+            "Convert_time_zone": {
+              "type": "Expression",
+              "kind": "ConvertTimeZone",
+              "inputs": {
+                "baseTime": "@utcNow()",
+                "sourceTimeZone": "UTC",
+                "destinationTimeZone": "UTC-08",
+                "formatString": "u"
+              }
+            },
+            "Base_Filter": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (OData Filters) (clr_UCHAVPSharePointListODataFilters)')",
+                  "id": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Convert_time_zone": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Sale_Date_Filter": {
+              "type": "Compose",
+              "inputs": " and SaleDate ne null and SaleDate ge '@{formatDateTime(body('Convert_time_zone'), 'yyyy-MM-dd')}'",
+              "runAfter": {
+                "Base_Filter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0755821c-a50a-497d-915d-a91bdc19502c"
+              }
+            },
+            "Modified_Data_Filter": {
+              "type": "Compose",
+              "inputs": "and Modified le '@{formatDateTime(\r\n  addHours(\r\n    body('Convert_time_zone'),\r\n    -12\r\n  ), \r\n  'yyyy-MM-ddTHH:mm:ssZ'\r\n)}'",
+              "runAfter": {
+                "Sale_Date_Filter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0755821c-a50a-497d-915d-a91bdc19502c"
+              }
+            },
+            "Get_Due_Records": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "$filter": "@{outputs('Base_Filter')?['body/Filter']}@{outputs('Sale_Date_Filter')}@{outputs('Modified_Data_Filter')}"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Modified_Data_Filter": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 5000
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "fe8cbad8-5552-4567-8d19-898b33a4d151"
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Each_Due_Record": {
+          "type": "Foreach",
+          "foreach": "@outputs('Get_Due_Records')?['body/value']",
+          "actions": {
+            "Set_Stage_to_Intake": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
+                  "id": "@items('Each_Due_Record')?['ID']",
+                  "item/Title": "@items('Each_Due_Record')?['Title']",
+                  "item/RadarID": "@items('Each_Due_Record')?['RadarID']",
+                  "item/Action/Id": 13
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Due_Records": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

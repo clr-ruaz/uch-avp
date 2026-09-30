@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPNotificationMFA">
+  <defaultvalue>chris@upsidecapitalholdings.com</defaultvalue>
+  <displayname default="UCH-AVP Notification (MFA)">
+    <label description="UCH-AVP Notification (MFA)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.1</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

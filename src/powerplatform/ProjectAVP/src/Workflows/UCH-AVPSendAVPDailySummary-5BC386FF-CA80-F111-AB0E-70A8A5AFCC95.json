@@ -1,0 +1,408 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365-1": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365users-1": {
+        "api": {
+          "name": "shared_office365users"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UPMAVPO365UserConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP Notification (TO | Daily Statistics) (clr_UCHAVPNotificationTODailyStatistics)": {
+          "defaultValue": "michael@upsidecapitalholdings.com;robert@upsidecapitalholdings.com;stephen@upsidecapitalholdings.com;josh@upsidecapitalholdings.com;earl@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationTODailyStatistics"
+          }
+        },
+        "UCH-AVP Notification (TO | Support | DQS) (clr_UCHAVPNotificationSupportAtlas)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupportAtlas"
+          }
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "timeZone": "Pacific Standard Time",
+            "startTime": "2026-07-16T02:00:00Z",
+            "schedule": {
+              "hours": [
+                "8"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "a999ba7c-a341-42b6-bfdc-40d77eacaa58"
+          }
+        }
+      },
+      "actions": {
+        "Get_newly_deals": {
+          "type": "Http",
+          "inputs": {
+            "uri": "@body('Get_Callback_URL')?['callback_url']",
+            "method": "POST",
+            "body": [
+              {
+                "Site Address": "@{parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')}",
+                "Uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')/items?$filter=@{outputs('Create_Date_Filter')}&$top=5000&$select=State,PropertyType,ValuationStatus,ValuationSource,PropertySource,Duplicate",
+                "Method": "GET"
+              }
+            ]
+          },
+          "runAfter": {
+            "Get_Callback_URL": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Get_Callback_URL": {
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+            },
+            "body": {
+              "text": "UCH-AVP SharePoint Connector"
+            }
+          },
+          "runAfter": {
+            "Create_Date_Filter": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Create_Date_Filter": {
+          "type": "Compose",
+          "inputs": "Created ge datetime'@{formatDateTime(addHours(utcNow(), -24), 'yyyy-MM-ddTHH:mm:ssZ')}'",
+          "runAfter": {
+            "Init_Recipient_Names": [
+              "Succeeded"
+            ]
+          }
+        },
+        "New_Deals_Exist": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(\n  body('Get_newly_deals')?['results']\n)",
+                  "@false"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Newly_Added_Deals": {
+              "type": "Compose",
+              "inputs": "@xml(\n  addProperty(\n    json('{}'),\n    'root',\n    addProperty(\n      json('{}'),\n      'results',\n      body('Xform_Fetched_Deals')\n    )\n  )\n)",
+              "runAfter": {
+                "Xform_Fetched_Deals": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Property_Source_Ary": {
+              "type": "Select",
+              "inputs": {
+                "from": "@union(\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/PropertySource/text()'\n    )\n  ),\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/PropertySource/text()'\n    )\n  )\n)",
+                "select": {
+                  "Key": "@item()",
+                  "Value": "@xpath(\n    xml(outputs('Newly_Added_Deals')),\n    concat(\n        'count(/root/results[PropertySource=''',\n        item(),\n        '''])'\n    )\n)"
+                }
+              },
+              "runAfter": {
+                "Newly_Added_Deals": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Property_Type_Ary": {
+              "type": "Select",
+              "inputs": {
+                "from": "@union(\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/PropertyType/text()'\n    )\n  ),\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/PropertyType/text()'\n    )\n  )\n)",
+                "select": {
+                  "Key": "@item()",
+                  "Value": "@xpath(\n    xml(outputs('Newly_Added_Deals')),\n    concat(\n        'count(/root/results[PropertyType=''',\n        item(),\n        '''])'\n    )\n)"
+                }
+              },
+              "runAfter": {
+                "Property_Source_Ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Property_State_Ary": {
+              "type": "Select",
+              "inputs": {
+                "from": "@union(\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/State/text()'\n    )\n  ),\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/State/text()'\n    )\n  )\n)",
+                "select": {
+                  "Key": "@item()",
+                  "Value": "@xpath(\n    xml(outputs('Newly_Added_Deals')),\n    concat(\n        'count(/root/results[State=''',\n        item(),\n        '''])'\n    )\n)"
+                }
+              },
+              "runAfter": {
+                "Property_Type_Ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Valuation_Status_Ary": {
+              "type": "Select",
+              "inputs": {
+                "from": "@union(\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/ValuationStatus/text()'\n    )\n  ),\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/ValuationStatus/text()'\n    )\n  )\n)",
+                "select": {
+                  "Key": "@item()",
+                  "Value": "@xpath(\n  xml(outputs('Newly_Added_Deals')),\n  concat(\n    'count(/root/results[ValuationStatus=''',\n    item(),\n    '''])'\n  )\n)"
+                }
+              },
+              "runAfter": {
+                "Property_State_Ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "AVP_Statistics_JSON": {
+              "type": "Select",
+              "inputs": {
+                "from": "@range(\n  0,\n  max(\n    createArray(\n      length(\n        union(\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/ValuationStatus/text()'\n            ),\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/ValuationStatus/text()'\n            )\n          )\n        ),\n        length(\n        union(\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/PropertySource/text()'\n            ),\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/PropertySource/text()'\n            )\n        )\n      ),\n        length(\n        union(\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/PropertyType/text()'\n            ),\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/PropertyType/text()'\n            )\n        )\n      ),\n        length(\n        union(\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/State/text()'\n            ),\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/State/text()'\n            )\n        )\n      ),\n        length(\n        union(\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/Duplicate/text()'\n            ),\n            xpath(\n              xml(outputs('Newly_Added_Deals')), \n              '/root/results/Duplicate/text()'\n            )\n        )\n      )\n    )\n  )\n)",
+                "select": {
+                  "DealSource": "@if(\n  not(empty(string(body('Property_Source_Ary')?[item()]?['Key']))),\n  concat(\n    body('Property_Source_Ary')?[item()]?['Key'],\n    ' (', body('Property_Source_Ary')?[item()]?['Value'], ')'\n  ),\n  null\n)",
+                  "DealType": "@if(\n  not(empty(string(body('Property_Type_Ary')?[item()]?['Key']))),\n  concat(\n    body('Property_Type_Ary')?[item()]?['Key'], \n    ' (', body('Property_Type_Ary')?[item()]?['Value'], ')'\n  ),\n  null\n)",
+                  "DealState": "@if(\n  not(empty(string(body('Property_State_Ary')?[item()]?['Key']))),\n  concat(\n    body('Property_State_Ary')?[item()]?['Key'],\n    ' (', body('Property_State_Ary')?[item()]?['Value'], ')'\n  ),\n  null\n)",
+                  "DealValuation": "@if(\n  not(empty(string(body('Valuation_Status_Ary')?[item()]?['Key']))),\n  concat(\n    body('Valuation_Status_Ary')?[item()]?['Key'],\n    ' (', body('Valuation_Status_Ary')?[item()]?['Value'], ')'\n  ),\n  null\n)",
+                  "ValuationSource": "@if(\n  not(empty(string(body('Valuation_Source_Ary')?[item()]?['Key']))),\n  concat(\n    body('Valuation_Source_Ary')?[item()]?['Key'],\n    ' (', body('Valuation_Source_Ary')?[item()]?['Value'], ')'\n  ),\n  null\n)"
+                }
+              },
+              "runAfter": {
+                "Valuation_Source_Ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "AVP_Statistics_Html": {
+              "type": "Table",
+              "inputs": {
+                "from": "@body('AVP_Statistics_JSON')",
+                "format": "HTML"
+              },
+              "runAfter": {
+                "AVP_Statistics_JSON": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Send_email_alert": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                  "emailMessage/To": "@parameters('UCH-AVP Notification (TO | Daily Statistics) (clr_UCHAVPNotificationTODailyStatistics)')",
+                  "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Daily Statistics: @{length(body('Get_newly_deals')?['results'])} new deals were added in the last 24 hours",
+                  "emailMessage/Body": "    <style>\n        body {\n            margin: 20px;\n            font-family: Arial, Helvetica, sans-serif;\n            font-size: 14px;\n            color: #333333;\n        }\n\n        table {\n            font-family: Arial, Helvetica, sans-serif;\n            font-size: 14px;\n            border-collapse: collapse;\n            border: 1px solid #d9d9d9;\n            table-layout: fixed;\n        }\n\n        th {\n            background: #548235;\n            font-family: Arial, Helvetica, sans-serif;\n            font-size: 14px;\n            color: #ffffff;\n            font-weight: bold;\n            text-align: center;\n            padding: 10px 12px;\n            border: 1px solid #d9d9d9;\n            text-align: center;\n        }\n\n        td {\n            font-family: Arial, Helvetica, sans-serif;\n            font-size: 14px;\n            padding: 8px 12px;\n            border: 1px solid #d9d9d9;\n            vertical-align: middle;\n            text-align: center;\n        }\n\n        /* ===== Source ===== */\n        th.property,\n        th.property {\n            background: #2F5597;\n            color: #ffffff;\n        }\n\n\n        /* ===== Type ===== */\n        th.type,\n        th.type {\n            background: #548235;\n            color: #ffffff;\n        }\n\n        /* ===== State ===== */\n        th.state,\n        th.state {\n            background: #C55A11;\n            color: #ffffff;\n        }\n\n        /* ===== Valuation ===== */\n        th.status,\n        th.status {\n            background: #7030A0;\n            color: #ffffff;\n        }\n    </style>\n<p class=\"editor-paragraph\">Hi @{join(\n  variables('aryRecipient_Names'),\n  '/'\n)},</p><p is=\"\" class=\"editor-paragraph\">Below is a summary of the <b>@{length(body('Get_newly_deals')?['results'])} deals</b> added in the last 24 hours, including a breakdown by property source, property type, state, and current valuation status.</p><p class=\"editor-paragraph\">@{outputs('AVP_Statistics_Final')}</p>@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}",
+                  "emailMessage/Cc": "@parameters('UCH-AVP Notification (TO | Support | DQS) (clr_UCHAVPNotificationSupportAtlas)')",
+                  "emailMessage/Importance": "Normal"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2",
+                  "connectionName": "shared_office365-1"
+                }
+              },
+              "runAfter": {
+                "Get_Recipients": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Recipients": {
+              "type": "Foreach",
+              "foreach": "@split(\n  replace(\n    parameters('UCH-AVP Notification (TO | Daily Statistics) (clr_UCHAVPNotificationTODailyStatistics)'),\n    ' ',\n    ''\n  ),\n  ';'\n)",
+              "actions": {
+                "UPN_Provided": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(string(item()))",
+                          "@false"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Get_user_profile": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "id": "@item()"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365users",
+                          "operationId": "UserProfile_V2",
+                          "connectionName": "shared_office365users-1"
+                        }
+                      }
+                    },
+                    "Add_Recipient_Name": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "aryRecipient_Names",
+                        "value": "@outputs('Get_user_profile')?['body/givenName']"
+                      },
+                      "runAfter": {
+                        "Get_user_profile": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "AVP_Statistics_Final": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "AVP_Statistics_Final": {
+              "type": "Compose",
+              "inputs": "@replace(\n  replace(\n    replace(\n      replace(\n        replace(\n          replace(\n            replace(\n                replace(\n                  replace(\n                      body('AVP_Statistics_Html'),\n                      '<th>ValuationSource</th>',\n                      '<th class=property>Valuation Source</th>'\n                  ),\n                    '<th>DealSource</th>',\n                    '<th class=property>Property Source</th>'\n                ),\n                '<th>SourceCount</th>',\n                '<th class=property>Count</th>'\n            ),\n            '<th>DealType</th>',\n            '<th class=type>Property Type</th>'\n          ),\n          '<th>TypeCount</th>',\n          '<th class=type>Count</th>'\n        ),\n        '<th>DealState</th>',\n        '<th class=state>State Address</th>'\n      ),\n      '<th>StateCount</th>',\n      '<th class=state>Count</th>'\n    ),\n    '<th>DealValuation</th>',\n    '<th class=valuation>Valuation Status</th>'\n  ),\n  '<th>ValuationCount</th>',\n  '<th class=valuation>Count</th>'\n)",
+              "runAfter": {
+                "AVP_Statistics_Html": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Valuation_Source_Ary": {
+              "type": "Select",
+              "inputs": {
+                "from": "@union(\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/ValuationSource/text()'\n    )\n  ),\n  sort(\n    xpath(\n      xml(outputs('Newly_Added_Deals')), \n      '/root/results/ValuationSource/text()'\n    )\n  )\n)",
+                "select": {
+                  "Key": "@item()",
+                  "Value": "@xpath(\n  xml(outputs('Newly_Added_Deals')),\n  concat(\n    'count(/root/results[ValuationSource=''',\n    item(),\n    '''])'\n  )\n)"
+                }
+              },
+              "runAfter": {
+                "Valuation_Status_Ary": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Xform_Fetched_Deals": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Get_newly_deals')?['results']",
+                "select": {
+                  "State": "@item()?['State']",
+                  "PropertyType": "@item()?['PropertyType']",
+                  "ValuationSource": "@if(\n  not(empty(string(item()?['ValuationSource']))),\n  if(\n    contains(\n      item()?['ValuationSource'],\n      '/'\n    ),\n    split(\n      item()?['ValuationSource'],\n      '/'\n    )?[0],\n    item()?['ValuationSource']\n  ),\n  null\n)",
+                  "ValuationStatus": "@item()?['ValuationStatus']",
+                  "PropertySource": "@item()?['PropertySource']",
+                  "Duplicate": "@item()?['Duplicate']"
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Get_newly_deals": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Recipient_Names": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "aryRecipient_Names",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

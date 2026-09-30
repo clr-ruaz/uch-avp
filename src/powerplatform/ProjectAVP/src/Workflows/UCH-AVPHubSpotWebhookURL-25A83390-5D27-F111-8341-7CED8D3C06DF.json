@@ -1,0 +1,672 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPOfficeOutlookConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP HubSpot API (Endpoint) (clr_UCHAVPHubSpotAPIEndpoint)": {
+          "defaultValue": "https://api.hubapi.com/crm/v3",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotAPIEndpoint"
+          }
+        },
+        "UCH-AVP HubSpot API (Secret) (clr_UCHAVPHubSpotAPISecret)": {
+          "defaultValue": "UCH-HubSpot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotAPISecret"
+          }
+        },
+        "UCH-AVP HubSpot Data (Pipeline) (clr_UCHAVPHubSpotDataPipeline)": {
+          "defaultValue": {
+            "label": "AVP Pipeline",
+            "id": "2011099865"
+          },
+          "type": "Object",
+          "metadata": {
+            "schemaName": "clr_UCHAVPHubSpotDataPipeline"
+          }
+        },
+        "UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)": {
+          "defaultValue": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListPropertyRadar"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP SharePoint List (AVP-HB Mapping) (clr_UCHAVPSharePointListAVPHBMapping)": {
+          "defaultValue": "2de42615-df19-4a17-a162-6df30eb54706",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListAVPHBMapping"
+          }
+        },
+        "UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)": {
+          "defaultValue": "avp-notifications@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationFrom"
+          }
+        },
+        "UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)": {
+          "defaultValue": "<p class=\"editor-paragraph\">Thanks,</p><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Automated Valuation Process (AVP)</strong></b><br><i><em class=\"editor-text-italic\">Automated Notification</em></i></p>",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationByline"
+          }
+        },
+        "UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)": {
+          "defaultValue": "AVP",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationProjectName"
+          }
+        },
+        "UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)": {
+          "defaultValue": " ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationLabel"
+          }
+        },
+        "UCH-AVP SharePoint List (Deal Stages) (clr_UCHAVPSharePointListDealStages)": {
+          "defaultValue": "a97f240b-37af-4bed-8a32-4b67ee80ac41",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListDealStages"
+          }
+        },
+        "UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)": {
+          "defaultValue": "avp-exemptions@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupport"
+          }
+        },
+        "UCH-AVP Notification (Support | Atlas) (clr_UCHAVPNotificationSupportAtlas)": {
+          "defaultValue": "chris@upsidecapitalholdings.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPNotificationSupportAtlas"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "triggerAuthenticationType": "All",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "appId": {
+                    "type": "integer"
+                  },
+                  "eventId": {
+                    "type": "integer"
+                  },
+                  "subscriptionId": {
+                    "type": "integer"
+                  },
+                  "portalId": {
+                    "type": "integer"
+                  },
+                  "occurredAt": {
+                    "type": "integer"
+                  },
+                  "subscriptionType": {
+                    "type": "string"
+                  },
+                  "attemptNumber": {
+                    "type": "integer"
+                  },
+                  "objectId": {
+                    "type": "integer"
+                  },
+                  "changeSource": {
+                    "type": "string"
+                  },
+                  "propertyName": {
+                    "type": "string"
+                  },
+                  "propertyValue": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "appId",
+                  "eventId",
+                  "subscriptionId",
+                  "portalId",
+                  "occurredAt",
+                  "subscriptionType",
+                  "attemptNumber",
+                  "objectId",
+                  "changeSource",
+                  "propertyName",
+                  "propertyValue"
+                ]
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "4ff7a2d9-7606-4493-8e36-153758ab2963"
+          }
+        }
+      },
+      "actions": {
+        "Get_HB_Changes": {
+          "type": "Scope",
+          "actions": {
+            "HB_Valid_Changes": {
+              "type": "Query",
+              "inputs": {
+                "from": "@triggerBody()",
+                "where": "@equals(not(\r\n  equals(\r\n    string(item()?['sourceId']),\r\n    string(item()?['appId'])\r\n  )\r\n),true)"
+              }
+            },
+            "HB_Changed_IDs": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('HB_Valid_Changes')",
+                "select": "@item()?['objectId']"
+              },
+              "runAfter": {
+                "HB_Valid_Changes": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Field_Map": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Field_Map": {
+          "type": "Scope",
+          "actions": {
+            "AVP-HB_Mapping": {
+              "type": "Select",
+              "inputs": {
+                "from": "@xpath(\r\n  xml(\r\n    json(\r\n      concat(\r\n        '{\"Root\":{\"Item\":', \r\n        body('Get_AVP_Properties')?['value'], \r\n        '}}'\r\n      )\r\n    )\r\n  ),\r\n  '/Root/Item[not(contains(AVPProperty/Value, \"Data: Calculated\"))]'\r\n)",
+                "select": {
+                  "AVP ID": "@trim(\r\n  replace(\r\n    replace(\r\n      last(\r\n        split(\r\n          replace(\r\n            xpath(item(), 'string(/Item/AVPProperty/Value)'), \r\n            '_x005F_x', '_x'\r\n          ),\r\n          'ID: '\r\n        )\r\n      ),\r\n      ')',\r\n      ''\r\n    ),\r\n    '/Value',\r\n    ''\r\n  )\r\n)",
+                  "HB ID": "@trim(\r\n  replace(\r\n    last(\r\n      split(\r\n        replace(\r\n          xpath(item(), 'string(/Item/HubSpotProperty/Value)'), \r\n          '_x005F_x', '_x'\r\n        ),\r\n        'ID: '\r\n      )\r\n    ),\r\n    ')',\r\n    ''\r\n  )\r\n)",
+                  "Type": "@trim(\r\n  first(\r\n    split(\r\n      last(\r\n        split(\r\n          replace(\r\n            xpath(item(), 'string(/Item/AVPProperty/Value)'), \r\n            '_x005F_x', '_x'\r\n          ),\r\n          'Data: '\r\n        )\r\n      ),\r\n      ', '\r\n    )\r\n  )\r\n)"
+                }
+              },
+              "runAfter": {
+                "Get_AVP_Properties": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_AVP_Properties": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (AVP-HB Mapping) (clr_UCHAVPSharePointListAVPHBMapping)')",
+                  "$filter": "SyncDirection ne 'AVP to HubSpot only'",
+                  "$top": 5000
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Prep_Global_Data": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Each_HB_ID": {
+          "type": "Foreach",
+          "foreach": "@union(\r\n  body('HB_Changed_IDs'),\r\n  body('HB_Changed_IDs')\r\n)",
+          "actions": {
+            "Prep_Payload": {
+              "type": "Scope",
+              "actions": {
+                "Payload_Index": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('AVP-HB_Mapping')",
+                    "where": "@contains(body('HB_Changed_Keys'),item()?['HB ID'])"
+                  }
+                },
+                "Payload_Array": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Payload_Index')",
+                    "select": {
+                      "@{item()?['AVP ID']}": "@if(\n  not(empty(string(outputs('HB_Changes_Object')[item()?['HB ID']]))),\n  if(\n    equals(item()?['Type'], 'Number'),\n    if(\n      isFloat(string(outputs('HB_Changes_Object')[item()?['HB ID']])),\n      float(outputs('HB_Changes_Object')[item()?['HB ID']]),\n      float(\n        split(\n          outputs('HB_Changes_Object')[item()?['HB ID']],\n          '-'\n        )?[0]\n      )\n    ),\n    if(\n      equals(item()?['Type'], 'Boolean'),\n      or(\n        contains(\n          string(outputs('HB_Changes_Object')[item()?['HB ID']]),\n          'Yes'\n        ),\n        equals(\n          string(outputs('HB_Changes_Object')[item()?['HB ID']]),\n          '1'\n        )\n      ),\n      if(\n        equals(item()?['Type'], 'DateTime'),\n        formatDateTime(\n          addSeconds(\n            '1970-01-01T00:00:00Z', \n            div(\n              int(outputs('HB_Changes_Object')[item()?['HB ID']]), \n              1000\n            )\n          ),\n          'yyyy-MM-dd'\n        ),\n        outputs('HB_Changes_Object')[item()?['HB ID']]\n      )\n    )\n  ),\n  null\n)"
+                    }
+                  },
+                  "runAfter": {
+                    "Payload_Index": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Payload_Object": {
+                  "type": "Compose",
+                  "inputs": "@json(\r\n  substring(\r\n    replace(\r\n      string(body('Payload_Array')),\r\n      '},{',\r\n      ','\r\n    ), \r\n    1, \r\n    sub(\r\n      length(\r\n        replace(\r\n          string(body('Payload_Array')),\r\n          '},{',\r\n          ','\r\n        )\r\n      ), \r\n      2\r\n    )\r\n  )\r\n)",
+                  "runAfter": {
+                    "Payload_Array": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "HB_Changes_Object": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "HB_This_Change": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('HB_Valid_Changes')",
+                "where": "@equals(item()?['objectId'],items('Each_HB_ID'))"
+              }
+            },
+            "HB_Changed_Keys": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('HB_This_Change')",
+                "select": "@item()?['propertyName']"
+              },
+              "runAfter": {
+                "HB_This_Change": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "HB_Changes_Array": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('HB_This_Change')",
+                "select": {
+                  "@{item()?['propertyName']}": "@item()?['propertyValue']"
+                }
+              },
+              "runAfter": {
+                "HB_Changed_Keys": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "HB_Changes_Object": {
+              "type": "Compose",
+              "inputs": "@json(\r\n  substring(\r\n    replace(\r\n      string(body('HB_Changes_Array')),\r\n      '},{',\r\n      ','\r\n    ), \r\n    1, \r\n    sub(\r\n      length(\r\n        replace(\r\n          string(body('HB_Changes_Array')),\r\n          '},{',\r\n          ','\r\n        )\r\n      ), \r\n      2\r\n    )\r\n  )\r\n)",
+              "runAfter": {
+                "HB_Changes_Array": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Valid_Payload": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(body('Payload_Array'))",
+                      false
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Find_Deal_Matches": {
+                  "type": "Http",
+                  "inputs": {
+                    "uri": "@{parameters('UCH-AVP HubSpot API (Endpoint) (clr_UCHAVPHubSpotAPIEndpoint)')}/objects/deals/@{items('Each_HB_ID')}?properties=pipeline,property_uid,dealstage,sharepointlist_id",
+                    "method": "GET",
+                    "headers": {
+                      "Authorization": "Bearer @{outputs('Get_HubSpot_Secret')?['body/value']}"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "577ae04f-8eef-4a83-a00b-3b2a8327930b"
+                  }
+                },
+                "Valid_Update": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@body('Find_Deal_Matches')?['properties']?['pipeline']",
+                          "@outputs('HubSpot_Pipeline')?['id']"
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "",
+                          ""
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Valid_SPL_ID": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@empty(string(body('Find_Deal_Matches')?['properties']?['sharepointlist_id']))",
+                              "@false"
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Final_Payload": {
+                          "type": "Compose",
+                          "inputs": "@addProperty(\r\n  variables('objPayload'),\r\n  '__metadata',\r\n  json(\r\n    concat(\r\n      '{\"type\": \"',\r\n      body('Get_SPL_Details')?['d']?['ListItemEntityTypeFullName'],\r\n      '\"}'\r\n    )\r\n  )\r\n)"
+                        },
+                        "Update_AVP_Record": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                              "parameters/method": "POST",
+                              "parameters/uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')/items(@{int(body('Find_Deal_Matches')?['properties']?['sharepointlist_id'])})",
+                              "parameters/headers": {
+                                "Content-Type": "application/json;odata=verbose",
+                                "IF-MATCH": "*",
+                                "X-HTTP-Method": "MERGE"
+                              },
+                              "parameters/body": "@outputs('Final_Payload')"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "connectionName": "shared_sharepointonline"
+                            }
+                          },
+                          "runAfter": {
+                            "Final_Payload": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Send_email_alert": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                              "emailMessage/To": "@parameters('UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                              "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed HubSpot -> AVP sync (@{body('Find_Deal_Matches')?['properties']?['property_uid']})",
+                              "emailMessage/Body": "<p class=\"editor-paragraph\">AVP encountered an error when attempting to update a record (@{body('Find_Deal_Matches')?['properties']?['property_uid']}) in Property List; see the error details below.</p><p class=\"editor-paragraph\"><i>@{body('Update_AVP_Record')?['message']}</i></p>@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SharedMailboxSendEmailV2",
+                              "connectionName": "shared_office365"
+                            }
+                          },
+                          "runAfter": {
+                            "Update_AVP_Record": [
+                              "Failed"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "e86e41a3-4d4a-4d22-bd11-a253ef6cc632"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Send_alert_re_missing_SharePoint_ID": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "emailMessage/MailboxAddress": "@parameters('UCH-AVP Notification (From) (clr_UCHAVPNotificationFrom)')",
+                                "emailMessage/To": "@parameters('UCH-AVP Notification (Support | Atlas) (clr_UCHAVPNotificationSupportAtlas)')",
+                                "emailMessage/Subject": "@{parameters('UCH-AVP Notification (Project Name) (clr_UCHAVPNotificationProjectName)')} Alert@{parameters('UCH-AVP Notification (Label) (clr_UCHAVPNotificationLabel)')}: Failed HubSpot -> AVP sync (hs_object_id: @{body('Find_Deal_Matches')?['properties']?['hs_object_id']})",
+                                "emailMessage/Body": "<p class=\"editor-paragraph\">HubSpot sent a webhook to update an AVP property but the HubSpot record (<a href=\"@{body('Find_Deal_Matches')?['url']}\">@{body('Find_Deal_Matches')?['properties']?['hs_object_id']}</a>) didn't have a valid SharePoint ID.@{parameters('UCH-AVP Notification (Byline) (clr_UCHAVPNotificationByline)')}</p>",
+                                "emailMessage/Cc": "@parameters('UCH-AVP Notification (Support | AVP) (clr_UCHAVPNotificationSupport)')",
+                                "emailMessage/Importance": "Normal"
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                "operationId": "SharedMailboxSendEmailV2",
+                                "connectionName": "shared_office365"
+                              }
+                            },
+                            "metadata": {
+                              "operationMetadataId": "e86e41a3-4d4a-4d22-bd11-a253ef6cc632"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Find_Deal_Matches": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Finalize_Payload": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Finalize_Payload": {
+              "type": "Scope",
+              "actions": {
+                "Stage_Required": {
+                  "type": "If",
+                  "description": "This is required because Deal Stage a special handling",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(string(outputs('Payload_Object')?['ActionId']))",
+                          "@false"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Adjust_Payload": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "objPayload",
+                        "value": "@setProperty(\r\n  outputs('Payload_Object'),\r\n  'ActionId',\r\n  first(body('Get_Deal_Stages')?['value'])?['ID']\r\n)"
+                      },
+                      "runAfter": {
+                        "Get_Deal_Stages": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Get_Deal_Stages": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (Deal Stages) (clr_UCHAVPSharePointListDealStages)')",
+                          "$filter": "UID eq '@{outputs('Payload_Object')?['ActionId']}'"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "GetItems",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Set_Payload": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "objPayload",
+                          "value": "@outputs('Payload_Object')"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Prep_Payload": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Get_HB_Changes": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Payload_Object": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "objPayload",
+                "type": "object",
+                "value": {}
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Prep_Global_Data": {
+          "type": "Scope",
+          "actions": {
+            "Get_HubSpot_Secret": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "secretName": "@parameters('UCH-AVP HubSpot API (Secret) (clr_UCHAVPHubSpotAPISecret)')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                  "operationId": "GetSecret",
+                  "connectionName": "shared_keyvault"
+                }
+              },
+              "runAfter": {
+                "Get_SPL_Details": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "93eff48e-5633-4e6a-aa26-2caa3ebb2e08"
+              }
+            },
+            "HubSpot_Pipeline": {
+              "type": "Compose",
+              "inputs": "@parameters('UCH-AVP HubSpot Data (Pipeline) (clr_UCHAVPHubSpotDataPipeline)')"
+            },
+            "Get_SPL_Details": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'@{parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')}')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "HubSpot_Pipeline": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Init_Payload_Object": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

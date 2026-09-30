@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPHubSpotDataPipeline">
+  <displayname default="UCH-AVP HubSpot Data (Pipeline)">
+    <label description="UCH-AVP HubSpot Data (Pipeline)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.4</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000003</type>
+</environmentvariabledefinition>
