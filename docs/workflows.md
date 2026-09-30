@@ -8,6 +8,8 @@ There are 37 cloud flows and one desktop-flow record. Companion `.json.data.xml`
 
 For the desktop flow's detailed portal sequences, see [CoStar](rpa/costar.md), [Zillow](rpa/zillow.md), [Redfin](rpa/redfin.md), and [Realtor.com](rpa/realtor.md). Shared orchestration and helper behavior are covered in the [RPA overview](desktop-automation.md).
 
+For how the cloud flows work together and detailed action maps for each one, see the [cloud automation guide](cloud-automation.md).
+
 | Workflow | Exported trigger | Top-level actions |
 | --- | --- | --- |
 | [UCH-AVPAddtoPropertyList](../src/powerplatform/ProjectAVP/src/Workflows/UCH-AVPAddtoPropertyList-94EE58AB-F2BA-F011-BBD3-7C1E5217E110.json) | manual (Request) | `Response`, `Update_AVP_DB`, `Init_Update_flag`, `Init_Activity_ary`, `Init_Item_ID_int`, `Init_Reset_flag`, `Init_Header_obj` |

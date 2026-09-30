@@ -64,7 +64,7 @@ src/powerplatform/ProjectAVP/
     desktopflowbinaries/           Desktop automation metadata and supporting assets
 ```
 
-The export contains **37 cloud flows**, **one desktop-flow record**, **one canvas app**, and **69 environment-variable definitions**. The desktop action script is stored in the desktop flow's companion `.json.data.xml` file, in its `<Definition>` element, and contains approximately 2,082 lines and 28 subflow definitions. See the [workflow reference](docs/workflows.md) for the complete inventory and the [desktop automation documentation](docs/desktop-automation.md) for the RPA process, source-specific behavior, and runtime verification limits.
+The export contains **37 cloud flows**, **one desktop-flow record**, **one canvas app**, and **69 environment-variable definitions**. The desktop action script is stored in the desktop flow's companion `.json.data.xml` file, in its `<Definition>` element, and contains approximately 2,082 lines and 28 subflow definitions. See the [workflow reference](docs/workflows.md) for the complete inventory, the [cloud automation documentation](docs/cloud-automation.md) for the cloud process and individual flows, and the [desktop automation documentation](docs/desktop-automation.md) for the RPA process, source-specific behavior, and runtime verification limits.
 
 Detailed portal guides trace the implemented steps, matching rules, outputs, and failure paths: [CoStar](docs/rpa/costar.md), [Zillow](docs/rpa/zillow.md), [Redfin](docs/rpa/redfin.md), and [Realtor.com](docs/rpa/realtor.md).
 
