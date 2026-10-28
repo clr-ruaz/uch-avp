@@ -40,6 +40,10 @@ flowchart TD
     Vault[Azure Key Vault] --> Flows
 ```
 
+## AVP Home Page (SPFx)
+
+The replacement for the Properties Counter canvas app is implemented in `src/sharepoint/spfx/`. It loads the existing SharePoint counts directly, without Power Apps or counting flows. See the [implementation and cutover guide](docs/spfx-properties-counter.md) for build commands, query behavior, verification limits and retirement steps. Version 1.0.1.0 is built as **AVP Home Page** and verified in the DEV workbench; deployment of this update and acceptance under intended user roles are pending.
+
 ## Repository structure
 
 ```text

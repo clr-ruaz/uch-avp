@@ -5,3 +5,17 @@
 .env
 .env.*
 !.env.example
+
+# SPFx dependencies, local workbench settings and generated output
+node_modules/
+src/sharepoint/spfx/lib/
+src/sharepoint/spfx/dist/
+src/sharepoint/spfx/temp/
+src/sharepoint/spfx/release/
+src/sharepoint/spfx/sharepoint/
+src/sharepoint/spfx/config/serve.json
+
+# SPFx Heft output
+src/sharepoint/spfx/lib-commonjs/
+src/sharepoint/spfx/lib-esnext/
+src/sharepoint/spfx/.heft/

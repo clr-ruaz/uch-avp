@@ -1,0 +1,33 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "aeb2c8e1-f482-47a3-930a-f20e41060e11",
+  "alias": "PropertiesCounterWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": [
+    "SharePointWebPart",
+    "SharePointFullPage"
+  ],
+  "supportsFullBleed": true,
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+      "group": {
+        "default": "Other"
+      },
+      "title": {
+        "default": "AVP Home Page"
+      },
+      "description": {
+        "default": "Property workload counts and quick access to AVP views."
+      },
+      "officeFabricIconFontName": "CityNext",
+      "properties": {
+        "propertyListId": "dcec0f31-ec6f-4d88-8f0b-fbfe1a7a7d15",
+        "filterListId": "a79a66a0-8553-4f7f-882b-6ca11a55621f"
+      }
+    }
+  ]
+}

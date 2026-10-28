@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "properties-counter-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/propertiesCounter/PropertiesCounterWebPart.js",
+          "manifest": "./src/webparts/propertiesCounter/PropertiesCounterWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {}
+}
