@@ -49,6 +49,9 @@
               "properties": {
                 "Status": {
                   "type": "string"
+                },
+                "ValuationSource": {
+                  "type": "string"
                 }
               }
             },
@@ -66,7 +69,7 @@
             "parameters": {
               "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
               "table": "@parameters('UCH-AVP SharePoint List (Property Listing) (clr_UCHAVPSharePointListPropertyRadar)')",
-              "$filter": "ValuationSource ne null and ValuationStatus eq '@{triggerBody()?['Status']}'"
+              "$filter": "(ValuationSource ne null and ValuationSource eq '@{triggerBody()?['ValuationSource']}') and \nValuationStatus eq '@{triggerBody()?['Status']}'"
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",

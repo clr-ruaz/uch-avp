@@ -1,0 +1,471 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPSharePointConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365users": {
+        "api": {
+          "name": "shared_office365users"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UPMDHAO365UserConnection"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_teams": {
+        "api": {
+          "name": "shared_teams"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedteams_33b0e"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_keyvault": {
+        "api": {
+          "name": "shared_keyvault"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "clr_UCHAVPAzureVaultConnection"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "UCH-AVP SharePoint List (System Config) (clr_UCHAVPSharePointListSystemConfig)": {
+          "defaultValue": "0f1bd822-aba6-40ca-a2e0-14d088bb8570",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointListSystemConfig"
+          }
+        },
+        "UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)": {
+          "defaultValue": "https://upsidecapitalholdings.sharepoint.com/Automation/UCH-AVP/DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPSharePointSite"
+          }
+        },
+        "UCH-AVP M365 Copilot API (Tenant ID) (clr_UCHAVPM365CopilotAPITenantID)": {
+          "defaultValue": "61ff08c6-421b-40a9-84bc-63b218640989",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPM365CopilotAPITenantID"
+          }
+        },
+        "UCH-AVP Azure App (Power Automate | Client ID) (clr_UCHAVPRegisteredAppPowerAutomateClientID)": {
+          "defaultValue": "48efd9e2-c837-43dd-bfc6-d8e2c34a32f7",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPRegisteredAppPowerAutomateClientID"
+          }
+        },
+        "UCH-AVP Azure App (Power Automate | Secret Name) (clr_UCHAVPAzureAppPowerAutomateSecretName)": {
+          "defaultValue": "UCH-AzureApp-PowerAutomate",
+          "type": "String",
+          "metadata": {
+            "schemaName": "clr_UCHAVPAzureAppPowerAutomateSecretName"
+          }
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "timeZone": "Pacific Standard Time",
+            "startTime": "2026-11-04T02:00:00Z",
+            "schedule": {
+              "hours": [
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17"
+              ],
+              "minutes": [
+                0,
+                15,
+                30,
+                45
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "d599b09e-3733-487b-b290-c11910bc1c5d"
+          }
+        }
+      },
+      "actions": {
+        "Get_CoStar_Reminder": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+              "table": "@parameters('UCH-AVP SharePoint List (System Config) (clr_UCHAVPSharePointListSystemConfig)')",
+              "id": 3
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "533ff931-e2f7-42b2-adf1-1007bd0196af"
+          }
+        },
+        "New_Day_Check": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "less": [
+                  "@if(\n  not(empty(string(outputs('Get_CoStar_Reminder')?['body/Value']))),\n  formatDateTime(\n    outputs('Get_CoStar_Reminder')?['body/Value'],\n    'yyyy-MM-dd'\n  ),\n  '2020-01-01'\n)",
+                  "@body('Current_Date')"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Get_CoStar_Runner": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (System Config) (clr_UCHAVPSharePointListSystemConfig)')",
+                  "id": 2
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Get_CoStar_Blocker": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "533ff931-e2f7-42b2-adf1-1007bd0196af"
+              }
+            },
+            "Get_Runner_Profile": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "id": "@outputs('Get_CoStar_Runner')?['body/Value']"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365users",
+                  "operationId": "UserProfile_V2",
+                  "connectionName": "shared_office365users"
+                }
+              },
+              "runAfter": {
+                "Get_CoStar_Runner": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Runner_Status": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://graph.microsoft.com/v1.0/users/@{outputs('Get_Runner_Profile')?['body/id']}/presence",
+                "method": "GET",
+                "authentication": {
+                  "type": "ActiveDirectoryOAuth",
+                  "authority": "https://login.microsoftonline.com",
+                  "tenant": "@{parameters('UCH-AVP M365 Copilot API (Tenant ID) (clr_UCHAVPM365CopilotAPITenantID)')}",
+                  "audience": "https://graph.microsoft.com",
+                  "clientId": "@{parameters('UCH-AVP Azure App (Power Automate | Client ID) (clr_UCHAVPRegisteredAppPowerAutomateClientID)')}",
+                  "secret": "@{outputs('Get_Azure_App_Secret')?['body/value']}"
+                }
+              },
+              "runAfter": {
+                "Get_Azure_App_Secret": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                },
+                "secureData": {
+                  "properties": [
+                    "inputs"
+                  ]
+                }
+              }
+            },
+            "Clear_to_Run": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@body('Get_Runner_Status')?['availability']",
+                      "Available"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@int(outputs('Get_CoStar_Blocker')?['body/Value'])",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Fetch_Work_Queue_Callback_URL": {
+                  "type": "Workflow",
+                  "inputs": {
+                    "host": {
+                      "workflowReferenceName": "db89759a-f8be-f011-bbd3-7c1e5217e110"
+                    },
+                    "body": {
+                      "text": "UCH-AVP Fetch Work Queue"
+                    }
+                  }
+                },
+                "Fetch_Costar_Queue": {
+                  "type": "Http",
+                  "inputs": {
+                    "uri": "@body('Fetch_Work_Queue_Callback_URL')?['callback_url']",
+                    "method": "POST",
+                    "body": {
+                      "Status": "Pending",
+                      "ValuationSource": "CoStar"
+                    }
+                  },
+                  "runAfter": {
+                    "Fetch_Work_Queue_Callback_URL": [
+                      "Succeeded"
+                    ]
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  }
+                },
+                "CoStar_Queue": {
+                  "type": "Query",
+                  "description": "Include TX properties only",
+                  "inputs": {
+                    "from": "@body('Fetch_Costar_Queue')",
+                    "where": "@equals(item()?['State'],'TX')"
+                  },
+                  "runAfter": {
+                    "Fetch_Costar_Queue": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "CoStar_Items": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(body('CoStar_Queue'))",
+                          "@false"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Post_adaptive_card": {
+                      "type": "OpenApiConnectionWebhook",
+                      "inputs": {
+                        "parameters": {
+                          "poster": "Flow bot",
+                          "location": "Chat with Flow bot",
+                          "body/body/messageBody": "{\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.4\",\n  \"body\": [\n    {\n      \"type\": \"TextBlock\",\n      \"text\": \"CoStar Property Enrichment\",\n      \"weight\": \"Bolder\",\n      \"size\": \"Medium\",\n      \"wrap\": true\n    },\n    {\n      \"type\": \"TextBlock\",\n      \"text\": \"Hey, @{outputs('Get_Runner_Profile')?['body/givenName']}! There are **@{length(body('CoStar_Queue'))} Texas properties** awaiting enrichment in CoStar. Would you like to run the CoStar RPA now?\",\n      \"wrap\": true\n    }\n  ],\n  \"actions\": [\n    {\n      \"type\": \"Action.Submit\",\n      \"title\": \"Run CoStar RPA\",\n      \"data\": {\n        \"decision\": \"run\"\n      }\n    },\n    {\n      \"type\": \"Action.Submit\",\n      \"title\": \"Not Now\",\n      \"data\": {\n        \"decision\": \"later\"\n      }\n    }\n  ]\n}",
+                          "body/body/updateMessage": "Thanks, I've received your response!",
+                          "body/body/recipient/to": "@outputs('Get_CoStar_Runner')?['body/Value']",
+                          "body/body/recipient/isAlert": true
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                          "operationId": "PostCardAndWaitForResponse",
+                          "connectionName": "shared_teams"
+                        }
+                      },
+                      "runAfter": {
+                        "Update_Reminder": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Confirm_CoStar": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@body('Post_adaptive_card')?['submitActionId']",
+                              "Run CoStar RPA"
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Run_CoStar_RPA": {
+                          "type": "Workflow",
+                          "inputs": {
+                            "host": {
+                              "workflowReferenceName": "821b8546-78cf-f011-bbd3-7c1e5217e110"
+                            },
+                            "body": {
+                              "text": "Pending",
+                              "boolean": true
+                            }
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Post_adaptive_card": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Update_Reminder": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                          "table": "@parameters('UCH-AVP SharePoint List (System Config) (clr_UCHAVPSharePointListSystemConfig)')",
+                          "id": 3,
+                          "item/Value": "@body('Current_Date')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "connectionName": "shared_sharepointonline"
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "CoStar_Queue": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Get_Runner_Status": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_CoStar_Blocker": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('UCH-AVP SharePoint Site (clr_UCHAVPSharePointSite)')",
+                  "table": "@parameters('UCH-AVP SharePoint List (System Config) (clr_UCHAVPSharePointListSystemConfig)')",
+                  "id": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "533ff931-e2f7-42b2-adf1-1007bd0196af"
+              }
+            },
+            "Get_Azure_App_Secret": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "secretName": "@parameters('UCH-AVP Azure App (Power Automate | Secret Name) (clr_UCHAVPAzureAppPowerAutomateSecretName)')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_keyvault",
+                  "operationId": "GetSecret",
+                  "connectionName": "shared_keyvault"
+                }
+              },
+              "runAfter": {
+                "Get_Runner_Profile": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "outputs"
+                  ]
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Current_Date": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Current_Date": {
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@utcNow()",
+            "sourceTimeZone": "UTC",
+            "destinationTimeZone": "Pacific Standard Time",
+            "formatString": "yyyy-MM-dd"
+          },
+          "runAfter": {
+            "Get_CoStar_Reminder": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

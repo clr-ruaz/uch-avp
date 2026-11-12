@@ -2,13 +2,13 @@
   "properties": {
     "connectionReferences": {
       "shared_flowmanagement-1": {
-        "api": {
-          "name": "shared_flowmanagement"
-        },
+        "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "clr_sharedflowmanagement_0e55f"
         },
-        "runtimeSource": "embedded"
+        "api": {
+          "name": "shared_flowmanagement"
+        }
       }
     },
     "definition": {
@@ -33,6 +33,9 @@
       },
       "triggers": {
         "manual": {
+          "metadata": {
+            "operationMetadataId": "2bda8c12-6eb1-495b-b403-0ecbe65209d4"
+          },
           "type": "Request",
           "kind": "Button",
           "inputs": {
@@ -51,14 +54,19 @@
                 "text"
               ]
             }
-          },
-          "metadata": {
-            "operationMetadataId": "2bda8c12-6eb1-495b-b403-0ecbe65209d4"
           }
         }
       },
       "actions": {
         "Respond_to_flow": {
+          "runAfter": {
+            "Get_Cloud_Flow": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4ed34eec-a905-4538-80a8-59a07cb72455"
+          },
           "type": "Response",
           "kind": "PowerApp",
           "inputs": {
@@ -78,18 +86,9 @@
             "body": {
               "callback_url": "@{outputs('List_Callback_URL')?['body/response/value']}"
             }
-          },
-          "runAfter": {
-            "Get_Cloud_Flow": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "4ed34eec-a905-4538-80a8-59a07cb72455"
           }
         },
         "Get_Environment": {
-          "type": "Scope",
           "actions": {
             "List_Environments": {
               "type": "OpenApiConnection",
@@ -102,54 +101,59 @@
               }
             },
             "Filter_Environments": {
-              "type": "Query",
-              "inputs": {
-                "from": "@outputs('List_Environments')?['body/value']",
-                "where": "@equals(item()?['properties/displayName'],parameters('UCH-AVP Environment (Name) (clr_UCHAVPEnvironmentName)'))"
-              },
               "runAfter": {
                 "List_Environments": [
                   "Succeeded"
                 ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environments')?['body/value']",
+                "where": "@equals(item()?['properties/displayName'],parameters('UCH-AVP Environment (Name) (clr_UCHAVPEnvironmentName)'))"
               }
             },
             "Target_Environment": {
-              "type": "Compose",
-              "inputs": "@body('Filter_Environments')[0]['name']",
               "runAfter": {
                 "Filter_Environments": [
                   "Succeeded"
                 ]
-              }
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_Environments')[0]['name']"
             }
           },
-          "runAfter": {}
+          "runAfter": {},
+          "type": "Scope"
         },
         "Get_Cloud_Flow": {
-          "type": "Scope",
           "actions": {
             "Filter_Cloud_Flows": {
-              "type": "Query",
-              "inputs": {
-                "from": "@outputs('List_Flows_as_Admin')?['body/value']",
-                "where": "@equals(item()?['properties/displayName'],trim(triggerBody()?['text']))"
-              },
               "runAfter": {
                 "List_Flows_as_Admin": [
                   "Succeeded"
                 ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Flows_as_Admin')?['body/value']",
+                "where": "@equals(item()?['properties/displayName'],trim(triggerBody()?['text']))"
               }
             },
             "Target_Cloud_Flow": {
-              "type": "Compose",
-              "inputs": "@body('Filter_Cloud_Flows')[0]['name']",
               "runAfter": {
                 "Filter_Cloud_Flows": [
                   "Succeeded"
                 ]
-              }
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_Cloud_Flows')[0]['name']"
             },
             "List_Callback_URL": {
+              "runAfter": {
+                "Target_Cloud_Flow": [
+                  "Succeeded"
+                ]
+              },
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
@@ -161,11 +165,6 @@
                   "operationId": "ListCallbackUrl",
                   "connectionName": "shared_flowmanagement-1"
                 }
-              },
-              "runAfter": {
-                "Target_Cloud_Flow": [
-                  "Succeeded"
-                ]
               }
             },
             "List_Flows_as_Admin": {
@@ -191,7 +190,8 @@
             "Get_Environment": [
               "Succeeded"
             ]
-          }
+          },
+          "type": "Scope"
         }
       }
     },

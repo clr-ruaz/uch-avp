@@ -17,6 +17,7 @@
           "type": "Object"
         },
         "UCH-AVP Search OneDrive Connector (URL) (clr_UCHAVPSearchOneDriveConnectorURL)": {
+          "defaultValue": "",
           "type": "String",
           "metadata": {
             "schemaName": "clr_UCHAVPSearchOneDriveConnectorURL"

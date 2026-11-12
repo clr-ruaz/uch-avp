@@ -31,6 +31,7 @@
           }
         },
         "UCH-AVP M365 Copilot API (URL | Refresh Token) (clr_UCHAVPM365CopilotAPIURLRefreshToken)": {
+          "defaultValue": "",
           "type": "String",
           "metadata": {
             "schemaName": "clr_UCHAVPM365CopilotAPIURLRefreshToken"

@@ -89,6 +89,7 @@
           }
         },
         "UCH-AVP SharePoint Connector (URL) (clr_UCHAVPSharePointConnectorURL)": {
+          "defaultValue": "",
           "type": "String",
           "metadata": {
             "schemaName": "clr_UCHAVPSharePointConnectorURL"

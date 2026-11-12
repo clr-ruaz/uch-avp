@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.26084.171" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26084.171" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26084.00171">
+<ImportExportXml version="9.2.26101.184" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26101.184" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26101.00184">
   <SolutionManifest>
     <UniqueName>ProjectAVP</UniqueName>
     <LocalizedNames>
@@ -89,11 +89,13 @@
       <RootComponent type="29" id="{331b4b1b-b70c-b30d-8c38-ce2d7f36ac5b}" behavior="0" />
       <RootComponent type="29" id="{3553a92a-aff5-f011-8406-7ced8d3c078d}" behavior="0" />
       <RootComponent type="29" id="{36752642-fcbe-f011-bbd3-7c1e5217e110}" behavior="0" />
+      <RootComponent type="29" id="{3f05da5d-34d8-f111-a05d-00224809dee0}" behavior="0" />
       <RootComponent type="29" id="{46d7b9c3-2532-f111-88b4-7ced8d3c00cf}" behavior="0" />
       <RootComponent type="29" id="{4e7bf09c-595b-f111-bec7-7ced8d3c078d}" behavior="0" />
       <RootComponent type="29" id="{52d44bd7-e228-f111-8341-7ced8d3c00cf}" behavior="0" />
       <RootComponent type="29" id="{5614f716-373d-f111-88b5-7ced8d3c078d}" behavior="0" />
       <RootComponent type="29" id="{5bc386ff-ca80-f111-ab0e-70a8a5afcc95}" behavior="0" />
+      <RootComponent type="29" id="{5d87b102-93a4-c8f4-ac3d-ec28b9598c9d}" behavior="0" />
       <RootComponent type="29" id="{6a1c7505-310d-f111-8406-7ced8d3c078d}" behavior="0" />
       <RootComponent type="29" id="{736370ec-8ecb-f011-bbd3-7c1e5217e110}" behavior="0" />
       <RootComponent type="29" id="{7522eb76-33e4-fce7-9d68-51df51765368}" behavior="0" />
@@ -120,10 +122,18 @@
     </RootComponents>
     <MissingDependencies>
       <MissingDependency>
-        <Required type="connectionreference" displayName="msdyn_Dataverse" solution="msdynce_KnowledgeManagementOnlineExtension (9.0.26083.3004)" id.connectionreferencelogicalname="msdyn_Dataverse">
-          <package appName="msdynce_KnowledgeManagement" version="9.0.26083.3004">msdynce_KnowledgeManagementAnchor (9.0.26083.3004)</package>
+        <Required type="connectionreference" displayName="clr_UPMDHAO365UserConnection" solution="DallasHousingAuthority (1.0.0.2)" id.connectionreferencelogicalname="clr_UPMDHAO365UserConnection" />
+        <Dependent type="29" displayName="UCH-AVP CoStar Run Reminder" id="{3f05da5d-34d8-f111-a05d-00224809dee0}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="msdyn_Dataverse" solution="msdynce_KnowledgeManagementOnlineExtension (9.0.26092.3003)" id.connectionreferencelogicalname="msdyn_Dataverse">
+          <package appName="msdynce_KnowledgeManagement" version="9.0.26092.3003">msdynce_KnowledgeManagementAnchor (9.0.26092.3003)</package>
         </Required>
         <Dependent type="connectionreference" displayName="msdyn_Dataverse" id.connectionreferencelogicalname="msdyn_Dataverse" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="new_sharedteams_33b0e" solution="Active" id.connectionreferencelogicalname="new_sharedteams_33b0e" />
+        <Dependent type="29" displayName="UCH-AVP CoStar Run Reminder" id="{3f05da5d-34d8-f111-a05d-00224809dee0}" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>

@@ -1,0 +1,11 @@
+<environmentvariabledefinition schemaname="clr_UCHAVPRegisteredAppPowerAutomateClientID">
+  <defaultvalue>48efd9e2-c837-43dd-bfc6-d8e2c34a32f7</defaultvalue>
+  <displayname default="UCH-AVP Azure App (Power Automate | Client ID)">
+    <label description="UCH-AVP Azure App (Power Automate | Client ID)" languagecode="1033" />
+  </displayname>
+  <introducedversion>0.0.0.10</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

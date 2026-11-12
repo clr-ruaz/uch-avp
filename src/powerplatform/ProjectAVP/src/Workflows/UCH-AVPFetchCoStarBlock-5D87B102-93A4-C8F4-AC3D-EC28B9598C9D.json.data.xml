@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{db89759a-f8be-f011-bbd3-7c1e5217e110}" Name="UCH-AVP Get Callbak URL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <JsonFileName>/Workflows/UCH-AVPGetCallbakURL-DB89759A-F8BE-F011-BBD3-7C1E5217E110.json</JsonFileName>
+<Workflow WorkflowId="{5d87b102-93a4-c8f4-ac3d-ec28b9598c9d}" Name="UCH-AVP Fetch CoStar Block" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <JsonFileName>/Workflows/UCH-AVPFetchCoStarBlock-5D87B102-93A4-C8F4-AC3D-EC28B9598C9D.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
   <Category>5</Category>
@@ -15,12 +15,13 @@
   <StatusCode>2</StatusCode>
   <RunAs>1</RunAs>
   <IsTransacted>1</IsTransacted>
-  <IntroducedVersion>0.0.0.0</IntroducedVersion>
+  <IntroducedVersion>1.0</IntroducedVersion>
   <IsCustomizable>1</IsCustomizable>
+  <BusinessProcessType>0</BusinessProcessType>
   <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="UCH-AVP Get Callbak URL" />
+    <LocalizedName languagecode="1033" description="UCH-AVP Fetch CoStar Block" />
   </LocalizedNames>
 </Workflow>

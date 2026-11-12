@@ -42301,7 +42301,7 @@
           "ElementTypeName": "Heading 1",
           "InstanceId": "d90a4ddc-d80c-4001-a719-0e789515a16c",
           "Name": "Zillow Home 'Address'",
-          "SelectorCount": 2,
+          "SelectorCount": 3,
           "Selectors": [
             {
               "CustomSelector": null,
@@ -44063,6 +44063,1378 @@
               "IsPlaceholderSelector": false,
               "IsWindowsInstance": false,
               "Name": "Default Selector 2",
+              "Properties": []
+            },
+            {
+              "CustomSelector": null,
+              "Elements": [
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "nav-full-width"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-srp-split",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-panda-theme",
+                      "Operation": "EqualTo",
+                      "Value": "zillow"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Body '/* Carry the navs across the document swap. The  ... gip\":true,\"appGip\":true,\"scriptLoader\":[]}'",
+                  "Tag": "body"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "__next"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-subapp-name",
+                      "Operation": "EqualTo",
+                      "Value": "not-for-sale-page-sub-app"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-subapp-type",
+                      "Operation": "EqualTo",
+                      "Value": "page"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "display:contents"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "main-wrapper no-search-layout"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "main-wrapper"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-product-nav-will-render",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-top-nav-will-render",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "max-height:100dvh"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '.with-product-nav__wrapper .with-product-n ... ainAsync\":false,\"productNavEnabled\":true}}'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__top-and-main"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '!window.__USER_SESSION_INITIAL_STATE__ ? w ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__main-content-wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "overflow:hidden"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '#wrapper.no-search-layout .layout-container-desktop  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-panda-theme",
+                      "Operation": "EqualTo",
+                      "Value": "zillow"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '{\"@context\":\"https://schema.org\",\"@type\":[ ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-test",
+                      "Operation": "EqualTo",
+                      "Value": "hdp-not-for-sale-page-content"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "[&_#page-header-container_div[role=\"status\"]]:nfs-d_none [&_#page-header-container_div[role=\"status\"]]:[@media_screen_and_(-ms-high-contrast:_active),_(-ms-high-contrast:_none)]:nfs-d_flex layout-wrapper no-search-layout"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "layout-wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-srp-split",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "--hdp-page-frame-nav-height: 80px; --hdp-page-frame-top-offset: 152px; --hdp-page-frame-product-nav-width: 78px; --hdp-page-frame-product-nav-height: 0px; --voyager-default-omnibar-bottom-offset: 0px; --hdp-layout-wrapper-viewport-left: 78px; --hdp-lightbox-content-left: 332px; --hdp-lightbox-content-left-centered: 371px; --hdp-lightbox-content-left-in-layout: 363.5px; --hdp-lightbox-content-width: 1248px; --hdp-scroll-container-viewport-left: 78px; --hdp-scroll-container-client-width: 1819px; --hdp-action-bar-height: 72px;"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "role",
+                      "Operation": "EqualTo",
+                      "Value": "presentation"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "outline:none"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "tabindex",
+                      "Operation": "EqualTo",
+                      "Value": "-1"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Section '230 Mcfarlane Gulch Rd, Aspen, CO 81611'",
+                  "Tag": "section"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-container-desktop"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-content-container"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "content-container"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch  ...  info not available at this timeClaim home'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-static-column-container"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch  ... yAdService info not available at this time'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "flex-direction:column"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch  ... yAdService info not available at this time'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "ds-data-view-list"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "macro-data-view"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch  ... yAdService info not available at this time'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-renderstrat",
+                      "Operation": "EqualTo",
+                      "Value": "inline"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch Rd, Aspen, CO 816116beds8baths8,635sqft'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch Rd, Aspen, CO 816116beds8baths8,635sqft'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n [&_.ds-expandable-card]:nfs-bd-b_none! [&_.ds-expandable-card-module-header]:nfs-m_0_0_{spacing.default}_0! [&_.ds-expandable-card-module-header]:nfs-bd-t_none! [&_.ds-expandable-card-module-header]:nfs-p_0! [&_.ds-expandable-card-content]:nfs-p_0! [&:has(>_:not(script):not([data-c11n-component=\"Divider\"]))_>_[data-c11n-component=\"Divider\"]]:nfs-d_block! [&_>_[data-c11n-component=\"Divider\"]]:nfs-d_none [@media_(max-width:_549px)]:nfs-p_0px_{spacing.default}"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch Rd, Aspen, CO 816116beds8baths8,635sqft'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n nfs-pt_{spacing.default} [@media_(min-width:_768px)]:nfs-pt_{spacing.loose}"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "home-details-chip-container"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch Rd, Aspen, CO 816116beds8baths8,635sqft'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n nfs-d_flex nfs-jc_space-between nfs-flex-d_column"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "fs-chip-container"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Tax assessed value$26,192,900230 McFarlane Gulch Rd, Aspen, CO 816116beds8baths8,635sqft'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n nfs-d_flex nfs-jc_space-between nfs-gap_{spacing.tighter}"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '$26,192,900230 McFarlane Gulch Rd, Aspen, CO 816116beds8baths8,635sqft'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n nfs-w_100%"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Div '$26,192,900230 McFarlane Gulch Rd, Aspen, CO 81611'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n [&_[data-c11n-component=\"Text\"]]:nfs-fs_{fontSizes.body} [&_[data-c11n-component=\"Text\"]]:nfs-lh_{lineHeights.body} [&_[data-c11n-component=\"Text\"]]:nfs-fw_{fontWeights.regular} [&_[data-c11n-component=\"Text\"]]:nfs-ff_{fonts.ui} [&_[data-c11n-component=\"Text\"]]:[@media_(min-width:_768px)]:nfs-fs_{fontSizes.h5} [&_[data-c11n-component=\"Text\"]]:[@media_(min-width:_768px)]:nfs-lh_{lineHeights.h4}"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '230 McFarlane Gulch Rd, Aspen, CO 81611'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n c11n-semantic nfs-c_text.neutral nfs-textStyle_body"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Text"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.19.0"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Text",
+                      "Operation": "EqualTo",
+                      "Value": "230 McFarlane Gulch Rd, Aspen, CO 81611"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Heading 1 '230 McFarlane Gulch Rd, Aspen, CO 81611'",
+                  "Tag": "h1"
+                }
+              ],
+              "Ignore": false,
+              "ImageSelector": null,
+              "IsCustom": false,
+              "IsImageBased": false,
+              "IsPlaceholderSelector": false,
+              "IsWindowsInstance": false,
+              "Name": "Default Selector 3",
               "Properties": []
             }
           ],
@@ -51664,7 +53036,7 @@
           "ElementTypeName": "Div",
           "InstanceId": "044c08da-49ec-48f5-b20e-837209826c36",
           "Name": "Zillow Home 'Section'",
-          "SelectorCount": 1,
+          "SelectorCount": 3,
           "Selectors": [
             {
               "CustomSelector": null,
@@ -52158,6 +53530,1584 @@
               "IsWindowsInstance": false,
               "Name": "Default Selector",
               "Properties": []
+            },
+            {
+              "CustomSelector": null,
+              "Elements": [
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "nav-full-width"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-srp-split",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-panda-theme",
+                      "Operation": "EqualTo",
+                      "Value": "zillow"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Body '/* Carry the navs across the document swap. The  ... \"https://insight.adsrvr.org/track/up\")}});'",
+                  "Tag": "body"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "__next"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-subapp-name",
+                      "Operation": "EqualTo",
+                      "Value": "not-for-sale-page-sub-app"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-subapp-type",
+                      "Operation": "EqualTo",
+                      "Value": "page"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "display:contents"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "main-wrapper no-search-layout"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-has-gallery-images",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "main-wrapper"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-product-nav-will-render",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-top-nav-will-render",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "max-height:100dvh"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '.with-product-nav__wrapper .with-product-n ... ainAsync\":false,\"productNavEnabled\":true}}'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__top-and-main"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '!window.__USER_SESSION_INITIAL_STATE__ ? w ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__main-content-wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "overflow:hidden"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '#wrapper.no-search-layout .layout-container-desktop  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-panda-theme",
+                      "Operation": "EqualTo",
+                      "Value": "zillow"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '{\"@context\":\"https://schema.org\",\"@type\":[ ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-test",
+                      "Operation": "EqualTo",
+                      "Value": "hdp-not-for-sale-page-content"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "[&_#page-header-container_div[role=\"status\"]]:nfs-d_none [&_#page-header-container_div[role=\"status\"]]:[@media_screen_and_(-ms-high-contrast:_active),_(-ms-high-contrast:_none)]:nfs-d_flex layout-wrapper no-search-layout"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "layout-wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-srp-split",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "--hdp-page-frame-nav-height: 65px; --hdp-page-frame-top-offset: 137px; --hdp-page-frame-product-nav-width: 78px; --hdp-page-frame-product-nav-height: 0px; --voyager-default-omnibar-bottom-offset: 0px; --hdp-layout-wrapper-viewport-left: 78px; --hdp-lightbox-content-left: 332px; --hdp-lightbox-content-left-centered: 371px; --hdp-lightbox-content-left-in-layout: 363.5px; --hdp-lightbox-content-width: 1248px; --hdp-scroll-container-viewport-left: 78px; --hdp-scroll-container-client-width: 1819px; --hdp-action-bar-height: 72px;"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "role",
+                      "Operation": "EqualTo",
+                      "Value": "presentation"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "outline:none"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "tabindex",
+                      "Operation": "EqualTo",
+                      "Value": "-1"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Section '4553 E San Carlos Pl S, Tucson, AZ 85712'",
+                  "Tag": "section"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-container layout-container-desktop"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "outline:none"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "tabindex",
+                      "Operation": "EqualTo",
+                      "Value": "-1"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-content-container"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "content-container"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '$1,525,0004553 E San Carlos Pl S, Tucson, AZ  ... 000What is this number?Start nowClaim home'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-static-column-container"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '$1,525,0004553 E San Carlos Pl S, Tucson, AZ  ...  tax amount: $8,312Show moreServices availabilityAd'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "c11n c11n_box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-component",
+                      "Operation": "EqualTo",
+                      "Value": "Box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-c11n-version",
+                      "Operation": "EqualTo",
+                      "Value": "10.24.0"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "flex-direction:column"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '$1,525,0004553 E San Carlos Pl S, Tucson, AZ  ...  tax amount: $8,312Show moreServices availabilityAd'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "ds-data-view-list"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 4
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "macro-data-view"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Div '$1,525,0004553 E San Carlos Pl S, Tucson, AZ  ...  tax amount: $8,312Show moreServices availabilityAd'",
+                  "Tag": "div"
+                }
+              ],
+              "Ignore": false,
+              "ImageSelector": null,
+              "IsCustom": false,
+              "IsImageBased": false,
+              "IsPlaceholderSelector": false,
+              "IsWindowsInstance": false,
+              "Name": "Default Selector 3",
+              "Properties": [
+                "ReCaptured",
+                "UserModified"
+              ]
+            },
+            {
+              "CustomSelector": null,
+              "Elements": [
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "nav-full-width"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-srp-split",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-panda-theme",
+                      "Operation": "EqualTo",
+                      "Value": "zillow"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Body '/* Carry the navs across the document swap. The  ... gip\":true,\"appGip\":true,\"scriptLoader\":[]}'",
+                  "Tag": "body"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "__next"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-subapp-name",
+                      "Operation": "EqualTo",
+                      "Value": "not-for-sale-page-sub-app"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-subapp-type",
+                      "Operation": "EqualTo",
+                      "Value": "page"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "display:contents"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "main-wrapper no-search-layout"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "main-wrapper"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '/* Carry the navs across the document swap. The  ...  parseInt(v, 10) + 1); } catch (e) { return; } }());'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-product-nav-will-render",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-top-nav-will-render",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "max-height:100dvh"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '.with-product-nav__wrapper .with-product-n ... ainAsync\":false,\"productNavEnabled\":true}}'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__top-and-main"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '!window.__USER_SESSION_INITIAL_STATE__ ? w ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "with-product-nav__main-content-wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "overflow:hidden"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '#wrapper.no-search-layout .layout-container-desktop  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-panda-theme",
+                      "Operation": "EqualTo",
+                      "Value": "zillow"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '{\"@context\":\"https://schema.org\",\"@type\":[ ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-test",
+                      "Operation": "EqualTo",
+                      "Value": "hdp-not-for-sale-page-content"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "[&_#page-header-container_div[role=\"status\"]]:nfs-d_none [&_#page-header-container_div[role=\"status\"]]:[@media_screen_and_(-ms-high-contrast:_active),_(-ms-high-contrast:_none)]:nfs-d_flex layout-wrapper no-search-layout"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "layout-wrapper"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-hdp-srp-split",
+                      "Operation": "EqualTo",
+                      "Value": "true"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "--hdp-page-frame-nav-height: 80px; --hdp-page-frame-top-offset: 152px; --hdp-page-frame-product-nav-width: 78px; --hdp-page-frame-product-nav-height: 0px; --voyager-default-omnibar-bottom-offset: 0px; --hdp-layout-wrapper-viewport-left: 78px; --hdp-lightbox-content-left: 332px; --hdp-lightbox-content-left-centered: 371px; --hdp-lightbox-content-left-in-layout: 363.5px; --hdp-lightbox-content-width: 1248px; --hdp-scroll-container-viewport-left: 78px; --hdp-scroll-container-client-width: 1819px; --hdp-action-bar-height: 72px;"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "role",
+                      "Operation": "EqualTo",
+                      "Value": "presentation"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "outline:none"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "tabindex",
+                      "Operation": "EqualTo",
+                      "Value": "-1"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Section '4553 E San Carlos Pl S, Tucson, AZ 85712'",
+                  "Tag": "section"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "Contains",
+                      "Value": "layout-container-desktop"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Div 'Back to searchSaveShareMoreHome valueCost  ...  Zillow© 2006-2026 ZillowEqual Housing Opportunity'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "layout-content-container"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 2
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-testid",
+                      "Operation": "EqualTo",
+                      "Value": "content-container"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '$1,525,0004553 E San Carlos Pl S, Tucson, AZ  ... 900What is this number?Start nowClaim home'",
+                  "Tag": "div"
+                }
+              ],
+              "Ignore": false,
+              "ImageSelector": null,
+              "IsCustom": false,
+              "IsImageBased": false,
+              "IsPlaceholderSelector": false,
+              "IsWindowsInstance": false,
+              "Name": "Default Selector 2",
+              "Properties": [
+                "UserModified"
+              ]
             }
           ],
           "Tag": "div",
@@ -55507,7 +58457,7 @@
           "SelectorCount": 1,
           "Selectors": [
             {
-              "CustomSelector": null,
+              "CustomSelector": "form[Class=\"SearchBoxForm\"]  input[Id=\"search-box-input\"]:visible:first",
               "Elements": [
                 {
                   "Attributes": [
@@ -55517,7 +58467,7 @@
                       "IsDisabledAttribute": false,
                       "Name": "Class",
                       "Operation": "EqualTo",
-                      "Value": "  customer-facing blueprint mercury bp-Homepage route-BlueprintHomepage"
+                      "Value": "  customer-facing blueprint mercury bp-Homepage route-HomepageRouter"
                     },
                     {
                       "Ignore": true,
@@ -55582,6 +58532,15 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-content",
+                      "Operation": "EqualTo",
+                      "Value": null
                     }
                   ],
                   "CustomValue": null,
@@ -55622,11 +58581,29 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-root-id",
+                      "Operation": "EqualTo",
+                      "Value": "7"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-timing-offset",
+                      "Operation": "EqualTo",
+                      "Value": "55"
                     }
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Div 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Div 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "div"
                 },
                 {
@@ -55666,7 +58643,7 @@
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Div 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Div 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "div"
                 },
                 {
@@ -55702,6 +58679,15 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-id",
+                      "Operation": "EqualTo",
+                      "Value": "homepage_main"
                     }
                   ],
                   "CustomValue": null,
@@ -55742,11 +58728,20 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-id",
+                      "Operation": "EqualTo",
+                      "Value": "searchAndMerch"
                     }
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Section 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Section 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "section"
                 },
                 {
@@ -55786,7 +58781,7 @@
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Div 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Div 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "div"
                 },
                 {
@@ -55826,7 +58821,7 @@
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Div 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Div 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "div"
                 },
                 {
@@ -55862,11 +58857,38 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-paint-id",
+                      "Operation": "EqualTo",
+                      "Value": "LeftClearBgWidget"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-name",
+                      "Operation": "EqualTo",
+                      "Value": "homeHeroWidget"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "style",
+                      "Operation": "EqualTo",
+                      "Value": "background-image:url(https://ssl.cdn-redfin.com/cop-assets/prod/homepage/homepage-hero-neighborhood-homes.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAgFBQUGBQgGBggLBwYHCw0KCAgKDQ8MDA0MDA8RDA0MDA0MEQ4REhMSEQ4XFxkZFxchICAgISUlJSUlJSUlJSUBCAkJDw4PHRMTHSAaFRogJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJf/AABEIAAoAHgMBEQACEQEDEQH/xAB0AAADAQAAAAAAAAAAAAAAAAACBAYFEAABAQYDBQkBAAAAAAAAAAABAgADBBExMgUSMwYTISI1FBU0QkNRUmFigQEBAAMBAAAAAAAAAAAAAAAAAQIDBAARAAEDBAMAAAAAAAAAAAAAAAABESECAzFBMnGB/9oADAMBAAIRAxEAPwC0d4mHSTkKc5SQjNSfBsaqaWHIeKjpvFPUSBHIEihE68GilUyosSezff4xExkUXj2JeLKVOHxJJAQt2ndcqcpmucimRZoqlSy7bRoFhi+DpiVYQlCjtC8UCrDsii+7QOfd5rAZitGGVghwo3T9Sx5W23z/AE0LuuyVnfQxsjdCVtHi9S42/n4sLzTj7nwrrxstEXqsqKX/ANbaUGPF9cg+m1XqdS01aP37/mbGjj//2Q==)"
                     }
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Div 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Div 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "div"
                 },
                 {
@@ -55906,7 +58928,7 @@
                   ],
                   "CustomValue": null,
                   "Ignore": true,
-                  "Name": "Div 'Your dreamhome search has just begun.BuyMortgageSellRentMy Home Value'",
+                  "Name": "Div 'Redfin Early Access.Find it first.BuyMortgageSellRentMy Home Value'",
                   "Tag": "div"
                 },
                 {
@@ -55942,6 +58964,15 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-name",
+                      "Operation": "EqualTo",
+                      "Value": "searchBox"
                     }
                   ],
                   "CustomValue": null,
@@ -56022,6 +59053,15 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "role",
+                      "Operation": "EqualTo",
+                      "Value": "tabpanel"
                     }
                   ],
                   "CustomValue": null,
@@ -56102,6 +59142,33 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "aria-haspopup",
+                      "Operation": "EqualTo",
+                      "Value": "dialog"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-name",
+                      "Operation": "EqualTo",
+                      "Value": "search-box"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "tabindex",
+                      "Operation": "EqualTo",
+                      "Value": "-1"
                     }
                   ],
                   "CustomValue": null,
@@ -56120,7 +59187,7 @@
                       "Value": "https://www.redfin.com/?"
                     },
                     {
-                      "Ignore": true,
+                      "Ignore": false,
                       "IsOrdinal": false,
                       "IsDisabledAttribute": false,
                       "Name": "Class",
@@ -56169,19 +59236,19 @@
                     }
                   ],
                   "CustomValue": null,
-                  "Ignore": true,
+                  "Ignore": false,
                   "Name": "Form",
                   "Tag": "form"
                 },
                 {
                   "Attributes": [
                     {
-                      "Ignore": true,
+                      "Ignore": false,
                       "IsOrdinal": false,
                       "IsDisabledAttribute": false,
                       "Name": "Class",
-                      "Operation": "EqualTo",
-                      "Value": "search-container inline-block"
+                      "Operation": "Contains",
+                      "Value": "search-container"
                     },
                     {
                       "Ignore": true,
@@ -56206,17 +59273,26 @@
                       "Name": "Title",
                       "Operation": "EqualTo",
                       "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-name",
+                      "Operation": "EqualTo",
+                      "Value": "search-container"
                     }
                   ],
                   "CustomValue": null,
-                  "Ignore": true,
+                  "Ignore": false,
                   "Name": "Div",
                   "Tag": "div"
                 },
                 {
                   "Attributes": [
                     {
-                      "Ignore": true,
+                      "Ignore": false,
                       "IsOrdinal": false,
                       "IsDisabledAttribute": false,
                       "Name": "Class",
@@ -56333,7 +59409,7 @@
                       "IsDisabledAttribute": false,
                       "Name": "Ordinal",
                       "Operation": "EqualTo",
-                      "Value": 0
+                      "Value": 1
                     },
                     {
                       "Ignore": true,
@@ -56389,7 +59465,70 @@
                       "IsDisabledAttribute": false,
                       "Name": "Value",
                       "Operation": "EqualTo",
-                      "Value": null
+                      "Value": "4553 E San Carlos Pl S"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "aria-autocomplete",
+                      "Operation": "EqualTo",
+                      "Value": "list"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "aria-haspopup",
+                      "Operation": "EqualTo",
+                      "Value": "listbox"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "aria-invalid",
+                      "Operation": "EqualTo",
+                      "Value": "false"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "autocomplete",
+                      "Operation": "EqualTo",
+                      "Value": "off"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-name",
+                      "Operation": "EqualTo",
+                      "Value": "search-box-input"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "placeholder",
+                      "Operation": "EqualTo",
+                      "Value": "City, Address, School, Agent, ZIP"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "tabindex",
+                      "Operation": "EqualTo",
+                      "Value": "0"
                     }
                   ],
                   "CustomValue": null,
@@ -56400,12 +59539,15 @@
               ],
               "Ignore": false,
               "ImageSelector": null,
-              "IsCustom": false,
+              "IsCustom": true,
               "IsImageBased": false,
               "IsPlaceholderSelector": false,
               "IsWindowsInstance": false,
               "Name": "Default Selector",
-              "Properties": []
+              "Properties": [
+                "ReCaptured",
+                "UserModified"
+              ]
             }
           ],
           "Tag": "input",
@@ -62497,8 +65639,456 @@
           "ElementTypeName": "Section",
           "InstanceId": "cc198e0c-cac8-4437-b7e3-bdacabfb3866",
           "Name": "Redfin Property 'Public' Section",
-          "SelectorCount": 1,
+          "SelectorCount": 2,
           "Selectors": [
+            {
+              "CustomSelector": null,
+              "Elements": [
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "  customer-facing blueprint mercury DetailsPage desktopDP omdp-desktop isContainerized  route-HomeDetails"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Body 'var _kiq = _kiq || [];_kiq.push(['disableA ... _tag_manager[\"rm\"][\"1497926\"](109)||\"\")});'",
+                  "Tag": "body"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": " has-js"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": "content"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-content",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div '#header header.LargeHeader { display: none; }  ... .REDFIN_APP_NAME = \"customer-pages-map-dp\"'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "detailsContent condensed gapSm"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-container",
+                      "Operation": "EqualTo",
+                      "Value": "8"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'const InlinePhotoPreviewPreinteractiveClick = (e)  ...  near meChandler, AZ homes for saleAZ New Listings'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "theRailSection"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-container",
+                      "Operation": "EqualTo",
+                      "Value": "14"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Off market feb 2025 for $1.5M$1,308,296Est. refi  ...  cash from your home fast? Sell to .Get a cash offer'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "alongTheRail"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-container",
+                      "Operation": "EqualTo",
+                      "Value": "15"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Off market feb 2025 for $1.5M$1,308,296Est. refi  ... erView sun simulationProvided by Shadowmap'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "componentSection "
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-name",
+                      "Operation": "EqualTo",
+                      "Value": "AbstractDetailPageComponentToRender"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-root-id",
+                      "Operation": "EqualTo",
+                      "Value": "30"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-react-server-timing-offset",
+                      "Operation": "EqualTo",
+                      "Value": "129"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Property detailsInteriorBathroom Information# of  ... rollHeight<550)b.style.display='none';})()'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "bp-Section AmenitiesInfoSection font-body-base useContainer has-top-rule"
+                    },
+                    {
+                      "Ignore": false,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "Contains",
+                      "Value": "property-details"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": false,
+                  "Name": "Section 'Property detailsInteriorBathroom Information# of  ... rollHeight<550)b.style.display='none';})()'",
+                  "Tag": "section"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "bp-Section--content"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Property detailsInteriorBathroom Information# of  ... rollHeight<550)b.style.display='none';})()'",
+                  "Tag": "div"
+                },
+                {
+                  "Attributes": [
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Class",
+                      "Operation": "EqualTo",
+                      "Value": "sectionContainer propertyDetailsContent--desktop"
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Id",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "Ordinal",
+                      "Operation": "EqualTo",
+                      "Value": 0
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDisabledAttribute": false,
+                      "Name": "Title",
+                      "Operation": "EqualTo",
+                      "Value": null
+                    },
+                    {
+                      "Ignore": true,
+                      "IsOrdinal": false,
+                      "IsDynamic": true,
+                      "IsDisabledAttribute": false,
+                      "Name": "data-rf-test-id",
+                      "Operation": "EqualTo",
+                      "Value": "propertyDetails"
+                    }
+                  ],
+                  "CustomValue": null,
+                  "Ignore": true,
+                  "Name": "Div 'Property detailsInteriorBathroom Information# of  ... rollHeight<550)b.style.display='none';})()'",
+                  "Tag": "div"
+                }
+              ],
+              "Ignore": false,
+              "ImageSelector": null,
+              "IsCustom": false,
+              "IsImageBased": false,
+              "IsPlaceholderSelector": false,
+              "IsWindowsInstance": false,
+              "Name": "Default Selector 2",
+              "Properties": [
+                "ReCaptured",
+                "UserModified"
+              ]
+            },
             {
               "CustomSelector": null,
               "Elements": [
@@ -76684,5 +80274,5 @@
     }
   ],
   "Version": 1,
-  "saveId": "c607c282-e21d-44e1-ad35-da474cc2a8b7"
+  "saveId": "5bbe2118-28f1-4de9-8c63-e40d5babc5d0"
 }
